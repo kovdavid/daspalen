@@ -1,18 +1,25 @@
 package com.github.davsx.llearn.data.KindleImport;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class KindleImportReceiver {
     private Intent intent;
+    private Context context;
 
-    public KindleImportReceiver(Intent intent) {
+    public KindleImportReceiver(Context context, Intent intent) {
         this.intent = intent;
+        this.context = context;
     }
 
     public ArrayList<String> receiveBackStrings() {
@@ -23,9 +30,16 @@ public class KindleImportReceiver {
 
         Uri uri = uris.get(0);
 
-        String html = "";
+        String html;
         try {
-
+            InputStream inputStream = context.getContentResolver().openInputStream(uri);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            StringBuilder builder = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                builder.append(line);
+            }
+            html = builder.toString();
         } catch (Exception e) {
             return null;
         }
@@ -36,6 +50,7 @@ public class KindleImportReceiver {
             String word = element.text();
             if (word.length() > 0) {
                 newBackStrings.add(word);
+                Log.d("DAVS", "KindleImport word " + word);
             }
         }
 

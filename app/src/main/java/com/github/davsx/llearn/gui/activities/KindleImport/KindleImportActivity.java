@@ -15,7 +15,7 @@ public class KindleImportActivity extends BaseActivity {
         String type = intent.getType();
 
         if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type.equals("message/rfc822")) {
-            new KindleImportReceiver(intent).receiveBackStrings();
+            new KindleImportReceiver(this, intent).receiveBackStrings();
         }
         finish();
     }
