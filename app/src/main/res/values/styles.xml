@@ -13,6 +13,10 @@
         <item name="android:textColor">@android:color/white</item>
     </style>
     <style name="AppTheme.ButtonCancel" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@android:color/white</item>
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+    <style name="AppTheme.ButtonDelete" parent="Widget.AppCompat.Button.Colored">
         <item name="colorButtonNormal">@color/colorAccent</item>
         <item name="android:textColor">@android:color/white</item>
     </style>

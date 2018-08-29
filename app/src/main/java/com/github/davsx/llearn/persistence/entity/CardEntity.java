@@ -1,9 +1,10 @@
-package com.github.davsx.llearn.infrastructure.persistence.entity;
+package com.github.davsx.llearn.persistence.entity;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 @Entity(
         tableName = "cards",
@@ -38,6 +39,17 @@ public class CardEntity {
     @ColumnInfo(name = "last_review_timestamp")
     public Long lastReviewTimestamp;
 
+    public CardEntity(Long id, String front, String back, Integer backWordCount, Integer backLength, Integer learnScore, Long createdTimestamp, Long lastReviewTimestamp) {
+        this.id = id;
+        this.front = front;
+        this.back = back;
+        this.backWordCount = backWordCount;
+        this.backLength = backLength;
+        this.learnScore = learnScore;
+        this.createdTimestamp = createdTimestamp;
+        this.lastReviewTimestamp = lastReviewTimestamp;
+    }
+
     public Long getId() {
         return id;
     }
@@ -60,6 +72,12 @@ public class CardEntity {
 
     public void setBack(String back) {
         this.back = back;
+    }
+
+    public void updateBack(String back) {
+        this.back = back;
+        this.backLength = back.length();
+        this.backWordCount = back.split("\\s+").length;
     }
 
     public Integer getBackWordCount() {
