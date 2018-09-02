@@ -74,7 +74,7 @@ public class EditCardDialog extends Dialog {
         String back = backText.getText().toString();
 
         card.setFront(front);
-        card.updateBack(back);
+        card.setBack(back);
 
         dataProvider.updateCard(card);
 

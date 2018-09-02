@@ -14,15 +14,24 @@ import android.support.annotation.NonNull;
         }
 )
 public class CardEntity {
+    public static final Integer TYPE_LEARN= 0;
+    public static final Integer TYPE_REVIEW = 1;
+
     @PrimaryKey
     @ColumnInfo(name = "id_card")
     public Long id;
 
+    @NonNull
     @ColumnInfo(name = "front")
-    public String front;
+    public String front = "";
 
+    @NonNull
     @ColumnInfo(name = "back")
-    public String back;
+    public String back = "";
+
+    @NonNull
+    @ColumnInfo(name = "type")
+    public Integer type = TYPE_LEARN;
 
     @ColumnInfo(name = "back_word_count")
     public Integer backWordCount;
@@ -33,91 +42,88 @@ public class CardEntity {
     @ColumnInfo(name = "learn_score")
     public Integer learnScore = 0;
 
-    @ColumnInfo(name = "created_timestamp")
-    public Long createdTimestamp;
+    @ColumnInfo(name = "learn_update_at")
+    public Long learnUpdateAt;
 
-    @ColumnInfo(name = "last_review_timestamp")
-    public Long lastReviewTimestamp;
+    @ColumnInfo(name = "created_at")
+    public Long createdAt;
 
-    public CardEntity(Long id, String front, String back, Integer backWordCount, Integer backLength, Integer learnScore, Long createdTimestamp, Long lastReviewTimestamp) {
-        this.id = id;
-        this.front = front;
-        this.back = back;
-        this.backWordCount = backWordCount;
-        this.backLength = backLength;
-        this.learnScore = learnScore;
-        this.createdTimestamp = createdTimestamp;
-        this.lastReviewTimestamp = lastReviewTimestamp;
-    }
+    public CardEntity() {}
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public CardEntity setId(Long id) {
         this.id = id;
+        return this;
     }
 
+    @NonNull
     public String getFront() {
         return front;
     }
 
-    public void setFront(String front) {
+    public CardEntity setFront(@NonNull String front) {
         this.front = front;
+        return this;
     }
 
+    @NonNull
     public String getBack() {
         return back;
     }
 
-    public void setBack(String back) {
-        this.back = back;
-    }
-
-    public void updateBack(String back) {
+    public CardEntity setBack(@NonNull String back) {
         this.back = back;
         this.backLength = back.length();
         this.backWordCount = back.split("\\s+").length;
+        return this;
+    }
+
+    @NonNull
+    public Integer getType() {
+        return type;
+    }
+
+    public CardEntity setType(@NonNull Integer type) {
+        this.type = type;
+        return this;
     }
 
     public Integer getBackWordCount() {
         return backWordCount;
     }
 
-    public void setBackWordCount(Integer backWordCount) {
-        this.backWordCount = backWordCount;
-    }
-
     public Integer getBackLength() {
         return backLength;
-    }
-
-    public void setBackLength(Integer backLength) {
-        this.backLength = backLength;
     }
 
     public Integer getLearnScore() {
         return learnScore;
     }
 
-    public void setLearnScore(Integer learnScore) {
+    public CardEntity setLearnScore(Integer learnScore) {
         this.learnScore = learnScore;
+        return this;
     }
 
-    public Long getCreatedTimestamp() {
-        return createdTimestamp;
+    public Long getLearnUpdateAt() {
+        return learnUpdateAt;
     }
 
-    public void setCreatedTimestamp(Long createdTimestamp) {
-        this.createdTimestamp = createdTimestamp;
+    public CardEntity setLearnUpdateAt(Long learnUpdateAt) {
+        this.learnUpdateAt = learnUpdateAt;
+        return this;
     }
 
-    public Long getLastReviewTimestamp() {
-        return lastReviewTimestamp;
+    public Long getCreatedAt() {
+        return createdAt;
     }
 
-    public void setLastReviewTimestamp(Long lastReviewTimestamp) {
-        this.lastReviewTimestamp = lastReviewTimestamp;
+    public CardEntity setCreatedAt(Long createdAt) {
+        this.createdAt = createdAt;
+        return this;
     }
 }
 

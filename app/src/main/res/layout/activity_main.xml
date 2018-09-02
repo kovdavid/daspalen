@@ -1,25 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".gui.activities.Main.MainActivity"
         android:padding="25dp">
 
-    <LinearLayout
+    <Button
+            android:theme="@style/AppTheme.ButtonConfirm"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:text="Manage Cards"
+            android:id="@+id/button_word_list"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="24dp"/>
 
-        <Button
-                android:theme="@style/AppTheme.ButtonConfirm"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Manage Cards"
-                android:id="@+id/button_word_list"
-                />
+    <Button
+            android:theme="@style/AppTheme.ButtonConfirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Learn Cards"
+            android:id="@+id/button_learn_cards"
+            android:layout_marginTop="24dp"
+            app:layout_constraintTop_toBottomOf="@+id/button_word_list"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp"/>
 
-    </LinearLayout>
+    <Button
+            android:theme="@style/AppTheme.ButtonConfirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create Anki Card"
+            android:id="@+id/button_create_anki_card"
+            android:layout_marginTop="24dp"
+            app:layout_constraintTop_toBottomOf="@+id/button_learn_cards"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp"/>
+
 
 </android.support.constraint.ConstraintLayout>

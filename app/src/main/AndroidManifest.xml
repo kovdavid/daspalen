@@ -21,6 +21,11 @@
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
+        <activity android:name=".gui.activities.LearnCard.LearnCardActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
         <activity android:name=".gui.activities.KindleImport.KindleImportActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEND_MULTIPLE" />

@@ -10,11 +10,18 @@ public interface CardDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long save(CardEntity card);
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void saveMany(List<CardEntity> cards);
+
     @Delete()
     void delete(CardEntity card);
 
     @Query("SELECT * from cards WHERE back IS NOT NULL ORDER BY id_card ASC")
     List<CardEntity> getAllCards();
+
+    @Query("SELECT * FROM cards WHERE back != '' AND front != '' AND learn_score < :learnScore" +
+            " ORDER BY learn_score DESC, learn_update_at DESC LIMIT :limit")
+    List<CardEntity> getLearnCandidates(Integer learnScore, Integer limit);
 
     @Query("SELECT * FROM cards WHERE id_card = :id_card")
     CardEntity getCardWithId(Long id_card);

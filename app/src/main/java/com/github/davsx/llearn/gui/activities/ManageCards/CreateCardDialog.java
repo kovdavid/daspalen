@@ -12,7 +12,6 @@ import butterknife.ButterKnife;
 import com.github.davsx.llearn.R;
 import com.github.davsx.llearn.data.ManageCards.ManageCardsDataProvider;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
-import com.github.davsx.llearn.persistence.entity.CardEntityBuilder;
 
 public class CreateCardDialog extends Dialog {
 
@@ -57,11 +56,10 @@ public class CreateCardDialog extends Dialog {
         String front = frontText.getText().toString();
         String back = backText.getText().toString();
 
-        CardEntity card = new CardEntityBuilder()
-                .setCreatedTimestamp(System.currentTimeMillis())
+        CardEntity card = new CardEntity()
+                .setCreatedAt(System.currentTimeMillis())
                 .setFront(front)
-                .setBack(back)
-                .createCardEntity();
+                .setBack(back);
 
         dataProvider.createCard(card);
 
