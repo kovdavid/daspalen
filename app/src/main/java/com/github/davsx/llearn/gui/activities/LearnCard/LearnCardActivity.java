@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import com.github.davsx.llearn.R;
 import com.github.davsx.llearn.data.LearnCard.CardTypeEnum;
-import com.github.davsx.llearn.data.LearnCard.ShowCardData;
+import com.github.davsx.llearn.data.LearnCard.LearnCardData;
 import com.github.davsx.llearn.persistence.repository.CardRepository;
 import com.github.davsx.llearn.service.LearnCard.LearnCardService;
 
@@ -38,16 +38,26 @@ public class LearnCardActivity extends FragmentActivity implements AnswerReceive
 
     private void showNextFragment() {
         CardTypeEnum currentCardType = learnCardService.getCurrentCardType();
+        LearnCardData data = learnCardService.getLearnCardData();
+        Fragment fragment = null;
         if (currentCardType.equals(CardTypeEnum.NONE)) {
-            finish();
+            // Learning session is finished
         } else if (currentCardType.equals(CardTypeEnum.SHOW_CARD)) {
-            ShowCardData data = learnCardService.getShowCardData();
-            FragmentShowCard fragment = new FragmentShowCard()
+            fragment = new FragmentShowCard()
                     .setAnswerReceiver(this)
                     .setData(data);
-            renderFragment(fragment);
+        } else if (currentCardType.equals(CardTypeEnum.KEYBOARD_INPUT)) {
+            fragment = new FragmentKeyboardInput()
+                    .setAnswerReceiver(this)
+                    .setData(data);
         } else {
+            // Not yet implemented
+        }
+
+        if (fragment == null) {
             finish();
+        } else {
+            renderFragment(fragment);
         }
     }
 

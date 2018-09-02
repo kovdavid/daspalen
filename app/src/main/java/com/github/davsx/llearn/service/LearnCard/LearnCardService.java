@@ -1,7 +1,8 @@
 package com.github.davsx.llearn.service.LearnCard;
 
 import com.github.davsx.llearn.data.LearnCard.CardTypeEnum;
-import com.github.davsx.llearn.data.LearnCard.ShowCardData;
+import com.github.davsx.llearn.data.LearnCard.KeyboardKeyChooser;
+import com.github.davsx.llearn.data.LearnCard.LearnCardData;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
 import com.github.davsx.llearn.persistence.repository.CardRepository;
 
@@ -12,7 +13,7 @@ public class LearnCardService {
 
     private CardEntity currentCard;
     private CardTypeEnum currentCardType;
-    private ShowCardData showCardData;
+    private LearnCardData learnCardData;
     private ArrayList<CardEntity> learnCards;
     private Integer learnCardsIndex;
 
@@ -26,38 +27,37 @@ public class LearnCardService {
         learnCards = (ArrayList<CardEntity>) cardRepository.getAllCards();
 
         if (learnCards.size() > 0) {
-            showNextCard();
+            setUpNextCard();
             return true;
         } else {
             return false;
         }
     }
 
-    private void showNextCard() {
+    private void setUpNextCard() {
         currentCard = learnCards.get(learnCardsIndex);
 
-        currentCardType = CardTypeEnum.SHOW_CARD;
-        showCardData = new ShowCardData(currentCard.getFront(), currentCard.getBack());
-    }
+        learnCardData = new LearnCardData(currentCard.getFront(), currentCard.getBack());
 
-    public CardEntity getCurrentCard() {
-        return currentCard;
+        if (learnCardsIndex % 2 == 1) {
+            currentCardType = CardTypeEnum.SHOW_CARD;
+        } else {
+            currentCardType = CardTypeEnum.KEYBOARD_INPUT;
+            learnCardData.setKeyboardKeys(KeyboardKeyChooser.choose(currentCard.getBack()));
+        }
+
     }
 
     public CardTypeEnum getCurrentCardType() {
         return currentCardType;
     }
 
-    public ShowCardData getShowCardData() {
-        return showCardData;
-    }
-
-    private void setCurrentCard(CardEntity currentCard) {
-        this.currentCard = currentCard;
+    public LearnCardData getLearnCardData() {
+        return learnCardData;
     }
 
     public void processAnswer(String answer) {
         learnCardsIndex++;
-        showNextCard();
+        setUpNextCard();
     }
 }

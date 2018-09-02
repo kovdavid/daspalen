@@ -9,16 +9,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.github.davsx.llearn.R;
-import com.github.davsx.llearn.data.LearnCard.ShowCardData;
+import com.github.davsx.llearn.data.LearnCard.LearnCardData;
 
 public class FragmentShowCard extends Fragment {
     private TextView textViewFront;
     private TextView textViewBack;
     private Button buttonNext;
 
-    private ShowCardData showCardData;
+    private LearnCardData learnCardData;
     private AnswerReceiver answerReceiver;
 
     @Nullable
@@ -34,7 +33,7 @@ public class FragmentShowCard extends Fragment {
             @Override
             public void onClick(View v) {
                 // This fragment only shows the card, so we always send a correct answer
-                answerReceiver.onAnswer(showCardData.getBackText());
+                answerReceiver.onAnswer(learnCardData.getBackText());
             }
         });
 
@@ -44,8 +43,8 @@ public class FragmentShowCard extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        textViewFront.setText(showCardData.getFrontText());
-        textViewBack.setText(showCardData.getBackText());
+        textViewFront.setText(learnCardData.getFrontText());
+        textViewBack.setText(learnCardData.getBackText());
     }
 
     public FragmentShowCard setAnswerReceiver(AnswerReceiver answerReceiver) {
@@ -53,8 +52,8 @@ public class FragmentShowCard extends Fragment {
         return this;
     }
 
-    public FragmentShowCard setData(ShowCardData data) {
-        this.showCardData = data;
+    public FragmentShowCard setData(LearnCardData data) {
+        this.learnCardData = data;
         return this;
     }
 }
