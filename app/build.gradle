@@ -50,5 +50,5 @@ dependencies {
     api 'com.google.guava:guava:26.0-android'
 
     // Java String Similarity
-    compile group: 'info.debatty', name: 'java-string-similarity', version: '0.10'
+    implementation group: 'info.debatty', name: 'java-string-similarity', version: '0.10'
 }

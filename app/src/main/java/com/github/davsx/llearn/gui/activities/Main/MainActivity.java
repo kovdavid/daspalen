@@ -1,6 +1,7 @@
 package com.github.davsx.llearn.gui.activities.Main;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +16,7 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.button_word_list) Button btnWordList;
     @BindView(R.id.button_create_anki_card) Button createAnkiWordButton;
     @BindView(R.id.button_learn_cards) Button btnLearnCards;
+    @BindView(R.id.button_translate_spanishdict) Button btnTranslateSpanishDict;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,19 @@ public class MainActivity extends BaseActivity {
                 sendIntent.putExtra("SOURCE_TEXT", "Testing source text");
                 sendIntent.putExtra("TARGET_TEXT", "Testing target text");
                 startActivity(sendIntent);
+            }
+        });
+
+        btnTranslateSpanishDict.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.setPackage("com.spanishdict.spanishdict");
+                intent.setData(Uri.parse("http://www.spanishdict.com/translate/bread"));
+                intent.addCategory(Intent.CATEGORY_DEFAULT);
+                intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                startActivity(intent);
             }
         });
     }
