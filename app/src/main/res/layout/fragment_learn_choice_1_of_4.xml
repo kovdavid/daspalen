@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/label_front"
+            android:text="Front"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="16dp"
+            android:textSize="32dp"
+            />
+
+    <TextView
+            android:text="TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textview_front"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginLeft="32dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginRight="32dp"
+            app:layout_constraintTop_toBottomOf="@+id/label_front"
+            android:layout_marginTop="16dp"
+            android:textSize="24dp"
+            android:textColor="@android:color/black"
+            />
+
+    <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textview_front"
+            app:layout_constraintBottom_toBottomOf="parent"
+            >
+
+        <Space
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"/>
+
+        <include
+                layout="@layout/fragment_learn_choice_button"
+                android:id="@+id/choice_1"
+                />
+
+        <Space
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"/>
+
+        <include
+                layout="@layout/fragment_learn_choice_button"
+                android:id="@+id/choice_2"
+                />
+
+        <Space
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"/>
+
+        <include
+                layout="@layout/fragment_learn_choice_button"
+                android:id="@+id/choice_3"
+                />
+
+        <Space
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"/>
+
+        <include
+                layout="@layout/fragment_learn_choice_button"
+                android:id="@+id/choice_4"
+                />
+
+        <Space
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"/>
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

@@ -8,6 +8,7 @@ public class LearnCardData {
     private String frontText;
     private String backText;
     private ArrayList<String> choices;
+    private boolean guessBack = true;
     private List<List<Character>> keyboardKeys;
 
     public LearnCardData(String frontText, String backText) {
@@ -32,8 +33,21 @@ public class LearnCardData {
         return this;
     }
 
+    public ArrayList<String> getChoices() {
+        return choices;
+    }
+
     public LearnCardData setKeyboardKeys(List<List<Character>> keyboardKeys) {
         this.keyboardKeys = keyboardKeys;
+        return this;
+    }
+
+    public boolean isGuessBack() {
+        return guessBack;
+    }
+
+    public LearnCardData setGuessBack(boolean guessBack) {
+        this.guessBack = guessBack;
         return this;
     }
 }

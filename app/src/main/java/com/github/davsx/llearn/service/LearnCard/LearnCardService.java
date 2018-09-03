@@ -6,7 +6,7 @@ import com.github.davsx.llearn.data.LearnCard.LearnCardData;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
 import com.github.davsx.llearn.persistence.repository.CardRepository;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class LearnCardService {
     private CardRepository cardRepository;
@@ -39,8 +39,27 @@ public class LearnCardService {
 
         learnCardData = new LearnCardData(currentCard.getFront(), currentCard.getBack());
 
-        if (learnCardsIndex % 2 == 1) {
+        if (learnCardsIndex % 3 == 1) {
             currentCardType = CardTypeEnum.SHOW_CARD;
+        } else if (learnCardsIndex % 3 == 0) {
+            currentCardType = CardTypeEnum.CHOICE_1of4;
+
+            Set<String> choicesSet = new HashSet<>();
+            choicesSet.add(currentCard.getBack());
+
+            Random rng = new Random();
+            rng.setSeed(System.currentTimeMillis());
+            while (choicesSet.size() != 4) {
+                int index = rng.nextInt(learnCards.size());
+                choicesSet.add(learnCards.get(index).getBack());
+            }
+
+            ArrayList<String> choicesList = new ArrayList<>();
+            choicesList.addAll(choicesSet);
+            Collections.shuffle(choicesList);
+
+            learnCardData.setChoices(choicesList);
+            learnCardData.setGuessBack(true);
         } else {
             currentCardType = CardTypeEnum.KEYBOARD_INPUT;
             learnCardData.setKeyboardKeys(KeyboardKeyChooser.choose(currentCard.getBack()));

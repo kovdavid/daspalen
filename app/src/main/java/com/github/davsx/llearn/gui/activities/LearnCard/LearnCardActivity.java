@@ -39,17 +39,15 @@ public class LearnCardActivity extends FragmentActivity implements AnswerReceive
     private void showNextFragment() {
         CardTypeEnum currentCardType = learnCardService.getCurrentCardType();
         LearnCardData data = learnCardService.getLearnCardData();
-        Fragment fragment = null;
+        LearnCardFragmentBase fragment = null;
         if (currentCardType.equals(CardTypeEnum.NONE)) {
             // Learning session is finished
         } else if (currentCardType.equals(CardTypeEnum.SHOW_CARD)) {
-            fragment = new FragmentShowCard()
-                    .setAnswerReceiver(this)
-                    .setData(data);
+            fragment = new FragmentShowCard();
         } else if (currentCardType.equals(CardTypeEnum.KEYBOARD_INPUT)) {
-            fragment = new FragmentKeyboardInput()
-                    .setAnswerReceiver(this)
-                    .setData(data);
+            fragment = new FragmentKeyboardInput();
+        } else if (currentCardType.equals(CardTypeEnum.CHOICE_1of4)) {
+            fragment = new FragmentChoice1of4();
         } else {
             // Not yet implemented
         }
@@ -57,7 +55,7 @@ public class LearnCardActivity extends FragmentActivity implements AnswerReceive
         if (fragment == null) {
             finish();
         } else {
-            renderFragment(fragment);
+            renderFragment(fragment.setAnswerReceiver(this).setData(data));
         }
     }
 

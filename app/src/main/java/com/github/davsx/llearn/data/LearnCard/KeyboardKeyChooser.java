@@ -49,6 +49,7 @@ public class KeyboardKeyChooser {
 
         ArrayList<Character> keys = new ArrayList<>();
         keys.addAll(uniqueChars);
+        Collections.shuffle(keys);
 
         List<List<Character>> result = Lists.partition(keys, LEARN_CARD_KEYBOARD_COLUMNS);
 

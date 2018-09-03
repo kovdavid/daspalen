@@ -16,8 +16,11 @@ public interface CardDao {
     @Delete()
     void delete(CardEntity card);
 
-    @Query("SELECT * from cards WHERE back IS NOT NULL ORDER BY id_card ASC")
+    @Query("SELECT * FROM cards WHERE back != '' ORDER BY id_card ASC")
     List<CardEntity> getAllCards();
+
+    @Query("SELECT * FROM cards WHERE back != '' AND front != '' ORDER BY RANDOM() LIMIT :limit")
+    List<CardEntity> getRandomCards(int limit);
 
     @Query("SELECT * FROM cards WHERE back != '' AND front != '' AND learn_score < :learnScore" +
             " ORDER BY learn_score DESC, learn_update_at DESC LIMIT :limit")

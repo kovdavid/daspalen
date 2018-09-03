@@ -15,17 +15,12 @@ import com.github.davsx.llearn.data.LearnCard.LearnCardData;
 
 import java.util.List;
 
-public class FragmentKeyboardInput extends Fragment {
+public class FragmentKeyboardInput extends LearnCardFragmentBase {
     private TextView textViewFront;
     private EditText textViewInput;
     private Button buttonConfirm;
     private Button buttonBackspace;
     private TableLayout keyboardTable;
-
-    private LearnCardData learnCardData;
-    private AnswerReceiver answerReceiver;
-    private LayoutInflater inflater;
-    private ViewGroup container;
 
     @Nullable
     @Override
@@ -37,9 +32,6 @@ public class FragmentKeyboardInput extends Fragment {
         buttonConfirm = rootView.findViewById(R.id.button_confirm);
         buttonBackspace = rootView.findViewById(R.id.button_backspace);
         keyboardTable = rootView.findViewById(R.id.keyboard_table);
-
-        this.inflater = inflater;
-        this.container = container;
 
         buttonConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,6 +47,8 @@ public class FragmentKeyboardInput extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        LayoutInflater inflater = getLayoutInflater();
 
         for (final List<Character> row : learnCardData.getKeyboardKeys()) {
             View keyboardRowView = inflater.inflate(R.layout.fragment_learn_keyboard_input_button_row, keyboardTable, false);
@@ -74,9 +68,9 @@ public class FragmentKeyboardInput extends Fragment {
             keyboardTable.addView(keyboardRowView);
         }
 
-        View spacebarView = inflater.inflate(R.layout.fragment_learn_keyboard_input_spacebar_row, keyboardTable, false);
-        Button spacebar = spacebarView.findViewById(R.id.keyboard_spacebar);
-        spacebar.setOnClickListener(new View.OnClickListener() {
+        View spaceBarView = inflater.inflate(R.layout.fragment_learn_keyboard_input_spacebar_row, keyboardTable, false);
+        Button spaceBar = spaceBarView.findViewById(R.id.keyboard_spacebar);
+        spaceBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 textViewInput.append(" ");
@@ -93,18 +87,8 @@ public class FragmentKeyboardInput extends Fragment {
             }
         });
 
-        keyboardTable.addView(spacebarView);
+        keyboardTable.addView(spaceBarView);
 
         textViewFront.setText(learnCardData.getFrontText());
-    }
-
-    public FragmentKeyboardInput setAnswerReceiver(AnswerReceiver answerReceiver) {
-        this.answerReceiver = answerReceiver;
-        return this;
-    }
-
-    public FragmentKeyboardInput setData(LearnCardData data) {
-        this.learnCardData = data;
-        return this;
     }
 }
