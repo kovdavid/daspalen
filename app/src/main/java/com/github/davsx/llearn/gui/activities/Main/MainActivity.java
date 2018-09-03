@@ -63,5 +63,8 @@ public class MainActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
+
+        // To get the origin of an intent (e.g. when we share the translation from SpanishDict back
+        // to our app, use this.getReferrer().getHost() . It should return something like com.spanishdict.spanishdict
     }
 }
