@@ -66,5 +66,9 @@ public class MainActivity extends BaseActivity {
 
         // To get the origin of an intent (e.g. when we share the translation from SpanishDict back
         // to our app, use this.getReferrer().getHost() . It should return something like com.spanishdict.spanishdict
+        //
+        // for older Android:
+        // ActivityManager am = (ActivityManager) this.getSystemService(ACTIVITY_SERVICE);
+        // List<ActivityManager.RecentTaskInfo> recentTasks = am.getRecentTasks(10000,ActivityManager.RECENT_WITH_EXCLUDED);
     }
 }
