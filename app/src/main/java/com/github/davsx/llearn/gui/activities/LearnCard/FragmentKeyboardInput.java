@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -14,8 +15,10 @@ import com.github.davsx.llearn.R;
 import com.github.davsx.llearn.data.LearnCard.LearnCardData;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
-public class FragmentKeyboardInput extends LearnCardFragmentBase {
+public class FragmentKeyboardInput extends LearnCardFragmentBase implements View.OnClickListener {
     private TextView textViewFront;
     private EditText textViewInput;
     private Button buttonConfirm;
@@ -33,13 +36,7 @@ public class FragmentKeyboardInput extends LearnCardFragmentBase {
         buttonBackspace = rootView.findViewById(R.id.button_backspace);
         keyboardTable = rootView.findViewById(R.id.keyboard_table);
 
-        buttonConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String answer = textViewInput.getText().toString();
-                answerReceiver.onAnswer(answer);
-            }
-        });
+        buttonConfirm.setOnClickListener(this);
 
         return rootView;
     }
@@ -90,5 +87,26 @@ public class FragmentKeyboardInput extends LearnCardFragmentBase {
         keyboardTable.addView(spaceBarView);
 
         textViewFront.setText(learnCardData.getFrontText());
+    }
+
+    @Override
+    public void onClick(View v) {
+        final String answer = textViewInput.getText().toString();
+        String correctAnswer = learnCardData.getBackText();
+
+        int color;
+        if (answer.equals(correctAnswer)) {
+            color = ContextCompat.getColor(getContext(), R.color.colorGreen);
+        } else {
+            color = ContextCompat.getColor(getContext(), R.color.colorAccent);
+        }
+        textViewInput.setTextColor(color);
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                answerReceiver.onAnswer(answer);
+            }
+        }, 2000);
     }
 }

@@ -44,6 +44,8 @@ public class LearnCardActivity extends FragmentActivity implements AnswerReceive
             // Learning session is finished
         } else if (currentCardType.equals(CardTypeEnum.SHOW_CARD)) {
             fragment = new FragmentShowCard();
+        } else if (currentCardType.equals(CardTypeEnum.SHOW_CARD_WITH_IMAGE)) {
+            fragment = new FragmentShowCardWithImage();
         } else if (currentCardType.equals(CardTypeEnum.KEYBOARD_INPUT)) {
             fragment = new FragmentKeyboardInput();
         } else if (currentCardType.equals(CardTypeEnum.CHOICE_1of4)) {

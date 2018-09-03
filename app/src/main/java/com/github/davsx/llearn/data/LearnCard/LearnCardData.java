@@ -1,5 +1,7 @@
 package com.github.davsx.llearn.data.LearnCard;
 
+import android.net.Uri;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +9,7 @@ public class LearnCardData {
 
     private String frontText;
     private String backText;
+    private Uri imageUri;
     private ArrayList<String> choices;
     private boolean guessBack = true;
     private List<List<Character>> keyboardKeys;
@@ -48,6 +51,15 @@ public class LearnCardData {
 
     public LearnCardData setGuessBack(boolean guessBack) {
         this.guessBack = guessBack;
+        return this;
+    }
+
+    public Uri getImageUri() {
+        return imageUri;
+    }
+
+    public LearnCardData setImageUri(Uri imageUri) {
+        this.imageUri = imageUri;
         return this;
     }
 }

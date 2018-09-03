@@ -39,9 +39,11 @@ public class LearnCardService {
 
         learnCardData = new LearnCardData(currentCard.getFront(), currentCard.getBack());
 
-        if (learnCardsIndex % 3 == 1) {
+        if (learnCardsIndex % 4 == 1) {
             currentCardType = CardTypeEnum.SHOW_CARD;
-        } else if (learnCardsIndex % 3 == 0) {
+        } else if (learnCardsIndex % 4 == 2) {
+            currentCardType = CardTypeEnum.SHOW_CARD_WITH_IMAGE;
+        } else if (learnCardsIndex % 4 == 0) {
             currentCardType = CardTypeEnum.CHOICE_1of4;
 
             Set<String> choicesSet = new HashSet<>();
