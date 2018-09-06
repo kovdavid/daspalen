@@ -29,6 +29,10 @@ public class CardRepository {
         return cardDao.getAllCards();
     }
 
+    public List<CardEntity> getAllValidCards() {
+        return cardDao.getAllValidCards();
+    }
+
     public CardEntity getCardWithId(Long id_card) {
         return cardDao.getCardWithId(id_card);
     }

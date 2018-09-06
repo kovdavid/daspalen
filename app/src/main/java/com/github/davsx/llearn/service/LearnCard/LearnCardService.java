@@ -17,6 +17,16 @@ public class LearnCardService {
     private ArrayList<CardEntity> learnCards;
     private Integer learnCardsIndex;
 
+    // Rules:
+    // * Max 5 new cards
+    // * Use 1 new card if possible
+    // * Max score is 8
+    // * Cards with score 0-3 use 3x
+    // * Cards with score 4-5 use 2x
+    // * Cards with score 6-7 use 1x
+    // * Max 20 rounds (calculated from card usage above)
+    // * For cards with score 0 use "show card" first
+
     public LearnCardService(CardRepository cardRepository) {
         this.cardRepository = cardRepository;
         currentCardType = CardTypeEnum.NONE;
@@ -24,7 +34,7 @@ public class LearnCardService {
     }
 
     public boolean startSession() {
-        learnCards = (ArrayList<CardEntity>) cardRepository.getAllCards();
+        learnCards = (ArrayList<CardEntity>) cardRepository.getAllValidCards();
 
         if (learnCards.size() > 0) {
             setUpNextCard();
@@ -56,8 +66,7 @@ public class LearnCardService {
                 choicesSet.add(learnCards.get(index).getBack());
             }
 
-            ArrayList<String> choicesList = new ArrayList<>();
-            choicesList.addAll(choicesSet);
+            ArrayList<String> choicesList = new ArrayList<>(choicesSet);
             Collections.shuffle(choicesList);
 
             learnCardData.setChoices(choicesList);

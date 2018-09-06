@@ -16,7 +16,10 @@ public interface CardDao {
     @Delete()
     void delete(CardEntity card);
 
-    @Query("SELECT * FROM cards WHERE back != '' ORDER BY id_card ASC")
+    @Query("SELECT * FROM cards WHERE back != '' AND front != '' ORDER BY id_card ASC")
+    List<CardEntity> getAllValidCards();
+
+    @Query("SELECT * FROM cards ORDER BY id_card ASC")
     List<CardEntity> getAllCards();
 
     @Query("SELECT * FROM cards WHERE back != '' AND front != '' ORDER BY RANDOM() LIMIT :limit")
