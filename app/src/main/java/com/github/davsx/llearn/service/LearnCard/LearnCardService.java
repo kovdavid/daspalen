@@ -25,7 +25,16 @@ public class LearnCardService {
     // * Cards with score 4-5 use 2x
     // * Cards with score 6-7 use 1x
     // * Max 20 rounds (calculated from card usage above)
-    // * For cards with score 0 use "show card" first
+    // * For cards with !score 0! || !lastLearned > 1 week! use "show card" first
+    // *** That said, some cards will be blocked by "show card" before first real use
+
+    // Question is: how to schedule cards with score: 0 0 2 4 6 7
+    // For 0 - do the first real card 1-2 cards after the show card - space out the rest
+
+    // Do a weight system, where we would use the cards with the lowest weight
+    // After using a card, it's weight could be recalculated, so that it would be used before or after a card with score 7
+
+    // 0 1 1 2 3 5 8 13 21 34 55 89 144
 
     public LearnCardService(CardRepository cardRepository) {
         this.cardRepository = cardRepository;
