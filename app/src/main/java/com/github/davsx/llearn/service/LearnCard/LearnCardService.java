@@ -2,8 +2,6 @@ package com.github.davsx.llearn.service.LearnCard;
 
 import com.github.davsx.llearn.persistence.entity.CardEntity;
 import com.github.davsx.llearn.persistence.repository.CardRepository;
-import info.debatty.java.stringsimilarity.Levenshtein;
-import info.debatty.java.stringsimilarity.StringSimilarityInterface;
 
 import java.util.*;
 
@@ -79,7 +77,7 @@ public class LearnCardService {
             Collections.shuffle(choicesList);
 
             learnCardData.setChoices(choicesList);
-            learnCardData.setGuessBack(true);
+            learnCardData.setReversed(true);
         } else {
             currentCardType = CardTypeEnum.KEYBOARD_INPUT;
             learnCardData.setKeyboardKeys(KeyboardKeyChooser.choose(currentCard.getBack()));

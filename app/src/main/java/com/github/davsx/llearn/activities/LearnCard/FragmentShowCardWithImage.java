@@ -15,7 +15,6 @@ public class FragmentShowCardWithImage extends LearnCardFragmentBase {
     private TextView textViewFront;
     private TextView textViewBack;
     private ImageView imageView;
-    private Button buttonNext;
 
     @Nullable
     @Override
@@ -24,9 +23,9 @@ public class FragmentShowCardWithImage extends LearnCardFragmentBase {
 
         textViewFront = view.findViewById(R.id.textview_front);
         textViewBack = view.findViewById(R.id.textview_back);
-        buttonNext = view.findViewById(R.id.button_next);
         imageView = view.findViewById(R.id.image_view);
 
+        Button buttonNext = view.findViewById(R.id.button_next);
         buttonNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

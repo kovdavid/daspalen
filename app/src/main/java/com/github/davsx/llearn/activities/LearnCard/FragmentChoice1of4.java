@@ -43,7 +43,7 @@ public class FragmentChoice1of4 extends LearnCardFragmentBase implements View.On
         super.onResume();
 
         String guess;
-        if (learnCardData.isGuessBack()) {
+        if (learnCardData.isReversed()) {
             guess = learnCardData.getFrontText();
         } else {
             guess = learnCardData.getBackText();
@@ -63,7 +63,7 @@ public class FragmentChoice1of4 extends LearnCardFragmentBase implements View.On
         final String answer = btn.getText().toString();
 
         String correctAnswer;
-        if (learnCardData.isGuessBack()) {
+        if (learnCardData.isReversed()) {
             correctAnswer = learnCardData.getBackText();
         } else {
             correctAnswer = learnCardData.getFrontText();

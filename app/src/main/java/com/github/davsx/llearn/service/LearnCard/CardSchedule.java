@@ -48,4 +48,5 @@ public class CardSchedule {
     public int getRoundCounter() {
         return roundCounter;
     }
+
 }

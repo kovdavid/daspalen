@@ -34,7 +34,6 @@ public class LearnCardService2 {
 
     private void setUpNextCard() {
         SchedulableCard schedulableCard = cardSchedule.nextCard();
-
     }
 
     private List<SchedulableCard> prepareCards() {

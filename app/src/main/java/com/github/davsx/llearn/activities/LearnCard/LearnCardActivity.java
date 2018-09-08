@@ -52,6 +52,8 @@ public class LearnCardActivity extends FragmentActivity implements AnswerReceive
             fragment = new FragmentKeyboardInput();
         } else if (currentCardType.equals(CardTypeEnum.CHOICE_1of4)) {
             fragment = new FragmentChoice1of4();
+        } else if (currentCardType.equals(CardTypeEnum.CHOICE_1of4_REVERSE)) {
+            fragment = new FragmentChoice1of4();
         } else {
             // Not yet implemented
         }

@@ -11,10 +11,10 @@ public class LearnCardData {
     private String backText;
     private Uri imageUri;
     private ArrayList<String> choices;
-    private boolean guessBack = true;
+    private boolean isReversed = false;
     private List<List<Character>> keyboardKeys;
 
-    public LearnCardData(String frontText, String backText) {
+    LearnCardData(String frontText, String backText) {
         this.frontText = frontText;
         this.backText = backText;
     }
@@ -31,27 +31,24 @@ public class LearnCardData {
         return keyboardKeys;
     }
 
-    public LearnCardData setChoices(ArrayList<String> choices) {
-        this.choices = choices;
-        return this;
+    void setKeyboardKeys(List<List<Character>> keyboardKeys) {
+        this.keyboardKeys = keyboardKeys;
     }
 
     public ArrayList<String> getChoices() {
         return choices;
     }
 
-    public LearnCardData setKeyboardKeys(List<List<Character>> keyboardKeys) {
-        this.keyboardKeys = keyboardKeys;
-        return this;
+    void setChoices(ArrayList<String> choices) {
+        this.choices = choices;
     }
 
-    public boolean isGuessBack() {
-        return guessBack;
+    public boolean isReversed() {
+        return isReversed;
     }
 
-    public LearnCardData setGuessBack(boolean guessBack) {
-        this.guessBack = guessBack;
-        return this;
+    void setReversed(boolean reversed) {
+        this.isReversed = reversed;
     }
 
     public Uri getImageUri() {
