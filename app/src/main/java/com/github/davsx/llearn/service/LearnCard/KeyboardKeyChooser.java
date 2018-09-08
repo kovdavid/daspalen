@@ -9,10 +9,10 @@ import java.util.*;
 import static com.github.davsx.llearn.LLearnConstants.LEARN_CARD_KEYBOARD_COLUMNS;
 import static com.github.davsx.llearn.LLearnConstants.SPANISH_LOWERCASE_LETTERS;
 
-public class KeyboardKeyChooser {
+class KeyboardKeyChooser {
     private static final String TAG = "KeyboardKeyChooser";
 
-    public static List<List<Character>> choose(String word) {
+    static List<List<Character>> choose(String word) {
         Log.d(TAG, "Choosing keys for word "+word);
 
         Set<Character> uniqueChars = new HashSet<>();
@@ -43,21 +43,16 @@ public class KeyboardKeyChooser {
         }
 
         int maxIndex = SPANISH_LOWERCASE_LETTERS.length;
-        Random rng = new Random();
-        rng.setSeed(System.currentTimeMillis());
+        Random rng = new Random(System.currentTimeMillis());
 
         while (uniqueChars.size() != targetKeyNumber) {
             int index = rng.nextInt(maxIndex);
             uniqueChars.add(SPANISH_LOWERCASE_LETTERS[index]);
         }
 
-
-        ArrayList<Character> keys = new ArrayList<>();
-        keys.addAll(uniqueChars);
+        ArrayList<Character> keys = new ArrayList<>(uniqueChars);
         Collections.shuffle(keys);
 
-        List<List<Character>> result = Lists.partition(keys, LEARN_CARD_KEYBOARD_COLUMNS);
-
-        return result;
+        return Lists.partition(keys, LEARN_CARD_KEYBOARD_COLUMNS);
     }
 }

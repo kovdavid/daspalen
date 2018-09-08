@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import com.github.davsx.llearn.R;
 import com.github.davsx.llearn.activities.LearnCard.LearnCardActivity;
 import com.github.davsx.llearn.activities.ManageCards.ManageCardsActivity;
@@ -17,22 +15,17 @@ public class MainActivity extends Activity {
 
     private static final String TAG = "MainActivity";
 
-    @BindView(R.id.button_word_list)
-    Button btnWordList;
-    @BindView(R.id.button_create_anki_card)
-    Button createAnkiWordButton;
-    @BindView(R.id.button_learn_cards)
-    Button btnLearnCards;
-    @BindView(R.id.button_translate_spanishdict)
-    Button btnTranslateSpanishDict;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
 
         Log.d(TAG, "onCreate");
+
+        Button btnWordList = findViewById(R.id.button_word_list);
+        Button btnLearnCards = findViewById(R.id.button_learn_cards);
+        Button btnCreateAnkiWord = findViewById(R.id.button_create_anki_card);
+        Button btnTranslateSpanishDict = findViewById(R.id.button_translate_spanishdict);
 
         btnWordList.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,7 +43,7 @@ public class MainActivity extends Activity {
             }
         });
 
-        createAnkiWordButton.setOnClickListener(new View.OnClickListener() {
+        btnCreateAnkiWord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent sendIntent = new Intent();

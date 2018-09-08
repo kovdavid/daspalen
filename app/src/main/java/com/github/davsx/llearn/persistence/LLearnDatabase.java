@@ -1,8 +1,6 @@
 package com.github.davsx.llearn.persistence;
 
-import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
-import android.content.Context;
 import com.github.davsx.llearn.persistence.dao.CardDao;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
 

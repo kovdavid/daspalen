@@ -30,8 +30,8 @@ public class KindleImportActivity extends Activity {
         String action = intent.getAction();
         String type = intent.getType();
 
-        if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type.equals("message/rfc822")) {
-            new KindleImportService(this, intent, cardRepository).doImport();
+        if (action.equals(Intent.ACTION_SEND_MULTIPLE) && type.equals("message/rfc822")) {
+            KindleImportService.doImport(this, intent, cardRepository);
         }
 
         Intent i = new Intent(this, ManageCardsActivity.class);

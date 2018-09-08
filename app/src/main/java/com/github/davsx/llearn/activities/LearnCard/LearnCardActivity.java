@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import com.github.davsx.llearn.LLearnApplication;
@@ -18,8 +17,6 @@ import javax.inject.Inject;
 public class LearnCardActivity extends FragmentActivity implements AnswerReceiver {
     private static final String TAG = "LearnCardActivity";
 
-    private FragmentManager fragmentManager;
-
     @Inject
     LearnCardService learnCardService;
 
@@ -31,8 +28,6 @@ public class LearnCardActivity extends FragmentActivity implements AnswerReceive
         Log.d(TAG, "onCreate");
 
         ((LLearnApplication) getApplication()).getApplicationComponent().inject(this);
-
-        fragmentManager = getSupportFragmentManager();
 
         boolean sessionStarted = learnCardService.startSession();
 
@@ -69,7 +64,7 @@ public class LearnCardActivity extends FragmentActivity implements AnswerReceive
     }
 
     private void renderFragment(Fragment fragment) {
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_card, fragment);
         fragmentTransaction.commit();
     }

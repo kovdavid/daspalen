@@ -1,13 +1,11 @@
 package com.github.davsx.llearn.service.LearnCard;
 
 import android.net.Uri;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class LearnCardData {
-    private static final String TAG = "LearnCardData";
 
     private String frontText;
     private String backText;
@@ -17,7 +15,6 @@ public class LearnCardData {
     private List<List<Character>> keyboardKeys;
 
     public LearnCardData(String frontText, String backText) {
-        Log.d(TAG, "creating object");
         this.frontText = frontText;
         this.backText = backText;
     }

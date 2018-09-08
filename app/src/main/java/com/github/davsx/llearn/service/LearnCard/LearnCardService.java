@@ -2,6 +2,8 @@ package com.github.davsx.llearn.service.LearnCard;
 
 import com.github.davsx.llearn.persistence.entity.CardEntity;
 import com.github.davsx.llearn.persistence.repository.CardRepository;
+import info.debatty.java.stringsimilarity.Levenshtein;
+import info.debatty.java.stringsimilarity.StringSimilarityInterface;
 
 import java.util.*;
 
@@ -96,9 +98,5 @@ public class LearnCardService {
     public void processAnswer(String answer) {
         learnCardsIndex++;
         setUpNextCard();
-    }
-
-    public void setCardRepository(CardRepository cardRepository) {
-        this.cardRepository = cardRepository;
     }
 }

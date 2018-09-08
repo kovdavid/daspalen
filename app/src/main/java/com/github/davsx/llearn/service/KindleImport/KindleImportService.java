@@ -3,6 +3,7 @@ package com.github.davsx.llearn.service.KindleImport;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
 import com.github.davsx.llearn.persistence.repository.CardRepository;
 import org.jsoup.Jsoup;
@@ -15,20 +16,13 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 public class KindleImportService {
-    private Intent intent;
-    private Context context;
-    private CardRepository cardRepository;
 
-    public KindleImportService(Context context, Intent intent, CardRepository cardRepository) {
-        this.intent = intent;
-        this.context = context;
-        this.cardRepository = cardRepository;
-    }
+    private static final String TAG = "KindleImportService";
 
-    public ArrayList<String> doImport() {
+    public static void doImport(Context context, Intent intent, CardRepository cardRepository) {
         ArrayList<Uri> uris = intent.getExtras().getParcelableArrayList(Intent.EXTRA_STREAM);
         if (uris.size() != 1) {
-            return null;
+            return;
         }
 
         Uri uri = uris.get(0);
@@ -44,7 +38,7 @@ public class KindleImportService {
             }
             html = builder.toString();
         } catch (Exception e) {
-            return null;
+            return;
         }
 
         ArrayList<String> newBackStrings = new ArrayList<>();
@@ -59,6 +53,7 @@ public class KindleImportService {
         if (newBackStrings.size() > 0) {
             ArrayList<CardEntity> newCards = new ArrayList<>();
             for (String back : newBackStrings) {
+                Log.i(TAG, "importing Card with text "+back);
                 CardEntity card = new CardEntity()
                         .setCreatedAt(System.currentTimeMillis())
                         .setBack(back);
@@ -66,6 +61,5 @@ public class KindleImportService {
             }
             cardRepository.saveMany(newCards);
         }
-        return newBackStrings;
     }
 }
