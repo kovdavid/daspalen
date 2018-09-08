@@ -1,8 +1,5 @@
 package com.github.davsx.llearn.service.LearnCard;
 
-import com.github.davsx.llearn.data.LearnCard.CardTypeEnum;
-import com.github.davsx.llearn.data.LearnCard.KeyboardKeyChooser;
-import com.github.davsx.llearn.data.LearnCard.LearnCardData;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
 import com.github.davsx.llearn.persistence.repository.CardRepository;
 
@@ -35,14 +32,15 @@ public class LearnCardService {
     // After using a card, it's weight could be recalculated, so that it would be used before or after a card with score 7
 
     // 0 1 1 2 3 5 8 13 21 34 55 89 144
-
     public LearnCardService(CardRepository cardRepository) {
         this.cardRepository = cardRepository;
-        currentCardType = CardTypeEnum.NONE;
-        learnCardsIndex = 0;
     }
 
     public boolean startSession() {
+
+        currentCardType = CardTypeEnum.NONE;
+        learnCardsIndex = 0;
+
         learnCards = (ArrayList<CardEntity>) cardRepository.getAllValidCards();
 
         if (learnCards.size() > 0) {
@@ -98,5 +96,9 @@ public class LearnCardService {
     public void processAnswer(String answer) {
         learnCardsIndex++;
         setUpNextCard();
+    }
+
+    public void setCardRepository(CardRepository cardRepository) {
+        this.cardRepository = cardRepository;
     }
 }
