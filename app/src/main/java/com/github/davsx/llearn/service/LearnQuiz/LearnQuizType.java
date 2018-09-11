@@ -1,6 +1,6 @@
-package com.github.davsx.llearn.service.LearnCard;
+package com.github.davsx.llearn.service.LearnQuiz;
 
-public enum CardTypeEnum {
+public enum LearnQuizType {
     NONE,
     SHOW_CARD,
     SHOW_CARD_WITH_IMAGE,

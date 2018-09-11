@@ -21,11 +21,6 @@ public class ManageCardsActivity extends Activity {
 
     private static final String TAG = "ManageCardsActivity";
 
-    @BindView(R.id.recycler_view)
-    RecyclerView recyclerView;
-    @BindView(R.id.create_card_button)
-    FloatingActionButton createCardButton;
-
     private ManageCardsAdapter adapter;
 
     @Inject
@@ -35,16 +30,17 @@ public class ManageCardsActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_cards);
-        ButterKnife.bind(this);
 
         Log.d(TAG, "onCreate");
 
         ((LLearnApplication) getApplication()).getApplicationComponent().inject(this);
 
         adapter = new ManageCardsAdapter(this, manageCardsService);
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
+        FloatingActionButton createCardButton = findViewById(R.id.create_card_button);
         createCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

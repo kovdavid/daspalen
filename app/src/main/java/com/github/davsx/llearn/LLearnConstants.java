@@ -1,11 +1,7 @@
 package com.github.davsx.llearn;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class LLearnConstants {
     public static final Integer MAX_CARD_LEARN_SCORE = 8;
-    public static final List<Integer> LEARN_CARD_PLANNED_USAGES = Arrays.asList(3, 3, 3, 3, 2, 2, 2, 1, 1);
 
     public static final Integer LEARN_SESSION_MAX_CARDS = 10;
     public static final Integer LEARN_SESSION_MAX_ROUNDS = 20;

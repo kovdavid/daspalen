@@ -7,7 +7,7 @@ import com.github.davsx.llearn.activities.KindleImport.KindleImportActivity;
 import com.github.davsx.llearn.activities.LearnCard.LearnCardActivity;
 import com.github.davsx.llearn.activities.Main.MainActivity;
 import com.github.davsx.llearn.activities.ManageCards.ManageCardsActivity;
-import com.github.davsx.llearn.service.LearnCard.LearnCardService;
+import com.github.davsx.llearn.service.LearnQuiz.LearnQuizService;
 import com.github.davsx.llearn.service.ManageCards.ManageCardsService;
 import dagger.Component;
 
@@ -20,7 +20,7 @@ import javax.inject.Singleton;
 })
 public interface ApplicationComponent {
 
-    LearnCardService getLearnCardService();
+    LearnQuizService getLearnCardService();
 
     ManageCardsService getManageCardsService();
 

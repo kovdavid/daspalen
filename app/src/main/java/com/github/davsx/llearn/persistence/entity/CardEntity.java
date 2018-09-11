@@ -5,17 +5,18 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
+import com.github.davsx.llearn.LLearnConstants;
 
 @Entity(
         tableName = "cards",
         indices = {
-                @Index(value = {"front"}),
-                @Index(value = {"back"}),
+                @Index(value = {"type"})
         }
 )
 public class CardEntity {
-    public static final Integer TYPE_LEARN= 0;
-    public static final Integer TYPE_REVIEW = 1;
+    public static final Integer TYPE_INCOMPLETE = 0;
+    public static final Integer TYPE_LEARN = 1;
+    public static final Integer TYPE_REVIEW = 2;
 
     @PrimaryKey
     @ColumnInfo(name = "id_card")
@@ -31,13 +32,7 @@ public class CardEntity {
 
     @NonNull
     @ColumnInfo(name = "type")
-    public Integer type = TYPE_LEARN;
-
-    @ColumnInfo(name = "back_word_count")
-    public Integer backWordCount;
-
-    @ColumnInfo(name = "back_length")
-    public Integer backLength;
+    public Integer type = TYPE_INCOMPLETE;
 
     @ColumnInfo(name = "learn_score")
     public Integer learnScore = 0;
@@ -48,14 +43,36 @@ public class CardEntity {
     @ColumnInfo(name = "created_at")
     public Long createdAt;
 
-    public CardEntity() {}
-
-    public Long getId() {
-        return id;
+    public CardEntity() {
     }
 
-    public CardEntity setId(Long id) {
-        this.id = id;
+    public void handleCorrectLearnQuizAnswer() {
+        this.learnScore = Math.max(this.learnScore + 1, LLearnConstants.MAX_CARD_LEARN_SCORE);
+        this.learnUpdateAt = System.currentTimeMillis();
+        if (this.learnScore >= LLearnConstants.MAX_CARD_LEARN_SCORE) {
+            this.type = TYPE_REVIEW;
+        }
+    }
+
+    @NonNull
+    public String getBack() {
+        return back;
+    }
+
+    public CardEntity setBack(@NonNull String back) {
+        this.back = back;
+        if (this.type.equals(TYPE_INCOMPLETE) && this.front.length() > 0 && this.back.length() > 0) {
+            this.type = TYPE_LEARN;
+        }
+        return this;
+    }
+
+    public Long getCreatedAt() {
+        return createdAt;
+    }
+
+    public CardEntity setCreatedAt(Long createdAt) {
+        this.createdAt = createdAt;
         return this;
     }
 
@@ -66,37 +83,19 @@ public class CardEntity {
 
     public CardEntity setFront(@NonNull String front) {
         this.front = front;
+        if (this.type.equals(TYPE_INCOMPLETE) && this.front.length() > 0 && this.back.length() > 0) {
+            this.type = TYPE_LEARN;
+        }
         return this;
     }
 
-    @NonNull
-    public String getBack() {
-        return back;
+    public Long getId() {
+        return id;
     }
 
-    public CardEntity setBack(@NonNull String back) {
-        this.back = back;
-        this.backLength = back.length();
-        this.backWordCount = back.split("\\s+").length;
+    public CardEntity setId(Long id) {
+        this.id = id;
         return this;
-    }
-
-    @NonNull
-    public Integer getType() {
-        return type;
-    }
-
-    public CardEntity setType(@NonNull Integer type) {
-        this.type = type;
-        return this;
-    }
-
-    public Integer getBackWordCount() {
-        return backWordCount;
-    }
-
-    public Integer getBackLength() {
-        return backLength;
     }
 
     public Integer getLearnScore() {
@@ -117,12 +116,13 @@ public class CardEntity {
         return this;
     }
 
-    public Long getCreatedAt() {
-        return createdAt;
+    @NonNull
+    public Integer getType() {
+        return type;
     }
 
-    public CardEntity setCreatedAt(Long createdAt) {
-        this.createdAt = createdAt;
+    public CardEntity setType(@NonNull Integer type) {
+        this.type = type;
         return this;
     }
 }

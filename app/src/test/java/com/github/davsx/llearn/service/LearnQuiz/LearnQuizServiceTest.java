@@ -1,4 +1,4 @@
-package com.github.davsx.llearn.service.LearnCard;
+package com.github.davsx.llearn.service.LearnQuiz;
 
 import org.junit.Test;
 
@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
-public class LearnCardServiceTest {
+public class LearnQuizServiceTest {
 
     private ArrayList<SchedulableCard> schedule;
     private ArrayList<SchedulableCard> cards;

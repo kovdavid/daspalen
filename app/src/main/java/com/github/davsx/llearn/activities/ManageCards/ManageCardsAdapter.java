@@ -70,10 +70,6 @@ public class ManageCardsAdapter extends RecyclerView.Adapter<ManageCardsAdapter.
             textViewLearnScore.setOnClickListener(this);
         }
 
-        public void setCard(CardEntity card) {
-            this.card = card;
-        }
-
         @Override
         public void onClick(View view) {
             EditCardDialog editCardDialog = new EditCardDialog(context, dataProvider, card);
@@ -84,6 +80,10 @@ public class ManageCardsAdapter extends RecyclerView.Adapter<ManageCardsAdapter.
                 }
             });
             editCardDialog.show();
+        }
+
+        public void setCard(CardEntity card) {
+            this.card = card;
         }
     }
 }

@@ -8,9 +8,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import com.github.davsx.llearn.LLearnApplication;
 import com.github.davsx.llearn.R;
-import com.github.davsx.llearn.service.LearnCard.CardTypeEnum;
-import com.github.davsx.llearn.service.LearnCard.LearnCardData;
-import com.github.davsx.llearn.service.LearnCard.LearnCardService;
+import com.github.davsx.llearn.service.LearnQuiz.LearnQuizService;
+import com.github.davsx.llearn.service.LearnQuiz.LearnQuizType;
+import com.github.davsx.llearn.service.LearnQuiz.LearnCardData;
 
 import javax.inject.Inject;
 
@@ -18,7 +18,7 @@ public class LearnCardActivity extends FragmentActivity implements AnswerReceive
     private static final String TAG = "LearnCardActivity";
 
     @Inject
-    LearnCardService learnCardService;
+    LearnQuizService learnQuizService;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,7 +29,7 @@ public class LearnCardActivity extends FragmentActivity implements AnswerReceive
 
         ((LLearnApplication) getApplication()).getApplicationComponent().inject(this);
 
-        boolean sessionStarted = learnCardService.startSession();
+        boolean sessionStarted = learnQuizService.startSession();
 
         if (sessionStarted) {
             showNextFragment();
@@ -39,20 +39,21 @@ public class LearnCardActivity extends FragmentActivity implements AnswerReceive
     }
 
     private void showNextFragment() {
-        CardTypeEnum currentCardType = learnCardService.getCurrentCardType();
-        LearnCardData data = learnCardService.getLearnCardData();
+        LearnQuizType currentCardType = learnQuizService.getCurrentCardType();
+        LearnCardData data = learnQuizService.getLearnCardData();
+
         LearnCardFragmentBase fragment = null;
-        if (currentCardType.equals(CardTypeEnum.NONE)) {
+        if (currentCardType.equals(LearnQuizType.NONE)) {
             // Learning session is finished
-        } else if (currentCardType.equals(CardTypeEnum.SHOW_CARD)) {
+        } else if (currentCardType.equals(LearnQuizType.SHOW_CARD)) {
             fragment = new FragmentShowCard();
-        } else if (currentCardType.equals(CardTypeEnum.SHOW_CARD_WITH_IMAGE)) {
+        } else if (currentCardType.equals(LearnQuizType.SHOW_CARD_WITH_IMAGE)) {
             fragment = new FragmentShowCardWithImage();
-        } else if (currentCardType.equals(CardTypeEnum.KEYBOARD_INPUT)) {
+        } else if (currentCardType.equals(LearnQuizType.KEYBOARD_INPUT)) {
             fragment = new FragmentKeyboardInput();
-        } else if (currentCardType.equals(CardTypeEnum.CHOICE_1of4)) {
+        } else if (currentCardType.equals(LearnQuizType.CHOICE_1of4)) {
             fragment = new FragmentChoice1of4();
-        } else if (currentCardType.equals(CardTypeEnum.CHOICE_1of4_REVERSE)) {
+        } else if (currentCardType.equals(LearnQuizType.CHOICE_1of4_REVERSE)) {
             fragment = new FragmentChoice1of4();
         } else {
             // Not yet implemented
@@ -73,7 +74,7 @@ public class LearnCardActivity extends FragmentActivity implements AnswerReceive
 
     @Override
     public void onAnswer(String answer) {
-        learnCardService.processAnswer(answer);
+        learnQuizService.processAnswer(answer);
         showNextFragment();
     }
 }

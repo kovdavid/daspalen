@@ -1,7 +1,7 @@
 package com.github.davsx.llearn.activities.LearnCard;
 
 import android.support.v4.app.Fragment;
-import com.github.davsx.llearn.service.LearnCard.LearnCardData;
+import com.github.davsx.llearn.service.LearnQuiz.LearnCardData;
 
 public abstract class LearnCardFragmentBase extends Fragment {
     LearnCardData learnCardData;
