@@ -5,7 +5,7 @@ import android.util.SparseArray;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LearnQuizSchedule {
+public class LearnQuizSchedule implements LearnQuizCardScheduler {
 
     private SparseArray<LearnQuizCard> schedule;
     private List<LearnQuizCard> cardQueue;
@@ -19,7 +19,8 @@ public class LearnQuizSchedule {
         this.maxTick = 0;
     }
 
-    void scheduleCardAfterOffset(LearnQuizCard card, int offset) {
+    @Override
+    public void scheduleAfterOffset(LearnQuizCard card, int offset) {
         int tick = nextTick + offset - 1;
         while (schedule.get(tick) != null) {
             tick++; // Find the first free tick number
@@ -30,7 +31,8 @@ public class LearnQuizSchedule {
         schedule.put(tick, card);
     }
 
-    void scheduleCardToExactOffset(LearnQuizCard card, int offset) {
+    @Override
+    public void scheduleToExactOffset(LearnQuizCard card, int offset) {
         int tick = nextTick + offset - 1;
         int freeTick = 0;
         for (int t = tick; t <= maxTick + 1; t++) {

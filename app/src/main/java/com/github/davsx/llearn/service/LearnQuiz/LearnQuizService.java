@@ -4,7 +4,9 @@ import com.github.davsx.llearn.LLearnConstants;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
 import com.github.davsx.llearn.persistence.repository.CardRepository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 // Rules:
 // * Max 5 new cards
@@ -27,23 +29,25 @@ public class LearnQuizService {
     private CardRepository cardRepository;
     private LearnQuizSchedule learnQuizSchedule;
     private List<LearnQuizCard> cards;
-    private List<CardEntity> randomCards;
+    private Integer totalRounds;
 
     public LearnQuizService(CardRepository cardRepository) {
         this.cardRepository = cardRepository;
+        this.totalRounds = 0;
     }
 
     public boolean startSession() {
         this.cards = prepareCards();
 
+        if (this.cards == null) {
+            return false; // Nothing new to learn
+        }
+
         ArrayList<LearnQuizCard> cardQueue = new ArrayList<>(this.cards);
         this.learnQuizSchedule = new LearnQuizSchedule(cardQueue);
 
-        if (this.cards == null) {
-            return false;
-        }
 
-        this.randomCards = cardRepository.getRandomCards(LLearnConstants.LEARN_SESSION_RANDOM_CARDS_COUNT);
+        List<CardEntity> randomCards = cardRepository.getRandomCards(LLearnConstants.LEARN_SESSION_RANDOM_CARDS_COUNT);
 
         setUpNextCard();
 
@@ -64,7 +68,6 @@ public class LearnQuizService {
 
         List<LearnQuizCard> chosenCards = new ArrayList<>();
 
-        int roundCounter = 0;
         int newCardCounter = 0;
         for (CardEntity card : learnCandidates) {
             if (card.getLearnScore() == 0) {
@@ -76,9 +79,9 @@ public class LearnQuizService {
 
             LearnQuizCard learnQuizCard = new LearnQuizCard(cardRepository, card);
             chosenCards.add(learnQuizCard);
-            roundCounter += learnQuizCard.getPlannedRounds();
+            totalRounds += learnQuizCard.getPlannedRounds();
 
-            if (roundCounter >= LLearnConstants.LEARN_SESSION_MAX_ROUNDS) {
+            if (totalRounds >= LLearnConstants.LEARN_SESSION_MAX_ROUNDS) {
                 break;
             }
             if (chosenCards.size() >= LLearnConstants.LEARN_SESSION_MAX_CARDS) {
@@ -92,5 +95,17 @@ public class LearnQuizService {
     }
 
     public void processAnswer(String answer) {
+    }
+
+    public Integer getCompletedRounds() {
+        Integer completedRounds = 0;
+        for (LearnQuizCard card : cards) {
+            completedRounds += card.getCompletedRounds();
+        }
+        return completedRounds;
+    }
+
+    public Integer getTotalRounds() {
+        return totalRounds;
     }
 }

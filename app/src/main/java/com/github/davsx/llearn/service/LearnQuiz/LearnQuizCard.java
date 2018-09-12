@@ -12,7 +12,7 @@ public class LearnQuizCard {
     private CardRepository cardRepository;
     private CardEntity cardEntity;
     private Boolean doShowCard;
-    private Integer roundsCounter;
+    private Integer completedRounds;
     private Integer plannedRounds;
     private Random rng;
 
@@ -22,13 +22,13 @@ public class LearnQuizCard {
         this.cardRepository = cardRepository;
         this.cardEntity = cardEntity;
         this.doShowCard = cardEntity.getLearnScore() == 0;
-        this.roundsCounter = 0;
+        this.completedRounds = 0;
         this.plannedRounds = calculatePlannedRounds();
 
         this.rng = new Random(System.currentTimeMillis());
     }
 
-    public void handleAnswer(LearnQuizSchedule schedule, String answer) {
+    public void handleAnswer(LearnQuizCardScheduler scheduler, String answer) {
         boolean isCorrectAnswer = evaluateAnswer(answer);
 
         if (isCorrectAnswer) {
@@ -36,12 +36,13 @@ public class LearnQuizCard {
                 if (doShowCard) {
                     doShowCard = false;
                 } else {
-                    roundsCounter++;
+                    completedRounds++;
                     cardEntity.handleCorrectLearnQuizAnswer();
+                    cardRepository.save(cardEntity);
                 }
                 Integer scheduleOffset = calculateScheduleOffset();
                 if (scheduleOffset > 0) {
-                    schedule.scheduleCardAfterOffset(this, scheduleOffset);
+                    scheduler.scheduleAfterOffset(this, scheduleOffset);
                 }
             } else {
                 if (doShowCard) {
@@ -51,27 +52,27 @@ public class LearnQuizCard {
                 }
                 Integer scheduleOffset = calculateScheduleOffset();
                 if (scheduleOffset > 0) {
-                    schedule.scheduleCardToExactOffset(this, scheduleOffset);
+                    scheduler.scheduleToExactOffset(this, scheduleOffset);
                 }
             }
         } else {
             gotBadAnswer = true;
             doShowCard = true;
-            schedule.scheduleCardToExactOffset(this, 1);
+            scheduler.scheduleToExactOffset(this, 1);
         }
     }
 
     private Integer calculateScheduleOffset() {
-        if (roundsCounter >= plannedRounds) {
+        if (completedRounds >= plannedRounds) {
             return 0;
         }
         if (gotBadAnswer) {
             return 2;
         }
 
-        if (roundsCounter == 0) {
+        if (completedRounds == 0) {
             return 2;
-        } else if (roundsCounter == 1) {
+        } else if (completedRounds == 1) {
             return Math.round(4 + rng.nextInt(1));
         } else {
             return Math.round(8 + rng.nextInt(8));
@@ -102,12 +103,8 @@ public class LearnQuizCard {
     }
 
     private LearnQuizType getCardType() {
-        if (doShowCard) {
-            return LearnQuizType.SHOW_CARD;
-        }
-        if (gotBadAnswer) {
-            return LearnQuizType.CHOICE_1of4;
-        }
+        if (doShowCard) return LearnQuizType.SHOW_CARD;
+        if (gotBadAnswer) return LearnQuizType.CHOICE_1of4;
 
         if (cardEntity.getLearnScore() == 0) return LearnQuizType.CHOICE_1of4;
         if (cardEntity.getLearnScore() == 1) return LearnQuizType.CHOICE_1of4_REVERSE;
@@ -121,6 +118,10 @@ public class LearnQuizCard {
         if (cardEntity.getLearnScore() >= 9) return LearnQuizType.KEYBOARD_INPUT;
 
         return LearnQuizType.NONE;
+    }
+
+    Integer getCompletedRounds() {
+        return completedRounds;
     }
 
     Integer getPlannedRounds() {
