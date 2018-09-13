@@ -1,4 +1,4 @@
-package com.github.davsx.llearn.activities.LearnCard;
+package com.github.davsx.llearn.activities.LearnQuiz;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,10 +12,11 @@ import android.widget.TextView;
 import com.github.davsx.llearn.R;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class FragmentChoice1of4 extends LearnCardFragmentBase implements View.OnClickListener {
+public class FragmentChoice1of4 extends LearnQuizFragmentBase implements View.OnClickListener {
     private TextView textViewFront;
     private ArrayList<Button> choiceButtons;
 
@@ -43,14 +44,14 @@ public class FragmentChoice1of4 extends LearnCardFragmentBase implements View.On
         super.onResume();
 
         String guess;
-        if (learnCardData.isReversed()) {
-            guess = learnCardData.getFrontText();
+        if (learnQuizData.isReversed()) {
+            guess = learnQuizData.getFrontText();
         } else {
-            guess = learnCardData.getBackText();
+            guess = learnQuizData.getBackText();
         }
         textViewFront.setText(guess);
 
-        ArrayList<String> choices = learnCardData.getChoices();
+        List<String> choices = learnQuizData.getChoices();
         for (int i = 0; i < 4; i++) {
             Button btn = choiceButtons.get(i);
             btn.setText(choices.get(i));
@@ -63,10 +64,10 @@ public class FragmentChoice1of4 extends LearnCardFragmentBase implements View.On
         final String answer = btn.getText().toString();
 
         String correctAnswer;
-        if (learnCardData.isReversed()) {
-            correctAnswer = learnCardData.getBackText();
+        if (learnQuizData.isReversed()) {
+            correctAnswer = learnQuizData.getBackText();
         } else {
-            correctAnswer = learnCardData.getFrontText();
+            correctAnswer = learnQuizData.getFrontText();
         }
 
         if (answer.equals(correctAnswer)) {

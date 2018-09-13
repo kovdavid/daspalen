@@ -1,4 +1,4 @@
-package com.github.davsx.llearn.activities.LearnCard;
+package com.github.davsx.llearn.activities.LearnQuiz;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class FragmentKeyboardInput extends LearnCardFragmentBase implements View.OnClickListener {
+public class FragmentKeyboardInput extends LearnQuizFragmentBase implements View.OnClickListener {
     private TextView textViewFront;
     private EditText textViewInput;
     private Button buttonConfirm;
@@ -43,7 +43,7 @@ public class FragmentKeyboardInput extends LearnCardFragmentBase implements View
 
         LayoutInflater inflater = getLayoutInflater();
 
-        for (final List<Character> row : learnCardData.getKeyboardKeys()) {
+        for (final List<Character> row : learnQuizData.getKeyboardKeys()) {
             View keyboardRowView = inflater.inflate(R.layout.fragment_learn_keyboard_input_button_row, keyboardTable, false);
             LinearLayout linearLayout = keyboardRowView.findViewById(R.id.keyboard_row);
             for (int i = 0; i < row.size(); i++) {
@@ -82,13 +82,13 @@ public class FragmentKeyboardInput extends LearnCardFragmentBase implements View
 
         keyboardTable.addView(spaceBarView);
 
-        textViewFront.setText(learnCardData.getFrontText());
+        textViewFront.setText(learnQuizData.getFrontText());
     }
 
     @Override
     public void onClick(View v) {
         final String answer = textViewInput.getText().toString();
-        String correctAnswer = learnCardData.getBackText();
+        String correctAnswer = learnQuizData.getBackText();
 
         int color;
         if (answer.equals(correctAnswer)) {

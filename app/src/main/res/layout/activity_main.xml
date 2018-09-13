@@ -42,7 +42,7 @@
                 android:theme="@style/AppTheme.ButtonConfirm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Learn Cards"
+                android:text="Learn New Cards"
                 android:id="@+id/button_learn_cards"
                 />
 

@@ -13,6 +13,7 @@ import static com.github.davsx.llearn.LLearnConstants.LEARN_CARD_KEYBOARD_COLUMN
 import static com.github.davsx.llearn.LLearnConstants.SPANISH_LOWERCASE_LETTERS;
 
 public class LearnQuizData {
+    private LearnQuizType learnQuizType;
     private String frontText;
     private String backText;
     private Uri imageUri;
@@ -20,13 +21,14 @@ public class LearnQuizData {
     private boolean isReversed = false;
     private List<List<Character>> keyboardKeys;
 
-    public static LearnQuizData Build(LearnQuizType quizType, CardEntity card, List<CardEntity> randomCards) {
+    public static LearnQuizData build(LearnQuizType quizType, CardEntity card, List<CardEntity> randomCards) {
         if (quizType.equals(LearnQuizType.NONE)) {
             return null;
         }
         LearnQuizData data = new LearnQuizData();
         data.setFrontText(card.getFront());
         data.setBackText(card.getBack());
+        data.setLearnQuizType(quizType);
         if (quizType.equals(LearnQuizType.SHOW_CARD_WITH_IMAGE)) {
             data.setImageUri(null);
         } else if (quizType.equals(LearnQuizType.CHOICE_1of4)) {
@@ -167,6 +169,14 @@ public class LearnQuizData {
 
     public void setKeyboardKeys(List<List<Character>> keyboardKeys) {
         this.keyboardKeys = keyboardKeys;
+    }
+
+    public LearnQuizType getLearnQuizType() {
+        return learnQuizType;
+    }
+
+    public void setLearnQuizType(LearnQuizType learnQuizType) {
+        this.learnQuizType = learnQuizType;
     }
 
     public boolean isReversed() {

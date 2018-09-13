@@ -9,7 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import com.github.davsx.llearn.R;
-import com.github.davsx.llearn.activities.LearnCard.LearnCardActivity;
+import com.github.davsx.llearn.activities.LearnQuiz.LearnQuizActivity;
 import com.github.davsx.llearn.activities.ManageCards.ManageCardsActivity;
 
 import java.util.Locale;
@@ -42,7 +42,7 @@ public class MainActivity extends Activity {
         btnLearnCards.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, LearnCardActivity.class);
+                Intent i = new Intent(MainActivity.this, LearnQuizActivity.class);
                 MainActivity.this.startActivity(i);
             }
         });

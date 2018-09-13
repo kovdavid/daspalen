@@ -1,4 +1,4 @@
-package com.github.davsx.llearn.activities.LearnCard;
+package com.github.davsx.llearn.activities.LearnQuiz;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -7,29 +7,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import com.github.davsx.llearn.R;
 
-public class FragmentShowCardWithImage extends LearnCardFragmentBase {
+public class FragmentShowCard extends LearnQuizFragmentBase {
     private TextView textViewFront;
     private TextView textViewBack;
-    private ImageView imageView;
+    private Button buttonNext;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_learn_show_card_with_image, container, false);
+        View view = inflater.inflate(R.layout.fragment_learn_show_card, container, false);
 
         textViewFront = view.findViewById(R.id.textview_front);
         textViewBack = view.findViewById(R.id.textview_back);
-        imageView = view.findViewById(R.id.image_view);
+        buttonNext = view.findViewById(R.id.button_next);
 
-        Button buttonNext = view.findViewById(R.id.button_next);
         buttonNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                answerReceiver.onAnswer(learnCardData.getBackText());
+                // This fragment only shows the card, so we always send a correct answer
+                answerReceiver.onAnswer(learnQuizData.getBackText());
             }
         });
 
@@ -39,10 +38,7 @@ public class FragmentShowCardWithImage extends LearnCardFragmentBase {
     @Override
     public void onResume() {
         super.onResume();
-        textViewFront.setText(learnCardData.getFrontText());
-        textViewBack.setText(learnCardData.getBackText());
-        if (learnCardData.getImageUri() != null) {
-            imageView.setImageURI(learnCardData.getImageUri());
-        }
+        textViewFront.setText(learnQuizData.getFrontText());
+        textViewBack.setText(learnQuizData.getBackText());
     }
 }

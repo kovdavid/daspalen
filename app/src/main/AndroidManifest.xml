@@ -22,7 +22,7 @@
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activities.LearnCard.LearnCardActivity">
+        <activity android:name=".activities.LearnQuiz.LearnQuizActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>

@@ -29,7 +29,9 @@ public class LearnQuizService {
     private CardRepository cardRepository;
     private LearnQuizSchedule learnQuizSchedule;
     private List<LearnQuizCard> cards;
+    private List<CardEntity> randomCards;
     private Integer totalRounds;
+    private LearnQuizCard currentCard;
 
     public LearnQuizService(CardRepository cardRepository) {
         this.cardRepository = cardRepository;
@@ -46,16 +48,23 @@ public class LearnQuizService {
         ArrayList<LearnQuizCard> cardQueue = new ArrayList<>(this.cards);
         this.learnQuizSchedule = new LearnQuizSchedule(cardQueue);
 
+        this.randomCards = cardRepository.getRandomCards(LLearnConstants.LEARN_SESSION_RANDOM_CARDS_COUNT);
 
-        List<CardEntity> randomCards = cardRepository.getRandomCards(LLearnConstants.LEARN_SESSION_RANDOM_CARDS_COUNT);
-
-        setUpNextCard();
+        prepareNextCard();
 
         return true;
     }
 
-    private void setUpNextCard() {
-        LearnQuizCard schedulableCard = learnQuizSchedule.nextCard();
+    private void prepareNextCard() {
+        currentCard = learnQuizSchedule.nextCard();
+    }
+
+    public LearnQuizData getNextCardData() {
+        if (currentCard == null) {
+            return null;
+        }
+
+        return currentCard.buildQuizData(randomCards);
     }
 
     private List<LearnQuizCard> prepareCards() {
@@ -95,6 +104,8 @@ public class LearnQuizService {
     }
 
     public void processAnswer(String answer) {
+        currentCard.handleAnswer(learnQuizSchedule, answer);
+        prepareNextCard();
     }
 
     public Integer getCompletedRounds() {

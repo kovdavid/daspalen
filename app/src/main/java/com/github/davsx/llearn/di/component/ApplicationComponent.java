@@ -1,10 +1,10 @@
 package com.github.davsx.llearn.di.component;
 
 import com.github.davsx.llearn.LLearnApplication;
+import com.github.davsx.llearn.activities.LearnQuiz.LearnQuizActivity;
 import com.github.davsx.llearn.di.module.LearnCardModule;
 import com.github.davsx.llearn.di.module.ManageCardsModule;
 import com.github.davsx.llearn.activities.KindleImport.KindleImportActivity;
-import com.github.davsx.llearn.activities.LearnCard.LearnCardActivity;
 import com.github.davsx.llearn.activities.Main.MainActivity;
 import com.github.davsx.llearn.activities.ManageCards.ManageCardsActivity;
 import com.github.davsx.llearn.service.LearnQuiz.LearnQuizService;
@@ -30,7 +30,7 @@ public interface ApplicationComponent {
 
     void inject(ManageCardsActivity activity);
 
-    void inject(LearnCardActivity activity);
+    void inject(LearnQuizActivity activity);
 
     void inject(KindleImportActivity activity);
 

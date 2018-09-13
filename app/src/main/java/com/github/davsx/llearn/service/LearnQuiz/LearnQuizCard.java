@@ -5,6 +5,7 @@ import com.github.davsx.llearn.persistence.entity.CardEntity;
 import com.github.davsx.llearn.persistence.repository.CardRepository;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.Random;
 
 public class LearnQuizCard {
@@ -100,6 +101,10 @@ public class LearnQuizCard {
             return answer.equals(cardEntity.getFront());
         }
         return true;
+    }
+
+    LearnQuizData buildQuizData(List<CardEntity> randomCards) {
+        return LearnQuizData.build(getCardType(), cardEntity, randomCards);
     }
 
     private LearnQuizType getCardType() {
