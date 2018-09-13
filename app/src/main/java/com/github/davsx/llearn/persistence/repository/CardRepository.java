@@ -5,10 +5,6 @@ import com.github.davsx.llearn.persistence.entity.CardEntity;
 import java.util.List;
 
 public interface CardRepository {
-    List<CardEntity> getAllCards();
-
-    List<CardEntity> getAllValidCards();
-
     CardEntity getCardWithId(Long id_card);
 
     CardEntity getCardWithFront(String front);
@@ -17,11 +13,15 @@ public interface CardRepository {
 
     void saveMany(List<CardEntity> cards);
 
-    List<CardEntity> getLearnCandidates();
-
     Integer cardCount();
 
     void deleteCard(CardEntity card);
 
     List<CardEntity> getRandomCards(int limit);
+
+    List<CardEntity> getAllCards();
+
+    List<CardEntity> getAllValidCards();
+
+    List<CardEntity> getLearnCandidates();
 }

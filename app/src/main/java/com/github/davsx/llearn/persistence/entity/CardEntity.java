@@ -47,7 +47,7 @@ public class CardEntity {
     }
 
     public void handleCorrectLearnQuizAnswer() {
-        this.learnScore = Math.max(this.learnScore + 1, LLearnConstants.MAX_CARD_LEARN_SCORE);
+        this.learnScore = Math.min(this.learnScore + 1, LLearnConstants.MAX_CARD_LEARN_SCORE);
         this.learnUpdateAt = System.currentTimeMillis();
         if (this.learnScore >= LLearnConstants.MAX_CARD_LEARN_SCORE) {
             this.type = TYPE_REVIEW;

@@ -60,8 +60,8 @@ public class ManageCardsAdapter extends RecyclerView.Adapter<ManageCardsAdapter.
             super(itemView);
 
             textViewIdCard = itemView.findViewById(R.id.textview_id_card);
-            textViewFront = itemView.findViewById(R.id.textview_front);
-            textViewBack = itemView.findViewById(R.id.textview_back);
+            textViewFront = itemView.findViewById(R.id.textview_quiz);
+            textViewBack = itemView.findViewById(R.id.textview_quiz);
             textViewLearnScore = itemView.findViewById(R.id.textview_learn_score);
 
             textViewIdCard.setOnClickListener(this);

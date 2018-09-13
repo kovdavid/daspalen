@@ -54,7 +54,7 @@ public class LearnQuizSchedule implements LearnQuizCardScheduler {
     }
 
     LearnQuizCard nextCard() {
-        if (cardQueue.size() == 0 || nextTick > maxTick) {
+        if (cardQueue.size() == 0 && nextTick > maxTick) {
             return null;
         }
 

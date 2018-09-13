@@ -11,23 +11,23 @@
             android:text="Front"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="8dp"
-            android:layout_marginLeft="50dp"
-            android:textSize="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="16dp"
+            android:textSize="16dp"
             />
 
     <TextView
             android:text="TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textview_front"
+            android:id="@+id/textview_quiz"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp"
             app:layout_constraintTop_toBottomOf="@+id/label_front"
             android:layout_marginTop="8dp"
-            android:textSize="30dp"
+            android:textSize="32dp"
             android:textColor="@android:color/black"
             />
 
@@ -37,10 +37,10 @@
             android:id="@+id/label_back"
             android:text="Back"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textview_front"
-            android:layout_marginTop="8dp"
-            android:layout_marginLeft="50dp"
-            android:textSize="32dp"
+            app:layout_constraintTop_toBottomOf="@+id/textview_quiz"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="16dp"
+            android:textSize="16dp"
             />
 
     <EditText
@@ -60,12 +60,12 @@
 
     <TableLayout
             android:id="@+id/keyboard_table"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edittext_input"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="8dp"
+            app:layout_constraintRight_toLeftOf="@id/button_backspace"
+            android:layout_marginTop="16dp"
             >
     </TableLayout>
 
@@ -76,22 +76,22 @@
             android:text="⌫"
             android:textSize="24sp"
             android:id="@+id/button_backspace"
-            app:layout_constraintTop_toTopOf="@+id/keyboard_table"
-            app:layout_constraintLeft_toRightOf="@+id/keyboard_table"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginRight="20dp"
+            app:layout_constraintTop_toBottomOf="@+id/edittext_input"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
             />
 
     <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="128dp"
+            android:layout_height="64dp"
             android:theme="@style/AppTheme.ButtonConfirm"
             android:text="Confirm"
             android:id="@+id/button_confirm"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="32dp"
+            android:layout_marginRight="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="32dp"/>
+            android:layout_marginBottom="16dp"
+            />
 
 </android.support.constraint.ConstraintLayout>

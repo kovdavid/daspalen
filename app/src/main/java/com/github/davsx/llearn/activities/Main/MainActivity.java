@@ -3,15 +3,19 @@ package com.github.davsx.llearn.activities.Main;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.text.format.Formatter;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import com.github.davsx.llearn.R;
 import com.github.davsx.llearn.activities.LearnQuiz.LearnQuizActivity;
 import com.github.davsx.llearn.activities.ManageCards.ManageCardsActivity;
 
+import java.net.Inet4Address;
 import java.util.Locale;
 
 public class MainActivity extends Activity {
@@ -25,11 +29,11 @@ public class MainActivity extends Activity {
 
         Log.d(TAG, "onCreate");
 
+        TextView textViewIpAddress = findViewById(R.id.textview_ip_address);
         Button btnWordList = findViewById(R.id.button_word_list);
         Button btnLearnCards = findViewById(R.id.button_learn_cards);
         Button btnCreateAnkiWord = findViewById(R.id.button_create_anki_card);
         Button btnTranslateSpanishDict = findViewById(R.id.button_translate_spanishdict);
-        Button btnTtsTest = findViewById(R.id.button_tts_test);
 
         btnWordList.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,20 +75,6 @@ public class MainActivity extends Activity {
             }
         });
 
-        final TextToSpeech tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-            }
-        });
-        tts.setLanguage(new Locale("es", "ES"));
-
-        btnTtsTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tts.speak("Manifestantes en Iraq exigen mejores servicios básicos ", TextToSpeech.QUEUE_FLUSH, null, "");
-            }
-        });
-
         // To get the origin of an intent (e.g. when we share the translation from SpanishDict back
         // to our app, use this.getReferrer().getHost() . It should return something like com.spanishdict.spanishdict
         //
@@ -104,5 +94,10 @@ public class MainActivity extends Activity {
 //                Log.e(TAG, "Failed to install TTS data, no acitivty found for " + intent + ")");
 //            }
 //        }
+
+        WifiManager wm = (WifiManager) (getApplicationContext().getSystemService(WIFI_SERVICE));
+        String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
+        textViewIpAddress.setText(ip);
+
     }
 }

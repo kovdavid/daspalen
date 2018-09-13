@@ -40,7 +40,7 @@
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:id="@+id/textview_front"
+                    android:id="@+id/textview_quiz"
                     android:text="originalText"
                     android:gravity="center_vertical"
                     android:paddingLeft="10dp"/>
@@ -48,7 +48,7 @@
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:id="@+id/textview_back"
+                    android:id="@+id/textview_quiz"
                     android:text="translatedText"
                     android:gravity="center_vertical"
                     android:paddingLeft="10dp"

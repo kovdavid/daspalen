@@ -1,9 +1,7 @@
 package com.github.davsx.llearn.persistence.repository;
 
-import android.content.Context;
 import android.util.Log;
 import com.github.davsx.llearn.LLearnConstants;
-import com.github.davsx.llearn.persistence.LLearnDatabase;
 import com.github.davsx.llearn.persistence.dao.CardDao;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
 

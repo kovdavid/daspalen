@@ -18,8 +18,8 @@ public class LearnQuizData {
     private String backText;
     private Uri imageUri;
     private List<String> choices;
-    private boolean isReversed = false;
     private List<List<Character>> keyboardKeys;
+    private Boolean isReversed = false;
 
     public static LearnQuizData build(LearnQuizType quizType, CardEntity card, List<CardEntity> randomCards) {
         if (quizType.equals(LearnQuizType.NONE)) {
@@ -34,8 +34,6 @@ public class LearnQuizData {
         } else if (quizType.equals(LearnQuizType.CHOICE_1of4)) {
             data.setChoices(findChoicesFor(data, randomCards));
         } else if (quizType.equals(LearnQuizType.CHOICE_1of4_REVERSE)) {
-            data.setFrontText(card.getBack());
-            data.setBackText(card.getFront());
             data.setReversed(true);
             data.setChoices(findChoicesFor(data, randomCards));
         } else if (quizType.equals(LearnQuizType.KEYBOARD_INPUT)) {
@@ -45,10 +43,10 @@ public class LearnQuizData {
     }
 
     private static List<String> findChoicesFor(LearnQuizData data, List<CardEntity> randomCards) {
-        String original = data.getBackText();
+        String original = data.getReversed() ? data.getFrontText() : data.getBackText();
         ArrayList<Pair<Integer, String>> candidates = new ArrayList<>();
         for (CardEntity card : randomCards) {
-            String candidate = data.isReversed() ? card.getFront() : card.getBack();
+            String candidate = data.getReversed() ? card.getFront() : card.getBack();
 
             Integer distance = Levenshtein.Distance(original, candidate);
             if (distance > 0) {
@@ -73,17 +71,19 @@ public class LearnQuizData {
             while (result.size() != 3) {
                 result.add("");
             }
+            result.add(original);
             return result;
         }
 
         Random rng = new Random(System.currentTimeMillis());
         Set<String> choices = new HashSet<>();
         while (choices.size() != 3) {
-            int index = rng.nextInt(Math.max(candidates.size(), 10));
+            int index = rng.nextInt(Math.min(candidates.size(), 10));
             choices.add(candidates.get(index).second);
         }
 
         List<String> result = new ArrayList<>(choices);
+        result.add(original);
         Collections.shuffle(result);
 
         return result;
@@ -179,11 +179,11 @@ public class LearnQuizData {
         this.learnQuizType = learnQuizType;
     }
 
-    public boolean isReversed() {
+    private Boolean getReversed() {
         return isReversed;
     }
 
-    public void setReversed(boolean reversed) {
+    private void setReversed(Boolean reversed) {
         isReversed = reversed;
     }
 }

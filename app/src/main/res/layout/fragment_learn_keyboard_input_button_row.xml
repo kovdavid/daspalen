@@ -1,23 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableRow
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
 
     <LinearLayout
             android:id="@+id/keyboard_row"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             >
 
         <include layout="@layout/fragment_learn_keyboard_input_button"/>
 
-        <include layout="@layout/fragment_learn_keyboard_input_button"/>
+        <Space
+                android:layout_weight="1"
+                android:layout_height="1dp"
+                android:layout_width="0dp"/>
 
         <include layout="@layout/fragment_learn_keyboard_input_button"/>
 
+        <Space
+                android:layout_weight="1"
+                android:layout_height="1dp"
+                android:layout_width="0dp"/>
+
         <include layout="@layout/fragment_learn_keyboard_input_button"/>
+
+        <Space
+                android:layout_weight="1"
+                android:layout_height="1dp"
+                android:layout_width="0dp"/>
+
+        <include layout="@layout/fragment_learn_keyboard_input_button"/>
+
+        <Space
+                android:layout_weight="1"
+                android:layout_height="1dp"
+                android:layout_width="0dp"/>
 
         <include layout="@layout/fragment_learn_keyboard_input_button"/>
 

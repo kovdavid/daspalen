@@ -26,7 +26,7 @@ public class FragmentKeyboardInput extends LearnQuizFragmentBase implements View
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_learn_keyboard_input, container, false);
 
-        textViewFront = rootView.findViewById(R.id.textview_front);
+        textViewFront = rootView.findViewById(R.id.textview_quiz);
         textViewInput = rootView.findViewById(R.id.edittext_input);
         buttonConfirm = rootView.findViewById(R.id.button_confirm);
         buttonBackspace = rootView.findViewById(R.id.button_backspace);
@@ -47,7 +47,7 @@ public class FragmentKeyboardInput extends LearnQuizFragmentBase implements View
             View keyboardRowView = inflater.inflate(R.layout.fragment_learn_keyboard_input_button_row, keyboardTable, false);
             LinearLayout linearLayout = keyboardRowView.findViewById(R.id.keyboard_row);
             for (int i = 0; i < row.size(); i++) {
-                Button btn = (Button) linearLayout.getChildAt(i);
+                Button btn = (Button) linearLayout.getChildAt(2*i);
                 btn.setText(row.get(i).toString());
 
                 btn.setOnClickListener(new View.OnClickListener() {
@@ -91,7 +91,9 @@ public class FragmentKeyboardInput extends LearnQuizFragmentBase implements View
         String correctAnswer = learnQuizData.getBackText();
 
         int color;
+        int timerInterval = 2000;
         if (answer.equals(correctAnswer)) {
+            timerInterval = 1000;
             color = ContextCompat.getColor(getContext(), R.color.colorGreen);
         } else {
             color = ContextCompat.getColor(getContext(), R.color.colorAccent);
@@ -103,6 +105,6 @@ public class FragmentKeyboardInput extends LearnQuizFragmentBase implements View
             public void run() {
                 answerReceiver.onAnswer(answer);
             }
-        }, 2000);
+        }, timerInterval);
     }
 }

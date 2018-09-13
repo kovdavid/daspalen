@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.widget.ProgressBar;
 import com.github.davsx.llearn.LLearnApplication;
 import com.github.davsx.llearn.R;
 import com.github.davsx.llearn.service.LearnQuiz.LearnQuizData;
@@ -20,6 +21,8 @@ public class LearnQuizActivity extends FragmentActivity implements AnswerReceive
     @Inject
     LearnQuizService learnQuizService;
 
+    private ProgressBar progressBar;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +34,9 @@ public class LearnQuizActivity extends FragmentActivity implements AnswerReceive
 
         boolean sessionStarted = learnQuizService.startSession();
 
+        progressBar = findViewById(R.id.progress_bar);
+        progressBar.setMax(learnQuizService.getTotalRounds());
+
         if (sessionStarted) {
             showNextFragment();
         } else {
@@ -39,6 +45,8 @@ public class LearnQuizActivity extends FragmentActivity implements AnswerReceive
     }
 
     private void showNextFragment() {
+        progressBar.setProgress(learnQuizService.getCompletedRounds());
+
         LearnQuizData data = learnQuizService.getNextCardData();
         if (data == null) {
             finish();
@@ -59,7 +67,7 @@ public class LearnQuizActivity extends FragmentActivity implements AnswerReceive
         } else if (learnQuizType.equals(LearnQuizType.CHOICE_1of4)) {
             fragment = new FragmentChoice1of4();
         } else if (learnQuizType.equals(LearnQuizType.CHOICE_1of4_REVERSE)) {
-            fragment = new FragmentChoice1of4();
+            fragment = new FragmentChoice1of4Reverse();
         } else {
             // Not yet implemented
         }

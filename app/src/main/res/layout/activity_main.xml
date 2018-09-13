@@ -25,6 +25,17 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"/>
 
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textview_ip_address"
+                />
+
+        <Space
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"/>
+
         <Button
                 android:theme="@style/AppTheme.ButtonConfirm"
                 android:layout_width="match_parent"
@@ -70,19 +81,6 @@
                 android:layout_height="wrap_content"
                 android:text="SpanishDict translate"
                 android:id="@+id/button_translate_spanishdict"
-                />
-
-        <Space
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"/>
-
-        <Button
-                android:theme="@style/AppTheme.ButtonConfirm"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TTS test"
-                android:id="@+id/button_tts_test"
                 />
 
         <Space
