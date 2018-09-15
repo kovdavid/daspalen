@@ -4,6 +4,7 @@ import com.github.davsx.llearn.LLearnConstants;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
 import com.github.davsx.llearn.persistence.repository.CardRepository;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
@@ -112,17 +113,19 @@ public class LearnQuizCard {
         if (gotBadAnswer) return LearnQuizType.CHOICE_1of4;
 
         if (cardEntity.getLearnScore() == 0) return LearnQuizType.CHOICE_1of4;
-        if (cardEntity.getLearnScore() == 1) return LearnQuizType.CHOICE_1of4_REVERSE;
-        if (cardEntity.getLearnScore() == 2) return LearnQuizType.KEYBOARD_INPUT;
-        if (cardEntity.getLearnScore() == 3) return LearnQuizType.CHOICE_1of4;
-        if (cardEntity.getLearnScore() == 4) return LearnQuizType.KEYBOARD_INPUT;
-        if (cardEntity.getLearnScore() == 5) return LearnQuizType.CHOICE_1of4_REVERSE;
-        if (cardEntity.getLearnScore() == 6) return LearnQuizType.CHOICE_1of4;
-        if (cardEntity.getLearnScore() == 7) return LearnQuizType.KEYBOARD_INPUT;
-        if (cardEntity.getLearnScore() == 8) return LearnQuizType.CHOICE_1of4;
-        if (cardEntity.getLearnScore() >= 9) return LearnQuizType.KEYBOARD_INPUT;
 
-        return LearnQuizType.NONE;
+        List<LearnQuizType> types = Arrays.asList(
+                LearnQuizType.CHOICE_1of4,
+                LearnQuizType.CHOICE_1of4,
+                LearnQuizType.CHOICE_1of4,
+                LearnQuizType.KEYBOARD_INPUT,
+                LearnQuizType.KEYBOARD_INPUT,
+                LearnQuizType.CHOICE_1of4_REVERSE
+        );
+
+        int typeIndex = new Random().nextInt(types.size());
+
+        return types.get(typeIndex);
     }
 
     Integer getCompletedRounds() {
