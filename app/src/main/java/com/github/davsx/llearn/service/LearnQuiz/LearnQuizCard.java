@@ -124,7 +124,7 @@ public class LearnQuizCard {
                 LearnQuizType.CHOICE_1of4_REVERSE
         );
 
-        int typeIndex = new Random().nextInt(types.size());
+        int typeIndex = new Random(System.currentTimeMillis()).nextInt(types.size());
 
         return types.get(typeIndex);
     }
