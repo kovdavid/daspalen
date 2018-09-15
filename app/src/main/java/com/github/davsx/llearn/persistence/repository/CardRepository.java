@@ -19,6 +19,8 @@ public interface CardRepository {
 
     void deleteCard(CardEntity card);
 
+    void deleteAllCards();
+
     List<CardEntity> getRandomCards(int limit);
 
     List<CardEntity> getAllCards();

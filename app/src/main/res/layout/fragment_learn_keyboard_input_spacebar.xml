@@ -6,7 +6,7 @@
         android:layout_height="wrap_content"
         android:minWidth="0dp"
         android:textSize="24sp"
-        android:text="╘══════╛"
+        android:text=""
         android:textAlignment="center"
         android:letterSpacing="0"
         android:id="@+id/keyboard_spacebar"

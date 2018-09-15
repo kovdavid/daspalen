@@ -71,6 +71,11 @@ public class CardRepositoryImpl implements CardRepository {
     }
 
     @Override
+    public void deleteAllCards() {
+        cardDao.deleteAllCards();
+    }
+
+    @Override
     public List<CardEntity> getRandomCards(int limit) {
         return cardDao.getRandomCards(limit);
     }

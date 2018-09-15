@@ -16,6 +16,9 @@ public interface CardDao {
     @Delete()
     void delete(CardEntity card);
 
+    @Query("DELETE FROM cards")
+    void deleteAllCards();
+
     @Query("SELECT count(*) FROM cards WHERE type = 1")
     Integer learnableCardCount();
 

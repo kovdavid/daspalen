@@ -7,4 +7,5 @@ public enum LearnQuizType {
     CHOICE_1of4,
     CHOICE_1of4_REVERSE,
     KEYBOARD_INPUT,
+    QUIZ_FINISHED
 }

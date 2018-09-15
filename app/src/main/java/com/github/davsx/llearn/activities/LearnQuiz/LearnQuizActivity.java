@@ -1,6 +1,7 @@
 package com.github.davsx.llearn.activities.LearnQuiz;
 
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -14,12 +15,16 @@ import com.github.davsx.llearn.service.LearnQuiz.LearnQuizService;
 import com.github.davsx.llearn.service.LearnQuiz.LearnQuizType;
 
 import javax.inject.Inject;
+import java.util.Locale;
 
-public class LearnQuizActivity extends FragmentActivity implements AnswerReceiver {
+public class LearnQuizActivity extends FragmentActivity implements AnswerReceiver, Speaker {
     private static final String TAG = "LearnQuizActivity";
 
     @Inject
     LearnQuizService learnQuizService;
+
+    private TextToSpeech tts;
+    private int ttsStatus = TextToSpeech.ERROR;
 
     private ProgressBar progressBar;
 
@@ -36,6 +41,14 @@ public class LearnQuizActivity extends FragmentActivity implements AnswerReceive
 
         progressBar = findViewById(R.id.progress_bar);
         progressBar.setMax(learnQuizService.getTotalRounds());
+
+        tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                ttsStatus = status;
+            }
+        });
+        tts.setLanguage(new Locale("es", "ES"));
 
         if (sessionStarted) {
             showNextFragment();
@@ -56,8 +69,8 @@ public class LearnQuizActivity extends FragmentActivity implements AnswerReceive
         LearnQuizType learnQuizType = data.getLearnQuizType();
 
         LearnQuizFragmentBase fragment = null;
-        if (learnQuizType.equals(LearnQuizType.NONE)) {
-            // Learning session is finished
+        if (learnQuizType.equals(LearnQuizType.QUIZ_FINISHED)) {
+            fragment = new FragmentQuizFinished();
         } else if (learnQuizType.equals(LearnQuizType.SHOW_CARD)) {
             fragment = new FragmentShowCard();
         } else if (learnQuizType.equals(LearnQuizType.SHOW_CARD_WITH_IMAGE)) {
@@ -75,7 +88,10 @@ public class LearnQuizActivity extends FragmentActivity implements AnswerReceive
         if (fragment == null) {
             finish();
         } else {
-            renderFragment(fragment.setAnswerReceiver(this).setData(data));
+            fragment.setAnswerReceiver(this);
+            fragment.setSpeaker(this);
+            fragment.setData(data);
+            renderFragment(fragment);
         }
     }
 
@@ -89,5 +105,21 @@ public class LearnQuizActivity extends FragmentActivity implements AnswerReceive
     public void onAnswer(String answer) {
         learnQuizService.processAnswer(answer);
         showNextFragment();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (tts != null) {
+            tts.stop();
+            tts.shutdown();
+        }
+    }
+
+    @Override
+    public void speak(String text) {
+        if (ttsStatus == TextToSpeech.SUCCESS) {
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "");
+        }
     }
 }

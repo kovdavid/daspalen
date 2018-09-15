@@ -1,8 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
                                              xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
                                              android:layout_width="match_parent"
-                                             android:layout_height="match_parent">
+                                             android:layout_height="match_parent"
+                                             tools:layout_editor_absoluteY="89dp">
+
+
+    <TextView
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:text="0"
+            android:textSize="24sp"
+            android:background="@drawable/baseline_panorama_fish_eye_24"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            android:id="@+id/textview_card_score"
+            android:textStyle="bold"
+            android:gravity="center_vertical|center_horizontal"
+            />
 
     <TextView
             android:layout_width="wrap_content"
@@ -10,24 +28,24 @@
             android:id="@+id/label_front"
             android:text="Front"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBaseline_toBaselineOf="@+id/textview_card_score"
             android:layout_marginTop="16dp"
             android:layout_marginLeft="16dp"
             android:textSize="16dp"
             />
 
     <TextView
-            android:text="TextView"
-            android:layout_width="wrap_content"
+            android:text="TextView with possible multiline text"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/textview_quiz"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/label_front"
+            android:id="@+id/textview_front"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginLeft="16dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginRight="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/textview_card_score"
             android:layout_marginTop="8dp"
-            android:textSize="32dp"
+            android:textSize="24sp"
             android:textColor="@android:color/black"
             />
 
@@ -37,37 +55,23 @@
             android:id="@+id/label_back"
             android:text="Back"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textview_quiz"
-            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/textview_front"
+            android:layout_marginTop="8dp"
             android:layout_marginLeft="16dp"
             android:textSize="16dp"
             />
 
     <EditText
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/edittext_input"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/label_back"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:layout_marginTop="8dp"
-            android:inputType="textNoSuggestions"
-            android:textSize="30dp"
-            android:lines="2"
+            android:inputType="textNoSuggestions|textMultiLine"
+            android:textSize="24sp"
+            app:layout_constraintTop_toBottomOf="@id/label_back"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:text=""
             />
-
-    <TableLayout
-            android:id="@+id/keyboard_table"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edittext_input"
-            app:layout_constraintRight_toLeftOf="@id/button_backspace"
-            android:layout_marginTop="16dp"
-            >
-    </TableLayout>
 
     <Button
             android:layout_width="wrap_content"
@@ -78,8 +82,34 @@
             android:id="@+id/button_backspace"
             app:layout_constraintTop_toBottomOf="@+id/edittext_input"
             app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginTop="16dp"
             android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp"
+            />
+
+    <LinearLayout
+            android:id="@+id/layout_keyboard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@+id/button_backspace"
+            app:layout_constraintLeft_toLeftOf="@+id/edittext_input"
+            app:layout_constraintRight_toLeftOf="@+id/button_backspace"
+            android:orientation="vertical"
+            android:layout_marginRight="16dp"
+            >
+
+    </LinearLayout>
+
+    <Button
+            android:id="@+id/keyboard_spacebar"
+            android:theme="@style/AppTheme.KeyboardButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:minWidth="0dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintLeft_toLeftOf="@+id/edittext_input"
+            app:layout_constraintRight_toLeftOf="@+id/button_backspace"
+            app:layout_constraintTop_toBottomOf="@+id/layout_keyboard"
             />
 
     <Button
@@ -88,9 +118,9 @@
             android:theme="@style/AppTheme.ButtonConfirm"
             android:text="Confirm"
             android:id="@+id/button_confirm"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginRight="16dp"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginRight="16dp"
             android:layout_marginBottom="16dp"
             />
 

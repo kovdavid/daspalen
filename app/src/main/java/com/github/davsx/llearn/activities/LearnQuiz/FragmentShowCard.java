@@ -17,8 +17,7 @@ import java.util.Locale;
 public class FragmentShowCard extends LearnQuizFragmentBase {
     private TextView textViewFront;
     private TextView textViewBack;
-    private TextToSpeech tts;
-    private Integer ttsStatus = TextToSpeech.ERROR;
+    private TextView textViewCardScore;
 
     @Nullable
     @Override
@@ -27,12 +26,12 @@ public class FragmentShowCard extends LearnQuizFragmentBase {
 
         textViewFront = view.findViewById(R.id.textview_front);
         textViewBack = view.findViewById(R.id.textview_back);
+        textViewCardScore = view.findViewById(R.id.textview_card_score);
 
         Button buttonNext = view.findViewById(R.id.button_next);
         buttonNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // This fragment only shows the card, so we always send a correct answer
                 answerReceiver.onAnswer(learnQuizData.getBackText());
             }
         });
@@ -41,9 +40,7 @@ public class FragmentShowCard extends LearnQuizFragmentBase {
         imageViewTTS.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ttsStatus == TextToSpeech.SUCCESS) {
-                    tts.speak(learnQuizData.getBackText(), TextToSpeech.QUEUE_FLUSH, null, "");
-                }
+                speaker.speak(learnQuizData.getBackText());
             }
         });
 
@@ -54,15 +51,8 @@ public class FragmentShowCard extends LearnQuizFragmentBase {
     public void onResume() {
         super.onResume();
 
-        tts = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                ttsStatus = status;
-            }
-        });
-        tts.setLanguage(new Locale("es", "ES"));
-
         textViewFront.setText(learnQuizData.getFrontText());
         textViewBack.setText(learnQuizData.getBackText());
+        textViewCardScore.setText(learnQuizData.getCardScore().toString());
     }
 }

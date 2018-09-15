@@ -1,7 +1,7 @@
 package com.github.davsx.llearn.service.LearnQuiz;
 
-public interface LearnQuizCardScheduler {
-    void scheduleAfterOffset(LearnQuizCard card, int offset);
+public interface LearnQuizCardScheduler<T> {
+    void scheduleAfterOffset(int offset, T elem);
 
-    void scheduleToExactOffset(LearnQuizCard card, int offset);
+    void scheduleToExactOffset(int offset, T elem);
 }

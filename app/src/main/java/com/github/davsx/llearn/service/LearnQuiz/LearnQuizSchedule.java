@@ -1,26 +1,25 @@
 package com.github.davsx.llearn.service.LearnQuiz;
 
-import android.util.SparseArray;
-
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class LearnQuizSchedule implements LearnQuizCardScheduler {
+public class LearnQuizSchedule<T> implements LearnQuizCardScheduler<T> {
 
-    private SparseArray<LearnQuizCard> schedule;
-    private List<LearnQuizCard> cardQueue;
+    private Map<Integer, T> schedule;
+    private List<T> queue;
     private int nextTick;
     private int maxTick;
 
-    LearnQuizSchedule(ArrayList<LearnQuizCard> cardQueue) {
-        this.cardQueue = cardQueue;
-        this.schedule = new SparseArray<>();
+    LearnQuizSchedule(List<T> queue) {
+        this.queue = queue;
+        this.schedule = new HashMap<Integer, T>();
         this.nextTick = 0;
         this.maxTick = 0;
     }
 
     @Override
-    public void scheduleAfterOffset(LearnQuizCard card, int offset) {
+    public void scheduleAfterOffset(int offset, T elem) {
         int tick = nextTick + offset - 1;
         while (schedule.get(tick) != null) {
             tick++; // Find the first free tick number
@@ -28,46 +27,43 @@ public class LearnQuizSchedule implements LearnQuizCardScheduler {
         if (tick > maxTick) {
             maxTick = tick;
         }
-        schedule.put(tick, card);
+        schedule.put(tick, elem);
     }
 
     @Override
-    public void scheduleToExactOffset(LearnQuizCard card, int offset) {
-        int tick = nextTick + offset - 1;
-        int freeTick = 0;
-        for (int t = tick; t <= maxTick + 1; t++) {
-            if (schedule.get(t) == null) {
-                freeTick = t;
-                break;
-            }
+    public void scheduleToExactOffset(int offset, T elem) {
+        int targetTick = nextTick + offset - 1;
+        int freeTick = targetTick;
+        while (schedule.get(freeTick) != null) {
+            freeTick++;
+        }
+
+        for (int t = freeTick; t > targetTick; t--) {
+            schedule.put(t, schedule.get(t-1));
         }
 
         if (freeTick > maxTick) {
             maxTick = freeTick;
         }
 
-        for (int t = freeTick; t > tick; t--) {
-            schedule.put(t, schedule.get(t - 1));
-        }
-
-        schedule.put(tick, card);
+        schedule.put(targetTick, elem);
     }
 
-    LearnQuizCard nextCard() {
-        if (cardQueue.size() == 0 && nextTick > maxTick) {
+    T nextElem() {
+        if (queue.size() == 0 && nextTick > maxTick) {
             return null;
         }
 
         int currentTick = nextTick;
 
-        LearnQuizCard card = schedule.get(currentTick);
-        if (card != null) {
+        T elem = schedule.get(currentTick);
+        if (elem != null) {
             nextTick++;
-            return card;
+            return elem;
         } else {
-            if (cardQueue.size() > 0) {
+            if (queue.size() > 0) {
                 nextTick++;
-                return cardQueue.remove(0);
+                return queue.remove(0);
             } else {
                 for (int t = currentTick; t <= maxTick; t++) {
                     if (schedule.get(t) != null) {

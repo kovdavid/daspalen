@@ -20,6 +20,13 @@ public class LearnQuizData {
     private List<String> choices;
     private List<List<Character>> keyboardKeys;
     private Boolean isReversed = false;
+    private Integer cardScore;
+
+    public static LearnQuizData buildFinishData() {
+        LearnQuizData data = new LearnQuizData();
+        data.setLearnQuizType(LearnQuizType.QUIZ_FINISHED);
+        return data;
+    }
 
     public static LearnQuizData build(LearnQuizType quizType, CardEntity card, List<CardEntity> randomCards) {
         if (quizType.equals(LearnQuizType.NONE)) {
@@ -29,6 +36,7 @@ public class LearnQuizData {
         data.setFrontText(card.getFront());
         data.setBackText(card.getBack());
         data.setLearnQuizType(quizType);
+        data.setCardScore(card.getLearnScore());
         if (quizType.equals(LearnQuizType.SHOW_CARD_WITH_IMAGE)) {
             data.setImageUri(null);
         } else if (quizType.equals(LearnQuizType.CHOICE_1of4)) {
@@ -185,5 +193,13 @@ public class LearnQuizData {
 
     private void setReversed(Boolean reversed) {
         isReversed = reversed;
+    }
+
+    public Integer getCardScore() {
+        return cardScore;
+    }
+
+    public void setCardScore(Integer cardScore) {
+        this.cardScore = cardScore;
     }
 }

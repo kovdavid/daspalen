@@ -9,6 +9,7 @@
         android:text="A"
         android:textAllCaps="false"
         android:fontFamily="monospace"
-        android:layout_margin="2dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
         android:background="@drawable/keyboard_button"
         />

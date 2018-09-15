@@ -29,7 +29,7 @@ public class LearnQuizCard {
         this.rng = new Random(System.currentTimeMillis());
     }
 
-    public void handleAnswer(LearnQuizCardScheduler scheduler, String answer) {
+    public void handleAnswer(LearnQuizCardScheduler<LearnQuizCard> scheduler, String answer) {
         boolean isCorrectAnswer = evaluateAnswer(answer);
 
         if (isCorrectAnswer) {
@@ -43,7 +43,7 @@ public class LearnQuizCard {
                 }
                 Integer scheduleOffset = calculateScheduleOffset();
                 if (scheduleOffset > 0) {
-                    scheduler.scheduleAfterOffset(this, scheduleOffset);
+                    scheduler.scheduleAfterOffset(scheduleOffset, this);
                 }
             } else {
                 if (doShowCard) {
@@ -53,13 +53,13 @@ public class LearnQuizCard {
                 }
                 Integer scheduleOffset = calculateScheduleOffset();
                 if (scheduleOffset > 0) {
-                    scheduler.scheduleToExactOffset(this, scheduleOffset);
+                    scheduler.scheduleToExactOffset(scheduleOffset, this);
                 }
             }
         } else {
             gotBadAnswer = true;
             doShowCard = true;
-            scheduler.scheduleToExactOffset(this, 1);
+            scheduler.scheduleToExactOffset(1, this);
         }
     }
 

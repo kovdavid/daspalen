@@ -3,15 +3,19 @@ package com.github.davsx.llearn.activities.Main;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.widget.Button;
 import com.github.davsx.llearn.LLearnApplication;
 import com.github.davsx.llearn.R;
 import com.github.davsx.llearn.activities.LearnQuiz.LearnQuizActivity;
 import com.github.davsx.llearn.activities.ManageCards.ManageCardsActivity;
+import com.github.davsx.llearn.persistence.entity.CardEntity;
 import com.github.davsx.llearn.persistence.repository.CardRepository;
 
 import javax.inject.Inject;
+import java.util.Arrays;
+import java.util.List;
 
 public class MainActivity extends Activity {
 
@@ -22,6 +26,7 @@ public class MainActivity extends Activity {
 
     private Button btnLearnCards;
     private Button btnManageCards;
+    private Button btnResetCards;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,24 +37,17 @@ public class MainActivity extends Activity {
 
         btnManageCards = findViewById(R.id.button_manage_cards);
         btnLearnCards = findViewById(R.id.button_learn_cards);
-
-        btnManageCards.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this, ManageCardsActivity.class);
-                MainActivity.this.startActivity(i);
-            }
-        });
+        btnResetCards = findViewById(R.id.button_reset_cards);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        updateBtnLearnCards();
+        updateButtons();
     }
 
-    private void updateBtnLearnCards() {
+    private void updateButtons() {
         Integer learnableCardCount = cardRepository.learnableCardCount();
         btnLearnCards.setText("Learn new cards (" + String.valueOf(learnableCardCount) + ")");
         if (learnableCardCount > 0) {
@@ -63,5 +61,29 @@ public class MainActivity extends Activity {
         } else {
             btnLearnCards.setOnClickListener(null);
         }
+
+        btnManageCards.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MainActivity.this, ManageCardsActivity.class);
+                MainActivity.this.startActivity(i);
+            }
+        });
+
+        btnResetCards.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cardRepository.deleteAllCards();
+                List<String> strings = Arrays.asList("aaaa", "bbbb", "cccc", "dddd", "eeee", "ffff", "gggg", "hhhh", "jjjj", "kkkk");
+                for (String string : strings) {
+                    CardEntity card = new CardEntity();
+                    card.setFront(string);
+                    card.setBack(string);
+                    card.setCreatedAt(System.currentTimeMillis());
+                    cardRepository.save(card);
+                }
+                updateButtons();
+            }
+        });
     }
 }

@@ -7,31 +7,39 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import com.github.davsx.llearn.R;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class FragmentKeyboardInput extends LearnQuizFragmentBase implements View.OnClickListener {
     private TextView textViewFront;
+    private TextView textViewCardScore;
     private EditText textViewInput;
-    private Button buttonConfirm;
+    private Button buttonSpace;
     private Button buttonBackspace;
-    private TableLayout keyboardTable;
+    private Button buttonConfirm;
+    private LinearLayout layoutKeyboard;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_learn_keyboard_input, container, false);
 
-        textViewFront = rootView.findViewById(R.id.textview_quiz);
+        textViewFront = rootView.findViewById(R.id.textview_front);
         textViewInput = rootView.findViewById(R.id.edittext_input);
-        buttonConfirm = rootView.findViewById(R.id.button_confirm);
+        textViewCardScore = rootView.findViewById(R.id.textview_card_score);
         buttonBackspace = rootView.findViewById(R.id.button_backspace);
-        keyboardTable = rootView.findViewById(R.id.keyboard_table);
+        buttonSpace = rootView.findViewById(R.id.keyboard_spacebar);
+        layoutKeyboard = rootView.findViewById(R.id.layout_keyboard);
 
+        buttonConfirm = rootView.findViewById(R.id.button_confirm);
         buttonConfirm.setOnClickListener(this);
 
         return rootView;
@@ -43,11 +51,21 @@ public class FragmentKeyboardInput extends LearnQuizFragmentBase implements View
 
         LayoutInflater inflater = getLayoutInflater();
 
+        List<Integer> keyResources = Arrays.asList(
+                R.id.keyboard_button1,
+                R.id.keyboard_button2,
+                R.id.keyboard_button3,
+                R.id.keyboard_button4,
+                R.id.keyboard_button5
+        );
+
+        layoutKeyboard.removeAllViews();
+
         for (final List<Character> row : learnQuizData.getKeyboardKeys()) {
-            View keyboardRowView = inflater.inflate(R.layout.fragment_learn_keyboard_input_button_row, keyboardTable, false);
-            LinearLayout linearLayout = keyboardRowView.findViewById(R.id.keyboard_row);
+            View keyboardRowView = inflater.inflate(
+                    R.layout.fragment_learn_keyboard_input_button_row, layoutKeyboard, false);
             for (int i = 0; i < row.size(); i++) {
-                Button btn = (Button) linearLayout.getChildAt(2*i);
+                Button btn = keyboardRowView.findViewById(keyResources.get(i));
                 btn.setText(row.get(i).toString());
 
                 btn.setOnClickListener(new View.OnClickListener() {
@@ -58,15 +76,13 @@ public class FragmentKeyboardInput extends LearnQuizFragmentBase implements View
                     }
                 });
             }
-            keyboardTable.addView(keyboardRowView);
+            layoutKeyboard.addView(keyboardRowView);
         }
 
-        View spaceBarView = inflater.inflate(R.layout.fragment_learn_keyboard_input_spacebar_row, keyboardTable, false);
-        Button spaceBar = spaceBarView.findViewById(R.id.keyboard_spacebar);
-        spaceBar.setOnClickListener(new View.OnClickListener() {
+        buttonSpace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                textViewInput.append(" ");
+                textViewInput.getText().append(" ");
             }
         });
 
@@ -80,14 +96,18 @@ public class FragmentKeyboardInput extends LearnQuizFragmentBase implements View
             }
         });
 
-        keyboardTable.addView(spaceBarView);
-
+        textViewCardScore.setText(learnQuizData.getCardScore().toString());
         textViewFront.setText(learnQuizData.getFrontText());
     }
 
     @Override
     public void onClick(View v) {
         final String answer = textViewInput.getText().toString();
+
+        if (answer.equals("")) {
+            return;
+        }
+
         String correctAnswer = learnQuizData.getBackText();
 
         int color;
@@ -99,6 +119,8 @@ public class FragmentKeyboardInput extends LearnQuizFragmentBase implements View
             color = ContextCompat.getColor(getContext(), R.color.colorAccent);
         }
         textViewInput.setTextColor(color);
+
+        buttonConfirm.setOnClickListener(null);
 
         new Timer().schedule(new TimerTask() {
             @Override
