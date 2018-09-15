@@ -109,23 +109,25 @@ public class LearnQuizCard {
     }
 
     private LearnQuizType getCardType() {
-        if (doShowCard) return LearnQuizType.SHOW_CARD;
-        if (gotBadAnswer) return LearnQuizType.CHOICE_1of4;
-
-        if (cardEntity.getLearnScore() == 0) return LearnQuizType.CHOICE_1of4;
-
-        List<LearnQuizType> types = Arrays.asList(
-                LearnQuizType.CHOICE_1of4,
-                LearnQuizType.CHOICE_1of4,
-                LearnQuizType.CHOICE_1of4,
-                LearnQuizType.KEYBOARD_INPUT,
-                LearnQuizType.KEYBOARD_INPUT,
-                LearnQuizType.CHOICE_1of4_REVERSE
-        );
-
-        int typeIndex = new Random().nextInt(types.size());
-
-        return types.get(typeIndex);
+        return LearnQuizType.CHOICE_1of4;
+//        if (doShowCard) return LearnQuizType.SHOW_CARD;
+//
+//        if (gotBadAnswer || cardEntity.getLearnScore() == 0) {
+//            return LearnQuizType.CHOICE_1of4;
+//        }
+//
+//        List<LearnQuizType> types = Arrays.asList(
+//                LearnQuizType.CHOICE_1of4,
+//                LearnQuizType.CHOICE_1of4,
+//                LearnQuizType.CHOICE_1of4,
+//                LearnQuizType.KEYBOARD_INPUT,
+//                LearnQuizType.KEYBOARD_INPUT,
+//                LearnQuizType.CHOICE_1of4_REVERSE
+//        );
+//
+//        int typeIndex = new Random().nextInt(types.size());
+//
+//        return types.get(typeIndex);
     }
 
     Integer getCompletedRounds() {

@@ -75,7 +75,7 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 cardRepository.deleteAllCards();
                 //List<String> strings = Arrays.asList("aaaa", "bbbb", "cccc", "dddd", "eeee", "ffff", "gggg", "hhhh", "jjjj", "kkkk");
-                List<String> strings = Arrays.asList("aaaa", "bbbb", "cccc");
+                List<String> strings = Arrays.asList("abcdef", "ghijkl", "lmnopq");
                 for (String string : strings) {
                     CardEntity card = new CardEntity();
                     card.setFront(string);

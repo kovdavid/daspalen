@@ -80,17 +80,16 @@
             android:text="⌫"
             android:textSize="24sp"
             android:id="@+id/button_backspace"
-            app:layout_constraintTop_toBottomOf="@+id/edittext_input"
+            app:layout_constraintTop_toTopOf="@+id/layout_keyboard"
             app:layout_constraintRight_toRightOf="parent"
             android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
             />
 
     <LinearLayout
             android:id="@+id/layout_keyboard"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="@+id/button_backspace"
+            app:layout_constraintBottom_toTopOf="@+id/keyboard_spacebar"
             app:layout_constraintLeft_toLeftOf="@+id/edittext_input"
             app:layout_constraintRight_toLeftOf="@+id/button_backspace"
             android:orientation="vertical"
@@ -106,10 +105,10 @@
             android:layout_height="wrap_content"
             android:minWidth="0dp"
             android:layout_marginRight="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginBottom="32dp"
             app:layout_constraintLeft_toLeftOf="@+id/edittext_input"
             app:layout_constraintRight_toLeftOf="@+id/button_backspace"
-            app:layout_constraintTop_toBottomOf="@+id/layout_keyboard"
+            app:layout_constraintBottom_toTopOf="@+id/button_confirm"
             />
 
     <Button

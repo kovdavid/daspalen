@@ -80,6 +80,7 @@ public class LearnQuizData {
                 result.add("");
             }
             result.add(original);
+            Collections.shuffle(result, new Random(System.currentTimeMillis()));
             return result;
         }
 
@@ -92,7 +93,7 @@ public class LearnQuizData {
 
         List<String> result = new ArrayList<>(choices);
         result.add(original);
-        Collections.shuffle(result);
+        Collections.shuffle(result, new Random(System.currentTimeMillis()));
 
         return result;
     }
