@@ -66,8 +66,8 @@ public class LearnQuizService {
             if (isFinished) {
                 return null;
             } else {
-                LearnQuizData.buildFinishData();
                 isFinished = true;
+                return LearnQuizData.buildFinishData();
             }
         }
 
