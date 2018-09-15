@@ -70,9 +70,10 @@ public class LearnQuizData {
             }
         });
 
+        Random rng = new Random(System.currentTimeMillis());
+        List<String> result = new ArrayList<>();
         // We don't have enough candidates; fill it with empty String
         if (candidates.size() < 3) {
-            List<String> result = new ArrayList<>();
             for (Pair<Integer, String> candidate : candidates) {
                 result.add(candidate.second);
             }
@@ -80,20 +81,19 @@ public class LearnQuizData {
                 result.add("");
             }
             result.add(original);
-            Collections.shuffle(result, new Random(System.currentTimeMillis()));
-            return result;
+        } else {
+
+            Set<String> choices = new HashSet<>();
+            while (choices.size() != 3) {
+                int index = rng.nextInt(Math.min(candidates.size(), 10));
+                choices.add(candidates.get(index).second);
+            }
+
+            result.addAll(choices);
+            result.add(original);
         }
 
-        Random rng = new Random(System.currentTimeMillis());
-        Set<String> choices = new HashSet<>();
-        while (choices.size() != 3) {
-            int index = rng.nextInt(Math.min(candidates.size(), 10));
-            choices.add(candidates.get(index).second);
-        }
-
-        List<String> result = new ArrayList<>(choices);
-        result.add(original);
-        Collections.shuffle(result, new Random(System.currentTimeMillis()));
+        Collections.shuffle(result, rng);
 
         return result;
     }
