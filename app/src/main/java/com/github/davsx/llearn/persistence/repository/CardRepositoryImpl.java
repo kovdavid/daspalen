@@ -61,6 +61,11 @@ public class CardRepositoryImpl implements CardRepository {
     }
 
     @Override
+    public Integer learnableCardCount() {
+        return cardDao.learnableCardCount();
+    }
+
+    @Override
     public void deleteCard(CardEntity card) {
         cardDao.delete(card);
     }

@@ -16,16 +16,13 @@ public interface CardDao {
     @Delete()
     void delete(CardEntity card);
 
-    @Query("SELECT * FROM cards WHERE type != 0 ORDER BY id_card ASC")
-    List<CardEntity> getAllValidCards();
-
-    @Query("SELECT * FROM cards ORDER BY id_card ASC")
-    List<CardEntity> getAllCards();
+    @Query("SELECT count(*) FROM cards WHERE type = 1")
+    Integer learnableCardCount();
 
     @Query("SELECT * FROM cards WHERE type != 0 ORDER BY RANDOM() LIMIT :limit")
     List<CardEntity> getRandomCards(int limit);
 
-    @Query("SELECT * FROM cards WHERE type == 1 AND learn_score < :learnScore" +
+    @Query("SELECT * FROM cards WHERE type = 1 AND learn_score < :learnScore" +
             " ORDER BY learn_score DESC, learn_update_at DESC LIMIT :limit")
     List<CardEntity> getLearnCandidates(Integer learnScore, Integer limit);
 
@@ -40,4 +37,10 @@ public interface CardDao {
 
     @Query("SELECT * FROM cards WHERE front IN (:frontTexts)")
     List<CardEntity> getCardsWithFronts(List<String> frontTexts);
+
+    @Query("SELECT * FROM cards ORDER BY id_card ASC")
+    List<CardEntity> getAllCards();
+
+    @Query("SELECT * FROM cards WHERE type != 0 ORDER BY id_card ASC")
+    List<CardEntity> getAllValidCards();
 }

@@ -25,14 +25,35 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"/>
 
-        <TextView
+        <Button
+                android:theme="@style/AppTheme.ButtonConfirm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/textview_ip_address"
+                android:text="Learn New Cards (0)"
+                android:id="@+id/button_learn_cards"
+                android:background="@drawable/round_edge_button"
+                android:textSize="20sp"
+                android:textAllCaps="false"
                 />
 
         <Space
-                android:layout_weight="1"
+                android:layout_weight="0.3"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"/>
+
+        <Button
+                android:theme="@style/AppTheme.ButtonConfirm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Review Cards (0)"
+                android:id="@+id/button_review_cards"
+                android:background="@drawable/round_edge_button"
+                android:textSize="20sp"
+                android:textAllCaps="false"
+                />
+
+        <Space
+                android:layout_weight="0.3"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"/>
 
@@ -41,46 +62,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Manage Cards"
-                android:id="@+id/button_word_list"
-                />
-
-        <Space
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"/>
-
-        <Button
-                android:theme="@style/AppTheme.ButtonConfirm"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Learn New Cards"
-                android:id="@+id/button_learn_cards"
-                />
-
-        <Space
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"/>
-
-        <Button
-                android:theme="@style/AppTheme.ButtonConfirm"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Create Anki Card"
-                android:id="@+id/button_create_anki_card"
-                />
-
-        <Space
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"/>
-
-        <Button
-                android:theme="@style/AppTheme.ButtonConfirm"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="SpanishDict translate"
-                android:id="@+id/button_translate_spanishdict"
+                android:id="@+id/button_manage_cards"
+                android:background="@drawable/round_edge_button"
+                android:textSize="20sp"
+                android:textAllCaps="false"
                 />
 
         <Space

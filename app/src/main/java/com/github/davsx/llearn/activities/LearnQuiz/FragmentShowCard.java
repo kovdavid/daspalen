@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.github.davsx.llearn.R;
 
@@ -36,8 +37,8 @@ public class FragmentShowCard extends LearnQuizFragmentBase {
             }
         });
 
-        Button buttonTTS = view.findViewById(R.id.button_tts);
-        buttonTTS.setOnClickListener(new View.OnClickListener() {
+        ImageView imageViewTTS = view.findViewById(R.id.button_tts);
+        imageViewTTS.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (ttsStatus == TextToSpeech.SUCCESS) {

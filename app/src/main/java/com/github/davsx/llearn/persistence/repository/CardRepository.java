@@ -15,6 +15,8 @@ public interface CardRepository {
 
     Integer cardCount();
 
+    Integer learnableCardCount();
+
     void deleteCard(CardEntity card);
 
     List<CardEntity> getRandomCards(int limit);
