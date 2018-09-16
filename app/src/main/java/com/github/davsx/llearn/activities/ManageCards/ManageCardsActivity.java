@@ -1,23 +1,15 @@
 package com.github.davsx.llearn.activities.ManageCards;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.*;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import android.widget.CheckBox;
 import com.github.davsx.llearn.LLearnApplication;
 import com.github.davsx.llearn.R;
 import com.github.davsx.llearn.service.ManageCards.ManageCardsService;
@@ -26,29 +18,42 @@ import javax.inject.Inject;
 
 public class ManageCardsActivity extends AppCompatActivity {
 
-    private static final String TAG = "ManageCardsActivity";
-
-    private ManageCardsAdapter adapter;
-
     @Inject
     ManageCardsService manageCardsService;
+
+    private ManageCardsAdapter adapter;
+    private MenuItem menuShowImcomplete;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_cards);
 
-        Log.d(TAG, "onCreate");
-
         ((LLearnApplication) getApplication()).getApplicationComponent().inject(this);
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
         adapter = new ManageCardsAdapter(this, manageCardsService);
+
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (adapter.onScrolled(linearLayoutManager.findLastVisibleItemPosition())) {
+                    recyclerView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+                }
+            }
+        });
     }
 
     @Override
@@ -56,16 +61,21 @@ public class ManageCardsActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.manage_cards_menu, menu);
 
+        menuShowImcomplete = menu.findItem(R.id.checkbox_show_incomplete);
+
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                adapter.searchCards(query);
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String query) {
-                Toast.makeText(ManageCardsActivity.this, "onQueryTextChange "+newText, Toast.LENGTH_SHORT).show();
+                if (query.length() == 0) {
+                    adapter.cancelSearch();
+                }
                 return true;
             }
         });
@@ -78,6 +88,9 @@ public class ManageCardsActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_new_word:
                 showCreateCardDialog();
+            case R.id.checkbox_show_incomplete:
+                menuShowImcomplete.setChecked(!menuShowImcomplete.isChecked());
+                adapter.showOnlyIncomplete(menuShowImcomplete.isChecked());
             default:
                 break;
         }

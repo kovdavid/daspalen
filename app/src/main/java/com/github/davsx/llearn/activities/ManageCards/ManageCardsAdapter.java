@@ -1,6 +1,5 @@
 package com.github.davsx.llearn.activities.ManageCards;
 
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
@@ -10,18 +9,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.github.davsx.llearn.R;
-import com.github.davsx.llearn.service.ManageCards.ManageCardsService;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
+import com.github.davsx.llearn.service.ManageCards.ManageCardsService;
 
 public class ManageCardsAdapter extends RecyclerView.Adapter<ManageCardsAdapter.CardViewHolder> {
 
-    private ManageCardsService dataProvider;
+    private ManageCardsService manageCardsService;
     private LayoutInflater layoutInflater;
     private Context context;
 
-    ManageCardsAdapter(Context context, ManageCardsService dataProvider) {
+    ManageCardsAdapter(Context context, ManageCardsService manageCardsService) {
         this.context = context;
-        this.dataProvider = dataProvider;
+        this.manageCardsService = manageCardsService;
         this.layoutInflater = LayoutInflater.from(context);
     }
 
@@ -34,7 +33,7 @@ public class ManageCardsAdapter extends RecyclerView.Adapter<ManageCardsAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ManageCardsAdapter.CardViewHolder holder, int position) {
-        CardEntity card = dataProvider.getCardByPosition(position);
+        CardEntity card = manageCardsService.getCardByPosition(position);
         if (card != null) {
             holder.textViewIdCard.setText(Long.toString(card.getId()));
             holder.textViewLearnScore.setText(Integer.toString(card.getLearnScore()));
@@ -44,9 +43,28 @@ public class ManageCardsAdapter extends RecyclerView.Adapter<ManageCardsAdapter.
         }
     }
 
+    void showOnlyIncomplete(boolean checked) {
+        manageCardsService.setShowOnlyIncomplete(checked);
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemCount() {
-        return dataProvider.getItemCount();
+        return manageCardsService.getItemCount();
+    }
+
+    void searchCards(String query) {
+        manageCardsService.searchCards(query);
+        notifyDataSetChanged();
+    }
+
+    void cancelSearch() {
+        manageCardsService.cancelSearch();
+        notifyDataSetChanged();
+    }
+
+    boolean onScrolled(int lastVisibleItemPosition) {
+        return manageCardsService.onScrolled(lastVisibleItemPosition);
     }
 
     public class CardViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -72,7 +90,7 @@ public class ManageCardsAdapter extends RecyclerView.Adapter<ManageCardsAdapter.
 
         @Override
         public void onClick(View view) {
-            EditCardDialog editCardDialog = new EditCardDialog(context, dataProvider, card);
+            EditCardDialog editCardDialog = new EditCardDialog(context, manageCardsService, card);
             editCardDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialogInterface) {

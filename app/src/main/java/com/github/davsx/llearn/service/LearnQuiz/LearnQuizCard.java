@@ -39,7 +39,7 @@ public class LearnQuizCard {
                     doShowCard = false;
                 } else {
                     completedRounds++;
-                    cardEntity.handleCorrectLearnQuizAnswer();
+                    cardEntity.incrementLearnScore();
                     cardRepository.save(cardEntity);
                 }
                 Integer scheduleOffset = calculateScheduleOffset();

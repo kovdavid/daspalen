@@ -12,6 +12,7 @@
             android:background="@color/colorPrimary"
             android:elevation="4dp"
             app:titleTextColor="@android:color/white"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             android:theme="@style/Theme.AppCompat"
             />
 

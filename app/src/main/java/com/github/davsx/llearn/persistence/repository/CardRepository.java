@@ -15,6 +15,8 @@ public interface CardRepository {
 
     Integer cardCount();
 
+    Long getMaxCardId();
+
     Integer learnableCardCount();
 
     void deleteCard(CardEntity card);
@@ -22,6 +24,10 @@ public interface CardRepository {
     void deleteAllCards();
 
     List<CardEntity> getRandomCards(int limit);
+
+    List<CardEntity> getCardsChunked(Long id, boolean onlyIcomplete, int limit);
+
+    List<CardEntity> searchCardsChunked(String query, Long id, boolean onlyIncomplete, int limit);
 
     List<CardEntity> getAllCards();
 

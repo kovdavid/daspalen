@@ -3,18 +3,26 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-            android:id="@+id/action_search"
-            android:icon="@drawable/baseline_search_24"
-            android:title="Search"
-            app:showAsAction="collapseActionView|ifRoom"
-            app:actionViewClass="android.support.v7.widget.SearchView"
-            />
-
-    <item
             android:id="@+id/action_new_word"
             android:icon="@drawable/baseline_add_circle_outline_24"
             android:title="New Card"
             app:showAsAction="always"
             />
+
+    <item
+            android:id="@+id/action_search"
+            android:icon="@drawable/baseline_search_24"
+            android:title="Search"
+            app:showAsAction="always|collapseActionView"
+            app:actionViewClass="android.support.v7.widget.SearchView"
+            />
+
+    <item
+            android:id="@+id/checkbox_show_incomplete"
+            android:title="Show incomplete cards"
+            android:theme="@style/Theme.AppCompat"
+            app:actionViewClass="android.widget.CheckBox"
+            app:showAsAction="never|withText"
+            android:checkable="true"/>
 
 </menu>

@@ -10,7 +10,9 @@ import com.github.davsx.llearn.LLearnConstants;
 @Entity(
         tableName = "cards",
         indices = {
-                @Index(value = {"type"})
+                @Index(value = {"type"}),
+                @Index(value = {"front"}),
+                @Index(value = {"back"}),
         }
 )
 public class CardEntity {
@@ -46,7 +48,7 @@ public class CardEntity {
     public CardEntity() {
     }
 
-    public void handleCorrectLearnQuizAnswer() {
+    public void incrementLearnScore() {
         this.learnScore = Math.min(this.learnScore + 1, LLearnConstants.MAX_CARD_LEARN_SCORE);
         this.learnUpdateAt = System.currentTimeMillis();
         if (this.learnScore >= LLearnConstants.MAX_CARD_LEARN_SCORE) {
@@ -61,10 +63,20 @@ public class CardEntity {
 
     public CardEntity setBack(@NonNull String back) {
         this.back = back;
-        if (this.type.equals(TYPE_INCOMPLETE) && this.front.length() > 0 && this.back.length() > 0) {
-            this.type = TYPE_LEARN;
-        }
+        this.type = calculateType();
         return this;
+    }
+
+    private Integer calculateType() {
+        if (front.length() > 0 && back.length() > 0) {
+            if (type.equals(TYPE_INCOMPLETE)) {
+                return TYPE_LEARN;
+            } else {
+                return type;
+            }
+        } else {
+            return TYPE_INCOMPLETE;
+        }
     }
 
     public Long getCreatedAt() {
@@ -83,9 +95,7 @@ public class CardEntity {
 
     public CardEntity setFront(@NonNull String front) {
         this.front = front;
-        if (this.type.equals(TYPE_INCOMPLETE) && this.front.length() > 0 && this.back.length() > 0) {
-            this.type = TYPE_LEARN;
-        }
+        this.type = calculateType();
         return this;
     }
 
@@ -100,20 +110,6 @@ public class CardEntity {
 
     public Integer getLearnScore() {
         return learnScore;
-    }
-
-    public CardEntity setLearnScore(Integer learnScore) {
-        this.learnScore = learnScore;
-        return this;
-    }
-
-    public Long getLearnUpdateAt() {
-        return learnUpdateAt;
-    }
-
-    public CardEntity setLearnUpdateAt(Long learnUpdateAt) {
-        this.learnUpdateAt = learnUpdateAt;
-        return this;
     }
 
     @NonNull

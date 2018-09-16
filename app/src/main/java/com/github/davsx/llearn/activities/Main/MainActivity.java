@@ -3,7 +3,6 @@ package com.github.davsx.llearn.activities.Main;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.widget.Button;
 import com.github.davsx.llearn.LLearnApplication;
@@ -14,6 +13,7 @@ import com.github.davsx.llearn.persistence.entity.CardEntity;
 import com.github.davsx.llearn.persistence.repository.CardRepository;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -74,15 +74,22 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 cardRepository.deleteAllCards();
-                //List<String> strings = Arrays.asList("aaaa", "bbbb", "cccc", "dddd", "eeee", "ffff", "gggg", "hhhh", "jjjj", "kkkk");
-                List<String> strings = Arrays.asList("abcdef", "ghijkl", "lmnopq");
-                for (String string : strings) {
-                    CardEntity card = new CardEntity();
-                    card.setFront(string);
-                    card.setBack(string);
-                    card.setCreatedAt(System.currentTimeMillis());
-                    cardRepository.save(card);
+                List<String> strings = Arrays.asList("aaaa", "bbbb", "cccc", "dddd", "eeee", "ffff", "gggg", "hhhh", "jjjj", "kkkk");
+
+                List<CardEntity> cards = new ArrayList<>();
+                for (int i = 0; i < 1000; i++) {
+                    for (String string : strings) {
+                        CardEntity card = new CardEntity();
+                        String text = string + String.valueOf(i);
+                        card.setFront(text);
+                        if (i % 2 == 0) {
+                            card.setBack(text);
+                        }
+                        card.setCreatedAt(System.currentTimeMillis());
+                        cards.add(card);
+                    }
                 }
+                cardRepository.saveMany(cards);
                 updateButtons();
             }
         });
