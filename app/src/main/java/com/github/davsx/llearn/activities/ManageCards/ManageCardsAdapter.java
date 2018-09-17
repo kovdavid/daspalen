@@ -1,14 +1,16 @@
 package com.github.davsx.llearn.activities.ManageCards;
 
 import android.content.Context;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import com.github.davsx.llearn.LLearnConstants;
 import com.github.davsx.llearn.R;
+import com.github.davsx.llearn.activities.EditCard.EditCardActivity;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
 import com.github.davsx.llearn.service.ManageCards.ManageCardsService;
 
@@ -39,7 +41,8 @@ public class ManageCardsAdapter extends RecyclerView.Adapter<ManageCardsAdapter.
             holder.textViewLearnScore.setText(Integer.toString(card.getLearnScore()));
             holder.textViewFront.setText(card.getFront());
             holder.textViewBack.setText(card.getBack());
-            holder.setCard(card);
+            holder.card = card;
+            holder.position = position;
         }
     }
 
@@ -73,6 +76,7 @@ public class ManageCardsAdapter extends RecyclerView.Adapter<ManageCardsAdapter.
         private TextView textViewFront;
         private TextView textViewBack;
         private CardEntity card;
+        private int position;
 
         CardViewHolder(View itemView) {
             super(itemView);
@@ -90,18 +94,12 @@ public class ManageCardsAdapter extends RecyclerView.Adapter<ManageCardsAdapter.
 
         @Override
         public void onClick(View view) {
-            EditCardDialog editCardDialog = new EditCardDialog(context, manageCardsService, card);
-            editCardDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialogInterface) {
-                    ManageCardsAdapter.this.notifyDataSetChanged();
-                }
-            });
-            editCardDialog.show();
-        }
+            Intent i = new Intent(context, EditCardActivity.class);
+            i.putExtra("LOAD_CARD_FROM_INTENT", true);
+            i.putExtra("ID_CARD", card.getId());
+            i.putExtra("CARD_POSITION", position);
 
-        public void setCard(CardEntity card) {
-            this.card = card;
+            ((ManageCardsActivity) context).startActivityForResult(i, LLearnConstants.INTENT_REQUEST_CODE_EDIT_CARD);
         }
     }
 }

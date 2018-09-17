@@ -1,6 +1,9 @@
 package com.github.davsx.llearn.activities.KindleImport;
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,10 +13,10 @@ import com.github.davsx.llearn.activities.ManageCards.ManageCardsActivity;
 import com.github.davsx.llearn.persistence.repository.CardRepository;
 
 import javax.inject.Inject;
+import java.util.Iterator;
+import java.util.List;
 
 public class KindleImportActivity extends Activity {
-
-    private static final String TAG = "KindleImportActivity";
 
     @Inject
     CardRepository cardRepository;
@@ -21,8 +24,6 @@ public class KindleImportActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Log.d(TAG, "onCreate");
 
         ((LLearnApplication) getApplication()).getApplicationComponent().inject(this);
 
@@ -36,6 +37,6 @@ public class KindleImportActivity extends Activity {
 
         Intent i = new Intent(this, ManageCardsActivity.class);
         startActivity(i);
+        finish();
     }
-
 }

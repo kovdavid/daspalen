@@ -10,6 +10,9 @@ public class LLearnConstants {
     public static final Integer LEARN_CARD_KEYBOARD_COLUMNS = 5;
     public static final Integer LEARN_SESSION_RANDOM_CARDS_COUNT = 400;
 
+    public static final Integer INTENT_REQUEST_CODE_CREATE_CARD = 1;
+    public static final Integer INTENT_REQUEST_CODE_EDIT_CARD = 2;
+
     public static final char[] SPANISH_LOWERCASE_LETTERS = "abcdefghijklmnñopqrstuvwxyzáéíñóúü".toCharArray();
     public static final char[] SPANISH_UPPERCASE_LETTERS = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZÁÉÍÑÓÚÜ".toCharArray();
 

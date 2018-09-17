@@ -1,6 +1,7 @@
 package com.github.davsx.llearn.activities.ManageCards;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -96,6 +97,11 @@ public class ManageCardsActivity extends AppCompatActivity {
         }
 
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void showCreateCardDialog() {
