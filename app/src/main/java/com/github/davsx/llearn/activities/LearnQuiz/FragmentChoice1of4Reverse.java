@@ -32,7 +32,7 @@ public class FragmentChoice1of4Reverse extends LearnQuizFragmentBase implements 
         view.findViewById(R.id.button_tts).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                speaker.speak(textViewQuiz.getText().toString());
+                speakerService.speak(textViewQuiz.getText().toString());
             }
         });
 

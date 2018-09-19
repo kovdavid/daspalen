@@ -13,18 +13,19 @@ import com.github.davsx.llearn.R;
 import com.github.davsx.llearn.service.LearnQuiz.LearnQuizData;
 import com.github.davsx.llearn.service.LearnQuiz.LearnQuizService;
 import com.github.davsx.llearn.service.LearnQuiz.LearnQuizType;
+import com.github.davsx.llearn.service.Speaker.SpeakerService;
 
 import javax.inject.Inject;
 import java.util.Locale;
 
-public class LearnQuizActivity extends FragmentActivity implements AnswerReceiver, Speaker {
+public class LearnQuizActivity extends FragmentActivity implements AnswerReceiver {
     private static final String TAG = "LearnQuizActivity";
 
     @Inject
     LearnQuizService learnQuizService;
 
-    private TextToSpeech tts;
-    private int ttsStatus = TextToSpeech.ERROR;
+    @Inject
+    SpeakerService speakerService;
 
     private ProgressBar progressBar;
 
@@ -42,13 +43,7 @@ public class LearnQuizActivity extends FragmentActivity implements AnswerReceive
         progressBar = findViewById(R.id.progress_bar);
         progressBar.setMax(learnQuizService.getTotalRounds());
 
-        tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                ttsStatus = status;
-            }
-        });
-        tts.setLanguage(new Locale("es", "ES"));
+        speakerService.setLanguage(new Locale("es", "ES"));
 
         if (sessionStarted) {
             showNextFragment();
@@ -89,7 +84,7 @@ public class LearnQuizActivity extends FragmentActivity implements AnswerReceive
             finish();
         } else {
             fragment.setAnswerReceiver(this);
-            fragment.setSpeaker(this);
+            fragment.setSpeakerService(speakerService);
             fragment.setData(data);
             renderFragment(fragment);
         }
@@ -105,21 +100,5 @@ public class LearnQuizActivity extends FragmentActivity implements AnswerReceive
     public void onAnswer(String answer) {
         learnQuizService.processAnswer(answer);
         showNextFragment();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (tts != null) {
-            tts.stop();
-            tts.shutdown();
-        }
-    }
-
-    @Override
-    public void speak(String text) {
-        if (ttsStatus == TextToSpeech.SUCCESS) {
-            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "");
-        }
     }
 }

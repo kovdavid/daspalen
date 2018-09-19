@@ -38,7 +38,7 @@ public class FragmentShowCardWithImage extends LearnQuizFragmentBase {
         view.findViewById(R.id.button_tts).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                speaker.speak(learnQuizData.getBackText());
+                speakerService.speak(learnQuizData.getBackText());
             }
         });
 

@@ -40,7 +40,7 @@ public class FragmentShowCard extends LearnQuizFragmentBase {
         imageViewTTS.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                speaker.speak(learnQuizData.getBackText());
+                speakerService.speak(learnQuizData.getBackText());
             }
         });
 

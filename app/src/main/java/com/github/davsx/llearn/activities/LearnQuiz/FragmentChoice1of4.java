@@ -69,7 +69,7 @@ public class FragmentChoice1of4 extends LearnQuizFragmentBase implements View.On
             ttsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    speaker.speak(choiceButton.getText().toString());
+                    speakerService.speak(choiceButton.getText().toString());
                 }
             });
         }

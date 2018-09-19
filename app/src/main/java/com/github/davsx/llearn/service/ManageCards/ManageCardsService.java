@@ -7,6 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ManageCardsService {
+    public static int RESULT_CARD_CHANGED = 1;
+    public static int RESULT_CARD_NOT_CHANGED = 2;
+    public static int RESULT_CARD_ADDED = 3;
+    public static int RESULT_CARD_DELETED = 4;
+
     private static int LOAD_CHUNK_SIZE = 30;
 
     private CardRepository cardRepository;
@@ -61,11 +66,6 @@ public class ManageCardsService {
     public void cancelSearch() {
         reset();
         searchQuery = null;
-    }
-
-    public void setShowOnlyIncomplete(boolean showOnlyIncomplete) {
-        reset();
-        this.showOnlyIncomplete = showOnlyIncomplete;
         loadMoreCards(LOAD_CHUNK_SIZE * 2);
     }
 
@@ -95,6 +95,24 @@ public class ManageCardsService {
             }
         }
         return false;
+    }
+
+    public void cardChanged(long cardId, int cardPosition) {
+        cards.set(cardPosition, cardRepository.getCardWithId(cardId));
+    }
+
+    public void cardDeleted(int cardPosition) {
+        cards.remove(cardPosition);
+    }
+
+    public void cardAdded() {
+        loadMoreCards(LOAD_CHUNK_SIZE);
+    }
+
+    public void setShowOnlyIncomplete(boolean showOnlyIncomplete) {
+        reset();
+        this.showOnlyIncomplete = showOnlyIncomplete;
+        loadMoreCards(LOAD_CHUNK_SIZE * 2);
     }
 
     public int getItemCount() {

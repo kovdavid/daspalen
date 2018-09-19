@@ -95,11 +95,9 @@ public class ManageCardsAdapter extends RecyclerView.Adapter<ManageCardsAdapter.
         @Override
         public void onClick(View view) {
             Intent i = new Intent(context, EditCardActivity.class);
-            i.putExtra("LOAD_CARD_FROM_INTENT", true);
             i.putExtra("ID_CARD", card.getId());
             i.putExtra("CARD_POSITION", position);
-
-            ((ManageCardsActivity) context).startActivityForResult(i, LLearnConstants.INTENT_REQUEST_CODE_EDIT_CARD);
+            context.startActivity(i);
         }
     }
 }
