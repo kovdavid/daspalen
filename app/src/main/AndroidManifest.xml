@@ -24,7 +24,7 @@
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activities.EditCard.EditCardActivity">
+        <activity android:name=".activities.EditCard.EditCardActivity" android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -33,14 +33,15 @@
                 <data android:mimeType="image/jpeg"/>
                 <data android:mimeType="image/png"/>
                 <data android:mimeType="image/gif"/>
+                <data android:mimeType="text/plain"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activities.LearnQuiz.LearnQuizActivity">
+        <activity android:name=".activities.LearnQuiz.LearnQuizActivity" android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activities.KindleImport.KindleImportActivity">
+        <activity android:name=".activities.KindleImport.KindleImportActivity" android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.SEND_MULTIPLE"/>
                 <category android:name="android.intent.category.DEFAULT"/>

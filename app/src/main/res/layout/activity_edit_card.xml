@@ -34,17 +34,34 @@
             android:textSize="16dp"
             />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/edittext_front"
-        android:inputType="textNoSuggestions|textMultiLine"
-        android:textSize="20sp"
-        app:layout_constraintTop_toBottomOf="@id/textview_card_score"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:text=""
-        />
+    <LinearLayout
+            android:id="@+id/layout_front_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/textview_card_score"
+            >
+
+        <EditText
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:id="@+id/edittext_front"
+                android:inputType="textNoSuggestions|textMultiLine"
+                android:textSize="20sp"
+                app:layout_constraintTop_toBottomOf="@id/button_tts"
+                android:layout_marginLeft="16dp"
+                android:text=""
+                />
+
+        <ImageButton
+                android:id="@+id/imagebutton_front_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="?android:attr/actionOverflowButtonStyle"
+                />
+
+    </LinearLayout>
 
     <ImageView
             android:layout_width="48dp"
@@ -52,7 +69,7 @@
             android:src="@drawable/baseline_hearing_24"
             android:id="@+id/button_tts"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edittext_front"
+            app:layout_constraintTop_toBottomOf="@+id/layout_front_text"
             android:layout_marginTop="16dp"
             android:layout_marginRight="16dp"
             />
@@ -69,17 +86,35 @@
             android:textSize="16dp"
             />
 
-    <EditText
+    <LinearLayout
+            android:id="@+id/layout_back_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/edittext_back"
-            android:inputType="textNoSuggestions|textMultiLine"
-            android:textSize="20sp"
-            app:layout_constraintTop_toBottomOf="@id/button_tts"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:text=""
-            />
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/button_tts"
+            >
+
+        <EditText
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:id="@+id/edittext_back"
+                android:inputType="textNoSuggestions|textMultiLine"
+                android:textSize="20sp"
+                app:layout_constraintTop_toBottomOf="@id/button_tts"
+                android:layout_marginLeft="16dp"
+                android:text=""
+                />
+
+        <ImageButton
+                android:id="@+id/imagebutton_back_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="?android:attr/actionOverflowButtonStyle"
+                />
+
+    </LinearLayout>
+
 
     <TextView
             android:layout_width="wrap_content"
@@ -87,7 +122,7 @@
             android:id="@+id/label_image"
             android:text="Image"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edittext_back"
+            app:layout_constraintTop_toBottomOf="@+id/layout_back_text"
             android:layout_marginTop="8dp"
             android:layout_marginLeft="16dp"
             android:textSize="16dp"

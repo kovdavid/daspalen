@@ -112,6 +112,10 @@ public class CardEntity {
         return learnScore;
     }
 
+    public void setLearnScore(Integer learnScore) {
+        this.learnScore = learnScore;
+    }
+
     @NonNull
     public Integer getType() {
         return type;

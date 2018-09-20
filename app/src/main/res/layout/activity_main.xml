@@ -88,6 +88,23 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"/>
+
+        <Button
+                android:theme="@style/AppTheme.ButtonConfirm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Test"
+                android:id="@+id/button_test"
+                android:background="@drawable/round_edge_button"
+                android:textSize="20sp"
+                android:textAllCaps="false"
+                />
+
+        <Space
+                android:layout_weight="0.3"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"/>
+
     </LinearLayout>
 
 

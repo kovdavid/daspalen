@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+            android:id="@+id/translate_spanishdict"
+            android:title="Translate with SpanishDict"
+            app:showAsAction="always"
+            />
+
+    <item
+            android:id="@+id/translate_google_translate"
+            android:title="Translate with Google Translate"
+            app:showAsAction="always"
+            />
+
+</menu>

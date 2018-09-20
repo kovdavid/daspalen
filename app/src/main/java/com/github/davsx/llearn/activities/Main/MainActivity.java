@@ -1,6 +1,7 @@
 package com.github.davsx.llearn.activities.Main;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -39,6 +40,25 @@ public class MainActivity extends Activity {
         btnManageCards = findViewById(R.id.button_manage_cards);
         btnLearnCards = findViewById(R.id.button_learn_cards);
         btnResetCards = findViewById(R.id.button_reset_cards);
+
+        findViewById(R.id.button_test).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_SEND);
+                intent.putExtra(Intent.EXTRA_TEXT, "car seat");
+                intent.putExtra("key_text_input", "car seat");
+                intent.putExtra("key_text_output", "");
+                intent.putExtra("key_language_from", "en");
+                intent.putExtra("key_language_to", "es");
+                intent.putExtra("key_suggest_translation", "");
+                intent.putExtra("key_from_floating_window", false);
+                intent.setComponent(new ComponentName(
+                        "com.google.android.apps.translate",
+                        "com.google.android.apps.translate.TranslateActivity"));
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -50,7 +70,7 @@ public class MainActivity extends Activity {
 
     private void updateButtons() {
         Integer learnableCardCount = cardRepository.learnableCardCount();
-        btnLearnCards.setText("Learn new cards (" + String.valueOf(learnableCardCount) + ")");
+        btnLearnCards.setText("Learn new cards (" + Integer.toString(learnableCardCount) + ")");
         if (learnableCardCount > 0) {
             btnLearnCards.setOnClickListener(new View.OnClickListener() {
                 @Override

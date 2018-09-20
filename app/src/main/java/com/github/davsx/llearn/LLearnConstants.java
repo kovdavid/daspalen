@@ -16,4 +16,6 @@ public class LLearnConstants {
     public static final char[] SPANISH_LOWERCASE_LETTERS = "abcdefghijklmnñopqrstuvwxyzáéíñóúü".toCharArray();
     public static final char[] SPANISH_UPPERCASE_LETTERS = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZÁÉÍÑÓÚÜ".toCharArray();
 
+    public static final String PKG_SPANISHDICT = "com.spanishdict.spanishdict";
+    public static final String PKG_GOOGLE_TRANSLATE = "com.google.android.apps.translate";
 }
