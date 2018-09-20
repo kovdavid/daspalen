@@ -87,10 +87,10 @@ public class ManageCardsActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_new_word:
                 showCreateCardDialog();
+                break;
             case R.id.checkbox_show_incomplete:
                 menuShowIncomplete.setChecked(!menuShowIncomplete.isChecked());
                 adapter.showOnlyIncomplete(menuShowIncomplete.isChecked());
-            default:
                 break;
         }
 
