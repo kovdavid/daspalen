@@ -1,7 +1,7 @@
 package com.github.davsx.llearn.di.component;
 
 import com.github.davsx.llearn.LLearnApplication;
-import com.github.davsx.llearn.activities.EditCard.EditCardActivity;
+import com.github.davsx.llearn.activities.CardEditor.CardEditorActivity;
 import com.github.davsx.llearn.activities.KindleImport.KindleImportActivity;
 import com.github.davsx.llearn.activities.LearnQuiz.LearnQuizActivity;
 import com.github.davsx.llearn.activities.Main.MainActivity;
@@ -37,7 +37,7 @@ public interface ApplicationComponent {
 
     void inject(KindleImportActivity activity);
 
-    void inject(EditCardActivity activity);
+    void inject(CardEditorActivity activity);
 
     CardImageService getCardImageService();
 

@@ -7,15 +7,11 @@ import java.util.List;
 public interface CardRepository {
     CardEntity getCardWithId(Long id_card);
 
-    CardEntity getCardWithFront(String front);
+    CardEntity findDuplicateCard(CardEntity card);
 
     Long save(CardEntity card);
 
     void saveMany(List<CardEntity> cards);
-
-    Integer cardCount();
-
-    Long getMaxCardId();
 
     Integer learnableCardCount();
 
@@ -28,10 +24,6 @@ public interface CardRepository {
     List<CardEntity> getCardsChunked(Long id, boolean onlyIcomplete, int limit);
 
     List<CardEntity> searchCardsChunked(String query, Long id, boolean onlyIncomplete, int limit);
-
-    List<CardEntity> getAllCards();
-
-    List<CardEntity> getAllValidCards();
 
     List<CardEntity> getLearnCandidates();
 }

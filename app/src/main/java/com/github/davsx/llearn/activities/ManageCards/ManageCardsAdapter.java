@@ -8,9 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.github.davsx.llearn.LLearnConstants;
 import com.github.davsx.llearn.R;
-import com.github.davsx.llearn.activities.EditCard.EditCardActivity;
+import com.github.davsx.llearn.activities.CardEditor.CardEditorActivity;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
 import com.github.davsx.llearn.service.ManageCards.ManageCardsService;
 
@@ -94,7 +93,7 @@ public class ManageCardsAdapter extends RecyclerView.Adapter<ManageCardsAdapter.
 
         @Override
         public void onClick(View view) {
-            Intent i = new Intent(context, EditCardActivity.class);
+            Intent i = new Intent(context, CardEditorActivity.class);
             i.putExtra("ID_CARD", card.getId());
             i.putExtra("CARD_POSITION", position);
             context.startActivity(i);

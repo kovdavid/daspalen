@@ -70,6 +70,14 @@ public class CardImageServiceImpl implements CardImageService {
         return null;
     }
 
+    @Override
+    public boolean isTempImage(String path) {
+        if (path == null) {
+            return false;
+        }
+        return getTempFile().getAbsolutePath().equals(path);
+    }
+
     private File getCardImageFile(String fileName) {
         return new File(imageDir + File.separator + fileName);
     }

@@ -11,4 +11,6 @@ public interface CardImageService {
     String saveTempImage(ContentResolver contentResolver, Uri uri);
 
     String getCardImagePath(Long cardId);
+
+    boolean isTempImage(String path);
 }

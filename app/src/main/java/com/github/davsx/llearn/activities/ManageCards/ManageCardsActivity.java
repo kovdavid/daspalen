@@ -1,6 +1,5 @@
 package com.github.davsx.llearn.activities.ManageCards;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import com.github.davsx.llearn.LLearnApplication;
 import com.github.davsx.llearn.R;
+import com.github.davsx.llearn.activities.CardEditor.CardEditorActivity;
 import com.github.davsx.llearn.service.ManageCards.ManageCardsService;
 
 import javax.inject.Inject;
@@ -86,7 +86,7 @@ public class ManageCardsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_new_word:
-                showCreateCardDialog();
+                createNewCard();
                 break;
             case R.id.checkbox_show_incomplete:
                 menuShowIncomplete.setChecked(!menuShowIncomplete.isChecked());
@@ -95,6 +95,13 @@ public class ManageCardsActivity extends AppCompatActivity {
         }
 
         return true;
+    }
+
+    private void createNewCard() {
+        Intent i = new Intent(this, CardEditorActivity.class);
+        i.putExtra("ID_CARD", 0L);
+        i.putExtra("CARD_POSITION", 0L);
+        startActivity(i);
     }
 
     @Override
@@ -114,16 +121,5 @@ public class ManageCardsActivity extends AppCompatActivity {
         }
 
         adapter.notifyDataSetChanged();
-    }
-
-    private void showCreateCardDialog() {
-        CreateCardDialog createCardDialog = new CreateCardDialog(ManageCardsActivity.this, manageCardsService);
-        createCardDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                ManageCardsActivity.this.adapter.notifyDataSetChanged();
-            }
-        });
-        createCardDialog.show();
     }
 }

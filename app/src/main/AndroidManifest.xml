@@ -24,7 +24,7 @@
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activities.EditCard.EditCardActivity" android:launchMode="singleInstance">
+        <activity android:name=".activities.CardEditor.CardEditorActivity" android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

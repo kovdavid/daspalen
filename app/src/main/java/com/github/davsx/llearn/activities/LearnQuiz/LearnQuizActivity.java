@@ -43,13 +43,18 @@ public class LearnQuizActivity extends FragmentActivity implements AnswerReceive
         progressBar = findViewById(R.id.progress_bar);
         progressBar.setMax(learnQuizService.getTotalRounds());
 
-        speakerService.setLanguage(new Locale("es", "ES"));
-
         if (sessionStarted) {
             showNextFragment();
         } else {
             finish();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        speakerService.setLanguage(new Locale("es", "ES"));
     }
 
     private void showNextFragment() {

@@ -39,18 +39,6 @@ public interface CardDao {
     @Query("SELECT * FROM cards WHERE id_card = :id_card")
     CardEntity getCardWithId(Long id_card);
 
-    @Query("SELECT * FROM cards WHERE front = :front")
-    CardEntity getCardWithFront(String front);
-
-    @Query("SELECT count(*) FROM cards")
-    Integer cardCount();
-
-    @Query("SELECT * FROM cards ORDER BY id_card ASC")
-    List<CardEntity> getAllCards();
-
-    @Query("SELECT * FROM cards WHERE type != 0 ORDER BY id_card ASC")
-    List<CardEntity> getAllValidCards();
-
-    @Query("SELECT MAX(id_card) FROM cards")
-    long getMaxCardId();
+    @Query("SELECT * FROM cards WHERE front = :front OR back = :back")
+    CardEntity findDuplicateCard(String front, String back);
 }

@@ -1,4 +1,4 @@
-package com.github.davsx.llearn.activities.EditCard;
+package com.github.davsx.llearn.activities.CardEditor;
 
 import android.content.ComponentName;
 import android.content.DialogInterface;
@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,9 +31,9 @@ import com.github.davsx.llearn.service.Speaker.SpeakerService;
 import javax.inject.Inject;
 import java.util.Locale;
 
-public class EditCardActivity extends AppCompatActivity {
+public class CardEditorActivity extends AppCompatActivity {
 
-    private static final String TAG = "EditCardActivity";
+    private static final String TAG = "CardEditorActivity";
 
     @Inject
     CardRepository cardRepository;
@@ -52,87 +53,65 @@ public class EditCardActivity extends AppCompatActivity {
     private ImageButton imageButtonFront;
     private ImageButton imageButtonBack;
 
-    private CardEntity card;
+    private CardEntity card = null;
     private Long cardId;
-    private Integer cardPosition;
-    private String imagePath;
+    private Integer cardPosition = 0;
+    private String imagePath = null;
     private String frontText = "";
     private String backText = "";
+    private boolean translateFront = true;
+
+    private String receivedTranslation = "";
 
     private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_card);
+        setContentView(R.layout.activity_card_editor);
 
         ((LLearnApplication) getApplication()).getApplicationComponent().inject(this);
         sharedPreferences = getPreferences(MODE_PRIVATE);
 
-        speakerService.setLanguage(new Locale("es", "ES"));
-
         setUpViews();
-        handleIntent();
+        handleIntent(getIntent());
     }
 
-    private void handleIntent() {
-        Intent intent = getIntent();
-        String action = intent.getAction();
-        String type = intent.getType();
-
-        if (action == null) {
-            cardId = intent.getLongExtra("ID_CARD", 0L);
-            if (cardId > 0L) {
-                card = cardRepository.getCardWithId(cardId);
-
-                cardPosition = intent.getIntExtra("CARD_POSITION", 0);
-                frontText = card.getFront();
-                backText = card.getBack();
-                imagePath = cardImageService.getCardImagePath(cardId);
-            } else {
-                Log.e(TAG, "Invalid ID_CARD in Intent extra");
-                openManageCardsActivity(ManageCardsService.RESULT_CARD_NOT_CHANGED);
-            }
-        } else if (action.equals(Intent.ACTION_SEND) && type != null) {
-            if (type.equals("image/jpeg") || type.equals("image/png") || type.equals("image/gif")) {
-                Uri imageUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
-                if (imageUri != null) {
-                    loadDataFromSharedPrefs();
-                    imagePath = cardImageService.saveTempImage(getContentResolver(), imageUri);
-                }
-            } else if (type.equals("text/plain")) {
-                loadDataFromSharedPrefs();
-                // com.google.android.app.translate
-                String host = this.getReferrer().getHost();
-                String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
-                Toast.makeText(this, sharedText, Toast.LENGTH_SHORT).show();
-            } else {
-                Log.e(TAG, "Invalid ACTION_SEND type " + type);
-                openManageCardsActivity(ManageCardsService.RESULT_CARD_NOT_CHANGED);
-            }
-        }
-    }
-
-    private void openManageCardsActivity(int result) {
-        Intent i = new Intent(this, ManageCardsActivity.class);
-        i.putExtra("ID_CARD", cardId);
-        i.putExtra("CARD_POSITION", cardPosition);
-        i.putExtra("RESULT", result);
-        startActivity(i);
-        finish();
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        loadDataFromSharedPrefs();
+        handleIntent(intent);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
+        loadDataFromSharedPrefs();
+
+        speakerService.setLanguage(new Locale("es", "ES"));
+
         editTextFront.setText(frontText);
         editTextBack.setText(backText);
+
+        Log.d(TAG, "receivedTranslation" + receivedTranslation);
+
+        if (receivedTranslation != null && receivedTranslation.length() > 0) {
+            showTranslationDialog();
+        }
+
+        // We do this twice, because imagePath can be set to tempImage
+        if (imagePath == null) {
+            imagePath = cardImageService.getCardImagePath(cardId);
+        }
         if (imagePath != null) {
             Bitmap bmImg = BitmapFactory.decodeFile(imagePath);
             imageView.setImageBitmap(bmImg);
         }
-        textViewCardScore.setText(Integer.toString(card.getLearnScore()));
+
+        int learnScore = card != null ? card.getLearnScore() : 0;
+        textViewCardScore.setText(Integer.toString(learnScore));
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,7 +121,6 @@ public class EditCardActivity extends AppCompatActivity {
                 } else {
                     showImageEditDialog();
                 }
-
             }
         });
 
@@ -156,8 +134,7 @@ public class EditCardActivity extends AppCompatActivity {
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveCard();
-                openManageCardsActivity(ManageCardsService.RESULT_CARD_CHANGED);
+                onSaveCard();
             }
         });
 
@@ -168,18 +145,23 @@ public class EditCardActivity extends AppCompatActivity {
             }
         });
 
-        buttonDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDeleteDialog();
-            }
-        });
+        if (cardId > 0L && card != null) {
+            buttonDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showDeleteDialog();
+                }
+            });
+        } else {
+            buttonDelete.setOnClickListener(null);
+            buttonDelete.setEnabled(false);
+        }
 
         imageButtonFront.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PopupMenu popup = new PopupMenu(EditCardActivity.this, imageButtonFront);
-                popup.getMenuInflater().inflate(R.menu.edit_cards_edittext_menu, popup.getMenu());
+                PopupMenu popup = new PopupMenu(CardEditorActivity.this, imageButtonFront);
+                popup.getMenuInflater().inflate(R.menu.card_editor_edittext_menu, popup.getMenu());
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
@@ -201,8 +183,8 @@ public class EditCardActivity extends AppCompatActivity {
         imageButtonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PopupMenu popup = new PopupMenu(EditCardActivity.this, imageButtonBack);
-                popup.getMenuInflater().inflate(R.menu.edit_cards_edittext_menu, popup.getMenu());
+                PopupMenu popup = new PopupMenu(CardEditorActivity.this, imageButtonBack);
+                popup.getMenuInflater().inflate(R.menu.card_editor_edittext_menu, popup.getMenu());
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
@@ -222,12 +204,104 @@ public class EditCardActivity extends AppCompatActivity {
         });
     }
 
+    private void handleIntent(Intent intent) {
+        String action = intent.getAction();
+        String type = intent.getType();
+
+        if (action == null) {
+            cardId = intent.getLongExtra("ID_CARD", 0L);
+            if (cardId > 0L) {
+                card = cardRepository.getCardWithId(cardId);
+
+                cardPosition = intent.getIntExtra("CARD_POSITION", 0);
+                frontText = card.getFront();
+                backText = card.getBack();
+                imagePath = cardImageService.getCardImagePath(cardId);
+            }
+        } else if (action.equals(Intent.ACTION_SEND) && type != null) {
+            switch (type) {
+                case "image/jpeg":
+                case "image/png":
+                case "image/gif":
+                    Uri imageUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+                    if (imageUri != null) {
+                        imagePath = cardImageService.saveTempImage(getContentResolver(), imageUri);
+                    }
+                    break;
+                case "text/plain":
+                    receivedTranslation = intent.getStringExtra(Intent.EXTRA_TEXT);
+                    break;
+                default:
+                    Log.e(TAG, "Invalid ACTION_SEND type " + type);
+                    openManageCardsActivity(ManageCardsService.RESULT_CARD_NOT_CHANGED);
+                    break;
+            }
+        }
+    }
+
+    private void openManageCardsActivity(int result) {
+        Intent i = new Intent(this, ManageCardsActivity.class);
+        i.putExtra("ID_CARD", cardId);
+        i.putExtra("CARD_POSITION", cardPosition);
+        i.putExtra("RESULT", result);
+        startActivity(i);
+        finish();
+    }
+
+    private void showTranslationDialog() {
+        final EditText targetEditText;
+        if (translateFront) {
+            targetEditText = editTextBack;
+        } else {
+            targetEditText = editTextFront;
+        }
+
+        String targetText = targetEditText.getText().toString();
+        final String translation = receivedTranslation;
+        receivedTranslation = "";
+
+        String positiveButtonText;
+        String dialogMessage;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        if (targetText.length() > 0) {
+            positiveButtonText = "Replace";
+            dialogMessage = "Current<br /><b>" + targetText + "</b><br /><br />Received<br /><b>" + translation + "</b>";
+            builder.setNegativeButton("Append", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    targetEditText.getText().append(translation);
+                }
+            });
+        } else {
+            dialogMessage = translation;
+            positiveButtonText = "Use";
+        }
+
+        builder.setTitle("Use received translation?")
+                .setMessage(Html.fromHtml(dialogMessage))
+                .setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        targetEditText.setText(translation);
+                    }
+                })
+                .setNeutralButton("Discard", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
     private void translateFrontWithSpanishDict() {
         String frontText = editTextFront.getText().toString();
         if (frontText.equals("")) {
             Toast.makeText(this, "Front text is empty!", Toast.LENGTH_SHORT).show();
             return;
         }
+        translateFront = true;
 
         Uri uri = Uri.parse("http://www.spanishdict.com/translate/" + Uri.encode(frontText));
         translateWithSpanishDict(uri);
@@ -239,6 +313,7 @@ public class EditCardActivity extends AppCompatActivity {
             Toast.makeText(this, "Back text is empty!", Toast.LENGTH_SHORT).show();
             return;
         }
+        translateFront = false;
 
         Uri uri = Uri.parse("http://www.spanishdict.com/traductor/" + Uri.encode(backText));
         translateWithSpanishDict(uri);
@@ -249,17 +324,27 @@ public class EditCardActivity extends AppCompatActivity {
         PackageInfo packageInfo = null;
         try {
             packageInfo = pm.getPackageInfo(LLearnConstants.PKG_SPANISHDICT, 0);
-        } catch (PackageManager.NameNotFoundException e) {
+        } catch (PackageManager.NameNotFoundException ignored) {
         }
 
         if (packageInfo != null) {
+            putDataToSharedPrefs();
             openSpanishDict(uri);
         } else {
             String appName = "SpanishDict";
             String pkgName = LLearnConstants.PKG_SPANISHDICT;
-
             alertInstallApp(appName, pkgName);
         }
+    }
+
+    private void openSpanishDict(Uri uri) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.setPackage("com.spanishdict.spanishdict");
+        intent.setData(uri);
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        intent.addCategory(Intent.CATEGORY_BROWSABLE);
+        startActivity(intent);
     }
 
     private void translateBackWithGoogleTranslate() {
@@ -268,6 +353,7 @@ public class EditCardActivity extends AppCompatActivity {
             Toast.makeText(this, "Back text is empty!", Toast.LENGTH_SHORT).show();
             return;
         }
+        translateFront = false;
         translateWithGoogleTranslate(backText, "es", "en");
     }
 
@@ -277,6 +363,7 @@ public class EditCardActivity extends AppCompatActivity {
             Toast.makeText(this, "Front text is empty!", Toast.LENGTH_SHORT).show();
             return;
         }
+        translateFront = true;
         translateWithGoogleTranslate(frontText, "en", "es");
     }
 
@@ -285,10 +372,11 @@ public class EditCardActivity extends AppCompatActivity {
         PackageInfo packageInfo = null;
         try {
             packageInfo = pm.getPackageInfo(LLearnConstants.PKG_GOOGLE_TRANSLATE, 0);
-        } catch (PackageManager.NameNotFoundException e) {
+        } catch (PackageManager.NameNotFoundException ignored) {
         }
 
         if (packageInfo != null) {
+            putDataToSharedPrefs();
             openGoogleTranslate(text, lngFrom, lngTo);
         } else {
             String appName = "Google Translate";
@@ -316,10 +404,11 @@ public class EditCardActivity extends AppCompatActivity {
 
     private void alertInstallApp(String appName, final String pkgName) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                .setMessage("Application "+ appName +" not installed")
+                .setMessage("Application " + appName + " not installed")
                 .setPositiveButton("Install", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        putDataToSharedPrefs();
                         Uri uri = Uri.parse("market://details?id=" + pkgName);
                         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                         startActivity(intent);
@@ -334,19 +423,9 @@ public class EditCardActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private void openSpanishDict(Uri uri) {
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_VIEW);
-        intent.setPackage("com.spanishdict.spanishdict");
-        intent.setData(uri);
-        intent.addCategory(Intent.CATEGORY_DEFAULT);
-        intent.addCategory(Intent.CATEGORY_BROWSABLE);
-        startActivity(intent);
-    }
-
     private void showImageEditDialog() {
         String[] items = {"Delete image", "Find image on the web"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(EditCardActivity.this)
+        AlertDialog.Builder builder = new AlertDialog.Builder(CardEditorActivity.this)
                 .setTitle("Choose action")
                 .setCancelable(true)
                 .setItems(items, new DialogInterface.OnClickListener() {
@@ -387,13 +466,21 @@ public class EditCardActivity extends AppCompatActivity {
 
     private void searchImageFromWeb() {
         putDataToSharedPrefs();
-        String url = "https://www.google.com/search?tbm=isch&q=" + Uri.encode(editTextFront.getText().toString());
+        String frontString = editTextFront.getText().toString();
+        String url = "https://www.google.com/search?tbm=isch&q=" + Uri.encode(frontString);
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(Uri.parse(url));
         startActivity(i);
     }
 
+    private void onSaveCard() {
+        // TODO before saving a card check for duplicated based on front/back texts
+        saveCard();
+        openManageCardsActivity(ManageCardsService.RESULT_CARD_CHANGED);
+    }
+
     private void saveCard() {
+        // TODO First save card, THEN save image (wee need cardId)
         String newFront = editTextFront.getText().toString();
         String newBack = editTextBack.getText().toString();
 
@@ -403,7 +490,7 @@ public class EditCardActivity extends AppCompatActivity {
             card.setFront(newFront);
             card.setBack(newBack);
         }
-        if (imagePath != null) {
+        if (cardImageService.isTempImage(imagePath)) {
             cardImageService.removeCardImages(cardId);
             cardImageService.setCardImageFromTemp(cardId);
         }
@@ -429,8 +516,11 @@ public class EditCardActivity extends AppCompatActivity {
     }
 
     private void deleteCard() {
-        cardRepository.deleteCard(card);
-        openManageCardsActivity(ManageCardsService.RESULT_CARD_DELETED);
+        if (card != null) {
+            cardRepository.deleteCard(card);
+            openManageCardsActivity(ManageCardsService.RESULT_CARD_DELETED);
+        }
+        openManageCardsActivity(ManageCardsService.RESULT_CARD_NOT_CHANGED);
     }
 
     private void putDataToSharedPrefs() {
@@ -441,6 +531,7 @@ public class EditCardActivity extends AppCompatActivity {
         editor.putString("IMAGE_PATH", imagePath);
         editor.putString("FRONT_TEXT", editTextFront.getText().toString());
         editor.putString("BACK_TEXT", editTextBack.getText().toString());
+        editor.putBoolean("TRANSLATE_FRONT", translateFront);
 
         editor.commit();
     }
@@ -451,8 +542,11 @@ public class EditCardActivity extends AppCompatActivity {
         imagePath = sharedPreferences.getString("IMAGE_PATH", "");
         frontText = sharedPreferences.getString("FRONT_TEXT", "");
         backText = sharedPreferences.getString("BACK_TEXT", "");
+        translateFront = sharedPreferences.getBoolean("TRANSLATE_FRONT", true);
 
-        card = cardRepository.getCardWithId(cardId);
+        if (cardId > 0L) {
+            card = cardRepository.getCardWithId(cardId);
+        }
     }
 
     private void setUpViews() {

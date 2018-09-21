@@ -28,8 +28,8 @@ public class CardRepositoryImpl implements CardRepository {
     }
 
     @Override
-    public CardEntity getCardWithFront(String front) {
-        return cardDao.getCardWithFront(front);
+    public CardEntity findDuplicateCard(CardEntity card) {
+        return cardDao.findDuplicateCard(card.getFront(), card.getBack());
     }
 
     @Override
@@ -40,16 +40,6 @@ public class CardRepositoryImpl implements CardRepository {
     @Override
     public void saveMany(List<CardEntity> cards) {
         cardDao.saveMany(cards);
-    }
-
-    @Override
-    public Integer cardCount() {
-        return cardDao.cardCount();
-    }
-
-    @Override
-    public Long getMaxCardId() {
-        return cardDao.getMaxCardId();
     }
 
     @Override
@@ -91,16 +81,6 @@ public class CardRepositoryImpl implements CardRepository {
         }
         String queryStr = "%" + query + "%";
         return cardDao.searchCardsChunked(queryStr, id, types, limit);
-    }
-
-    @Override
-    public List<CardEntity> getAllCards() {
-        return cardDao.getAllCards();
-    }
-
-    @Override
-    public List<CardEntity> getAllValidCards() {
-        return cardDao.getAllValidCards();
     }
 
     @Override
