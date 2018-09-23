@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -54,7 +55,7 @@ public class CardEditorActivity extends AppCompatActivity {
     private ImageButton imageButtonBack;
 
     private CardEntity card = null;
-    private Long cardId;
+    private Long cardId = 0L;
     private Integer cardPosition = 0;
     private String imagePath = null;
     private String frontText = "";
@@ -88,21 +89,17 @@ public class CardEditorActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        loadDataFromSharedPrefs();
-
         speakerService.setLanguage(new Locale("es", "ES"));
 
         editTextFront.setText(frontText);
         editTextBack.setText(backText);
-
-        Log.d(TAG, "receivedTranslation" + receivedTranslation);
 
         if (receivedTranslation != null && receivedTranslation.length() > 0) {
             showTranslationDialog();
         }
 
         // We do this twice, because imagePath can be set to tempImage
-        if (imagePath == null) {
+        if (imagePath == null && cardId != null) {
             imagePath = cardImageService.getCardImagePath(cardId);
         }
         if (imagePath != null) {
@@ -208,6 +205,8 @@ public class CardEditorActivity extends AppCompatActivity {
         String action = intent.getAction();
         String type = intent.getType();
 
+        Log.d(TAG, "handleIntent action[" + action + "] type[" + type + "]");
+
         if (action == null) {
             cardId = intent.getLongExtra("ID_CARD", 0L);
             if (cardId > 0L) {
@@ -217,6 +216,11 @@ public class CardEditorActivity extends AppCompatActivity {
                 frontText = card.getFront();
                 backText = card.getBack();
                 imagePath = cardImageService.getCardImagePath(cardId);
+            } else {
+                cardPosition = 0;
+                frontText = "";
+                backText = "";
+                imagePath = "";
             }
         } else if (action.equals(Intent.ACTION_SEND) && type != null) {
             switch (type) {
@@ -229,7 +233,10 @@ public class CardEditorActivity extends AppCompatActivity {
                     }
                     break;
                 case "text/plain":
-                    receivedTranslation = intent.getStringExtra(Intent.EXTRA_TEXT);
+                    String text = intent.getStringExtra(Intent.EXTRA_TEXT);
+                    if (text != null) {
+                        receivedTranslation = text;
+                    }
                     break;
                 default:
                     Log.e(TAG, "Invalid ACTION_SEND type " + type);
@@ -260,27 +267,17 @@ public class CardEditorActivity extends AppCompatActivity {
         final String translation = receivedTranslation;
         receivedTranslation = "";
 
-        String positiveButtonText;
-        String dialogMessage;
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        if (targetText.length() > 0) {
-            positiveButtonText = "Replace";
-            dialogMessage = "Current<br /><b>" + targetText + "</b><br /><br />Received<br /><b>" + translation + "</b>";
-            builder.setNegativeButton("Append", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    targetEditText.getText().append(translation);
-                }
-            });
-        } else {
-            dialogMessage = translation;
-            positiveButtonText = "Use";
+        if (targetText.length() == 0) {
+            targetEditText.setText(translation);
+            return;
         }
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        String dialogMessage =
+                String.format("Current<br /><b>%s</b><br /><br />Received<br /><b>%s</b>", targetText, translation);
         builder.setTitle("Use received translation?")
                 .setMessage(Html.fromHtml(dialogMessage))
-                .setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
+                .setPositiveButton("Replace", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         targetEditText.setText(translation);
@@ -290,6 +287,12 @@ public class CardEditorActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("Append", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        targetEditText.getText().append(translation);
                     }
                 })
                 .show();
@@ -466,21 +469,62 @@ public class CardEditorActivity extends AppCompatActivity {
 
     private void searchImageFromWeb() {
         putDataToSharedPrefs();
+
         String frontString = editTextFront.getText().toString();
-        String url = "https://www.google.com/search?tbm=isch&q=" + Uri.encode(frontString);
+        String backString = editTextBack.getText().toString();
+
+        String query;
+        if (frontString.length() > 0) {
+            query = frontString;
+        } else if (backString.length() > 0) {
+            query = backString;
+        } else {
+            Toast.makeText(this, "Front and Back are empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String url = "https://www.google.com/search?tbm=isch&q=" + Uri.encode(query);
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(Uri.parse(url));
         startActivity(i);
     }
 
     private void onSaveCard() {
-        // TODO before saving a card check for duplicated based on front/back texts
-        saveCard();
-        openManageCardsActivity(ManageCardsService.RESULT_CARD_CHANGED);
+        CardEntity dupCard = findDupCard();
+
+        if (dupCard == null) {
+            saveCard();
+            openManageCardsActivity(ManageCardsService.RESULT_CARD_CHANGED);
+        } else {
+            showDupCardAlert(dupCard);
+        }
+    }
+
+    private CardEntity findDupCard() {
+        String frontText = editTextFront.getText().toString();
+        String backText = editTextBack.getText().toString();
+
+        // We don't check duplicity for incomplete cards
+        if (frontText.length() > 0 && backText.length() > 0) {
+            return cardRepository.findDuplicateCard(frontText, backText);
+        } else {
+            return null;
+        }
+    }
+
+    private void showDupCardAlert(@NonNull CardEntity dupCard) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        String dialogMessage = String.format(
+                "The current card cannot be saved, because a duplicate card was found:<br /><br />Front<br /><b>%s</b><br />Back<br /><b>%s</b>",
+                dupCard.getFront(),
+                dupCard.getBack());
+        builder.setTitle("Error")
+                .setMessage(Html.fromHtml(dialogMessage))
+                .setPositiveButton("Ok", null)
+                .show();
     }
 
     private void saveCard() {
-        // TODO First save card, THEN save image (wee need cardId)
         String newFront = editTextFront.getText().toString();
         String newBack = editTextBack.getText().toString();
 
@@ -490,11 +534,13 @@ public class CardEditorActivity extends AppCompatActivity {
             card.setFront(newFront);
             card.setBack(newBack);
         }
+
+        cardId = cardRepository.save(card);
+
         if (cardImageService.isTempImage(imagePath)) {
             cardImageService.removeCardImages(cardId);
             cardImageService.setCardImageFromTemp(cardId);
         }
-        cardRepository.save(card);
     }
 
     private void showDeleteDialog() {

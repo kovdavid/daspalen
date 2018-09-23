@@ -7,7 +7,7 @@ import java.util.List;
 public interface CardRepository {
     CardEntity getCardWithId(Long id_card);
 
-    CardEntity findDuplicateCard(CardEntity card);
+    CardEntity findDuplicateCard(String front, String back);
 
     Long save(CardEntity card);
 

@@ -39,6 +39,6 @@ public interface CardDao {
     @Query("SELECT * FROM cards WHERE id_card = :id_card")
     CardEntity getCardWithId(Long id_card);
 
-    @Query("SELECT * FROM cards WHERE front = :front OR back = :back")
+    @Query("SELECT * FROM cards WHERE front = :front OR back = :back LIMIT 1")
     CardEntity findDuplicateCard(String front, String back);
 }

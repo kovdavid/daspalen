@@ -28,8 +28,8 @@ public class CardRepositoryImpl implements CardRepository {
     }
 
     @Override
-    public CardEntity findDuplicateCard(CardEntity card) {
-        return cardDao.findDuplicateCard(card.getFront(), card.getBack());
+    public CardEntity findDuplicateCard(String front, String back) {
+        return cardDao.findDuplicateCard(front, back);
     }
 
     @Override
