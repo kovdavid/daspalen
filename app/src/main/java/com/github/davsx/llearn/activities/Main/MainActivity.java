@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import com.github.davsx.llearn.LLearnApplication;
 import com.github.davsx.llearn.R;
+import com.github.davsx.llearn.activities.CardExport.CardExportActivity;
+import com.github.davsx.llearn.activities.CardImport.CardImportActivity;
 import com.github.davsx.llearn.activities.LearnQuiz.LearnQuizActivity;
 import com.github.davsx.llearn.activities.ManageCards.ManageCardsActivity;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
@@ -28,6 +30,8 @@ public class MainActivity extends Activity {
     private Button btnLearnCards;
     private Button btnManageCards;
     private Button btnResetCards;
+    private Button btnExportCards;
+    private Button btnImportCards;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,8 @@ public class MainActivity extends Activity {
         btnManageCards = findViewById(R.id.button_manage_cards);
         btnLearnCards = findViewById(R.id.button_learn_cards);
         btnResetCards = findViewById(R.id.button_reset_cards);
+        btnExportCards = findViewById(R.id.button_export_cards);
+        btnImportCards = findViewById(R.id.button_import_cards);
 
         findViewById(R.id.button_test).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,6 +93,22 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(MainActivity.this, ManageCardsActivity.class);
+                MainActivity.this.startActivity(i);
+            }
+        });
+
+        btnExportCards.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, CardExportActivity.class);
+                MainActivity.this.startActivity(i);
+            }
+        });
+
+        btnImportCards.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, CardImportActivity.class);
                 MainActivity.this.startActivity(i);
             }
         });

@@ -1,10 +1,13 @@
-package com.github.davsx.llearn.service.FileService;
+package com.github.davsx.llearn.service.CardImage;
 
 import android.content.ContentResolver;
 import android.net.Uri;
 
 import java.io.*;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class CardImageServiceImpl implements CardImageService {
 
@@ -76,6 +79,18 @@ public class CardImageServiceImpl implements CardImageService {
             return false;
         }
         return getTempFile().getAbsolutePath().equals(path);
+    }
+
+    @Override
+    public List<File> getAllFiles() {
+        File[] files = imageDir.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File pathname) {
+                return pathname.isFile();
+            }
+        });
+
+        return new ArrayList<>(Arrays.asList(files));
     }
 
     private File getCardImageFile(String fileName) {

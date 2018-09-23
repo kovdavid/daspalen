@@ -48,7 +48,7 @@ public class LearnQuizService {
         }
 
         ArrayList<LearnQuizCard> cardQueue = new ArrayList<>(this.cards);
-        this.learnQuizSchedule = new LearnQuizSchedule<LearnQuizCard>(cardQueue);
+        this.learnQuizSchedule = new LearnQuizSchedule<>(cardQueue);
 
         this.randomCards = cardRepository.getRandomCards(LLearnConstants.LEARN_SESSION_RANDOM_CARDS_COUNT);
 

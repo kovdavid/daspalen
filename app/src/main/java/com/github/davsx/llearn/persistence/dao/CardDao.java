@@ -19,6 +19,9 @@ public interface CardDao {
     @Query("DELETE FROM cards")
     void deleteAllCards();
 
+    @Query("SELECT count(*) FROM cards")
+    Integer allCardsCount();
+
     @Query("SELECT count(*) FROM cards WHERE type = 1")
     Integer learnableCardCount();
 
@@ -41,4 +44,5 @@ public interface CardDao {
 
     @Query("SELECT * FROM cards WHERE front = :front OR back = :back LIMIT 1")
     CardEntity findDuplicateCard(String front, String back);
+
 }

@@ -48,23 +48,28 @@ public class CardEntity {
     public CardEntity() {
     }
 
+    public String[] toCsvData() {
+        String leanUpdateAtString = "0";
+        if (learnUpdateAt != null) {
+            leanUpdateAtString = Long.toString(learnUpdateAt);
+        }
+        return new String[]{
+                Long.toString(id),
+                front,
+                back,
+                Integer.toString(type),
+                Integer.toString(learnScore),
+                leanUpdateAtString,
+                Long.toString(createdAt)
+        };
+    }
+
     public void incrementLearnScore() {
         this.learnScore = Math.min(this.learnScore + 1, LLearnConstants.MAX_CARD_LEARN_SCORE);
         this.learnUpdateAt = System.currentTimeMillis();
         if (this.learnScore >= LLearnConstants.MAX_CARD_LEARN_SCORE) {
             this.type = TYPE_REVIEW;
         }
-    }
-
-    @NonNull
-    public String getBack() {
-        return back;
-    }
-
-    public CardEntity setBack(@NonNull String back) {
-        this.back = back;
-        this.type = calculateType();
-        return this;
     }
 
     private Integer calculateType() {
@@ -79,12 +84,19 @@ public class CardEntity {
         }
     }
 
-    public Long getCreatedAt() {
-        return createdAt;
-    }
-
     public CardEntity setCreatedAt(Long createdAt) {
         this.createdAt = createdAt;
+        return this;
+    }
+
+    @NonNull
+    public String getBack() {
+        return back;
+    }
+
+    public CardEntity setBack(@NonNull String back) {
+        this.back = back;
+        this.type = calculateType();
         return this;
     }
 
@@ -112,8 +124,9 @@ public class CardEntity {
         return learnScore;
     }
 
-    public void setLearnScore(Integer learnScore) {
+    public CardEntity setLearnScore(Integer learnScore) {
         this.learnScore = learnScore;
+        return this;
     }
 
     @NonNull

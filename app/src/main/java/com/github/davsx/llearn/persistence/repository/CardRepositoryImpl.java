@@ -43,6 +43,11 @@ public class CardRepositoryImpl implements CardRepository {
     }
 
     @Override
+    public Integer allCardsCount() {
+        return cardDao.allCardsCount();
+    }
+
+    @Override
     public Integer learnableCardCount() {
         return cardDao.learnableCardCount();
     }

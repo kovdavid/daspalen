@@ -1,8 +1,8 @@
 package com.github.davsx.llearn.di.module;
 
 import android.content.Context;
-import com.github.davsx.llearn.service.FileService.CardImageService;
-import com.github.davsx.llearn.service.FileService.CardImageServiceImpl;
+import com.github.davsx.llearn.service.CardImage.CardImageService;
+import com.github.davsx.llearn.service.CardImage.CardImageServiceImpl;
 import dagger.Module;
 import dagger.Provides;
 

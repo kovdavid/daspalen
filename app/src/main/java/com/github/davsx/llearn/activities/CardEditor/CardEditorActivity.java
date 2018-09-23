@@ -25,7 +25,7 @@ import com.github.davsx.llearn.R;
 import com.github.davsx.llearn.activities.ManageCards.ManageCardsActivity;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
 import com.github.davsx.llearn.persistence.repository.CardRepository;
-import com.github.davsx.llearn.service.FileService.CardImageService;
+import com.github.davsx.llearn.service.CardImage.CardImageService;
 import com.github.davsx.llearn.service.ManageCards.ManageCardsService;
 import com.github.davsx.llearn.service.Speaker.SpeakerService;
 
@@ -506,7 +506,11 @@ public class CardEditorActivity extends AppCompatActivity {
 
         // We don't check duplicity for incomplete cards
         if (frontText.length() > 0 && backText.length() > 0) {
-            return cardRepository.findDuplicateCard(frontText, backText);
+            CardEntity dupCard = cardRepository.findDuplicateCard(frontText, backText);
+            if (dupCard != null && dupCard.getId().equals(cardId)) {
+                return null;
+            }
+            return dupCard;
         } else {
             return null;
         }
@@ -528,11 +532,19 @@ public class CardEditorActivity extends AppCompatActivity {
         String newFront = editTextFront.getText().toString();
         String newBack = editTextBack.getText().toString();
 
-        if (!newFront.equals(card.getFront()) || !newBack.equals(card.getBack())) {
-            card.setType(CardEntity.TYPE_INCOMPLETE);
-            card.setLearnScore(0);
-            card.setFront(newFront);
-            card.setBack(newBack);
+        if (card == null) {
+            card = new CardEntity()
+                    .setFront(newFront)
+                    .setBack(newBack)
+                    .setCreatedAt(System.currentTimeMillis())
+                    .setLearnScore(0);
+        } else {
+            if (!newFront.equals(card.getFront()) || !newBack.equals(card.getBack())) {
+                card.setType(CardEntity.TYPE_INCOMPLETE);
+                card.setLearnScore(0);
+                card.setFront(newFront);
+                card.setBack(newBack);
+            }
         }
 
         cardId = cardRepository.save(card);

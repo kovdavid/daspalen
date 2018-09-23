@@ -13,6 +13,8 @@ public interface CardRepository {
 
     void saveMany(List<CardEntity> cards);
 
+    Integer allCardsCount();
+
     Integer learnableCardCount();
 
     void deleteCard(CardEntity card);

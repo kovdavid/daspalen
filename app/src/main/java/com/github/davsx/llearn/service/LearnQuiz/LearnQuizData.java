@@ -82,7 +82,6 @@ public class LearnQuizData {
             }
             result.add(original);
         } else {
-
             Set<String> choices = new HashSet<>();
             while (choices.size() != 3) {
                 int index = rng.nextInt(Math.min(candidates.size(), 10));

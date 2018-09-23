@@ -58,4 +58,10 @@ dependencies {
 
     // Java String Similarity
     implementation group: 'info.debatty', name: 'java-string-similarity', version: '0.10'
+
+    // CircleProgress
+    implementation 'com.github.lzyzsd:circleprogress:1.2.1'
+
+    // OpenCSV
+    implementation 'com.opencsv:opencsv:4.2'
 }

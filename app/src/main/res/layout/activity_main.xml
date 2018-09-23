@@ -77,6 +77,38 @@
                 android:theme="@style/AppTheme.ButtonConfirm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="Export Cards"
+                android:id="@+id/button_export_cards"
+                android:background="@drawable/round_edge_button"
+                android:textSize="20sp"
+                android:textAllCaps="false"
+                />
+
+        <Space
+                android:layout_weight="0.3"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"/>
+
+        <Button
+                android:theme="@style/AppTheme.ButtonConfirm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Import Cards"
+                android:id="@+id/button_import_cards"
+                android:background="@drawable/round_edge_button"
+                android:textSize="20sp"
+                android:textAllCaps="false"
+                />
+
+        <Space
+                android:layout_weight="0.3"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"/>
+
+        <Button
+                android:theme="@style/AppTheme.ButtonConfirm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="Reset Cards"
                 android:id="@+id/button_reset_cards"
                 android:background="@drawable/round_edge_button"

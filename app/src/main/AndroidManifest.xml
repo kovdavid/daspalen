@@ -41,6 +41,16 @@
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
+        <activity android:name=".activities.CardExport.CardExportActivity" android:launchMode="singleInstance">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".activities.CardImport.CardImportActivity" android:launchMode="singleInstance">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
         <activity android:name=".activities.KindleImport.KindleImportActivity" android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.SEND_MULTIPLE"/>
