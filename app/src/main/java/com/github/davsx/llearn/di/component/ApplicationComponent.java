@@ -11,6 +11,7 @@ import com.github.davsx.llearn.activities.ManageCards.ManageCardsActivity;
 import com.github.davsx.llearn.di.module.*;
 import com.github.davsx.llearn.service.CardExport.CardExportService;
 import com.github.davsx.llearn.service.CardImage.CardImageService;
+import com.github.davsx.llearn.service.CardImport.CardImportService;
 import com.github.davsx.llearn.service.LearnQuiz.LearnQuizService;
 import com.github.davsx.llearn.service.ManageCards.ManageCardsService;
 import com.github.davsx.llearn.service.Speaker.SpeakerService;
@@ -24,7 +25,8 @@ import javax.inject.Singleton;
         ManageCardsModule.class,
         CardImageModule.class,
         SpeakerModule.class,
-        CardExportModule.class
+        CardExportModule.class,
+        CardImportModule.class
 })
 public interface ApplicationComponent {
 
@@ -45,6 +47,8 @@ public interface ApplicationComponent {
     void inject(CardImportActivity activity);
 
     CardExportService getCardExportService();
+
+    CardImportService getCardImportService();
 
     CardImageService getCardImageService();
 

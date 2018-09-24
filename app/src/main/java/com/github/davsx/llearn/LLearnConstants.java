@@ -18,4 +18,7 @@ public class LLearnConstants {
 
     public static final String PKG_SPANISHDICT = "com.spanishdict.spanishdict";
     public static final String PKG_GOOGLE_TRANSLATE = "com.google.android.apps.translate";
+
+    public static final Integer REQUEST_CODE_CREATE_DOCUMENT = 1;
+    public static final Integer REQUEST_CODE_OPEN_DOCUMENT = 2;
 }

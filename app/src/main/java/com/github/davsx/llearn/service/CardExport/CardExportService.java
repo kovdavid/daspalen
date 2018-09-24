@@ -16,6 +16,7 @@ public class CardExportService {
     private StringWriter csvStringWriter;
     private CSVWriter csvWriter;
     private ZipOutputStream zipOutputStream;
+    private StringBuilder manifestBuilder;
 
     private CardRepository cardRepository;
     private CardImageService cardImageService;
@@ -40,6 +41,7 @@ public class CardExportService {
         csvStringWriter = new StringWriter();
         csvWriter = new CSVWriter(csvStringWriter);
         zipOutputStream = new ZipOutputStream(outputStream);
+        manifestBuilder = new StringBuilder();
         maxCardId = 0L;
 
         maxProgress = cardRepository.allCardsCount() + imageFiles.size() + 1;
@@ -102,10 +104,13 @@ public class CardExportService {
             status = "Saving cards to ZIP";
 
             try {
+                String fileName = "cards_export_V1.csv";
                 byte[] bytes = csvStringWriter.toString().getBytes(StandardCharsets.UTF_8);
-                zipOutputStream.putNextEntry(new ZipEntry("cards_export_V1.csv"));
+                zipOutputStream.putNextEntry(new ZipEntry(fileName));
                 zipOutputStream.write(bytes);
                 exportStatus = ExportStatus.EXPORTING_IMAGES;
+                manifestBuilder.append(fileName);
+                manifestBuilder.append("\n");
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -124,6 +129,9 @@ public class CardExportService {
                     zipOutputStream.putNextEntry(new ZipEntry(img.getName()));
                     FileInputStream imgInputStream = new FileInputStream(img);
 
+                    manifestBuilder.append(img.getName());
+                    manifestBuilder.append("\n");
+
                     int length;
                     byte[] buffer = new byte[1024];
                     while ((length = imgInputStream.read(buffer)) > 0) {
@@ -131,7 +139,6 @@ public class CardExportService {
                     }
                     imgInputStream.close();
                 } else {
-                    zipOutputStream.close();
                     exportStatus = ExportStatus.FINISHED;
                 }
                 return true;
@@ -139,11 +146,24 @@ public class CardExportService {
                 e.printStackTrace();
                 exportStatus = ExportStatus.ERROR;
                 status = "Could not save cards csv to zip";
-                currentProgress++;
                 return false;
             }
         } else if (exportStatus.equals(ExportStatus.FINISHED)) {
             status = "Export finished";
+
+            try {
+                zipOutputStream.putNextEntry(new ZipEntry("MANIFEST"));
+                zipOutputStream.write(manifestBuilder.toString().getBytes());
+                zipOutputStream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+                exportStatus = ExportStatus.ERROR;
+                status = "Could not save cards csv to zip";
+                return false;
+            }
+
+            currentProgress++;
+
             return false;
         }
         return false;

@@ -9,9 +9,8 @@ import dagger.Provides;
 @Module(includes = {CardRepositoryModule.class, CardImageModule.class})
 public class CardExportModule {
     @Provides
-    CardExportService provideCardExportModule(CardRepository cardRepository, CardImageService cardImageService) {
+    CardExportService provideCardExportService(CardRepository cardRepository, CardImageService cardImageService) {
         return new CardExportService(cardRepository, cardImageService);
     }
-
 }
 

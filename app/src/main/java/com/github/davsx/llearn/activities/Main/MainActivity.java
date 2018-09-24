@@ -46,25 +46,6 @@ public class MainActivity extends Activity {
         btnResetCards = findViewById(R.id.button_reset_cards);
         btnExportCards = findViewById(R.id.button_export_cards);
         btnImportCards = findViewById(R.id.button_import_cards);
-
-        findViewById(R.id.button_test).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_SEND);
-                intent.putExtra(Intent.EXTRA_TEXT, "car seat");
-                intent.putExtra("key_text_input", "car seat");
-                intent.putExtra("key_text_output", "");
-                intent.putExtra("key_language_from", "en");
-                intent.putExtra("key_language_to", "es");
-                intent.putExtra("key_suggest_translation", "");
-                intent.putExtra("key_from_floating_window", false);
-                intent.setComponent(new ComponentName(
-                        "com.google.android.apps.translate",
-                        "com.google.android.apps.translate.TranslateActivity"));
-                startActivity(intent);
-            }
-        });
     }
 
     @Override

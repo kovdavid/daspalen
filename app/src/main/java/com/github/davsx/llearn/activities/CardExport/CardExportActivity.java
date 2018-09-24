@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.github.davsx.llearn.LLearnApplication;
+import com.github.davsx.llearn.LLearnConstants;
 import com.github.davsx.llearn.R;
 import com.github.davsx.llearn.service.CardExport.CardExportService;
 import com.github.lzyzsd.circleprogress.CircleProgress;
@@ -22,8 +23,6 @@ import java.io.FileNotFoundException;
 import java.io.OutputStream;
 
 public class CardExportActivity extends AppCompatActivity implements View.OnClickListener {
-
-    private static final int SAVE_REQUEST_CODE = 1;
 
     @Inject
     CardExportService cardExportService;
@@ -64,26 +63,15 @@ public class CardExportActivity extends AppCompatActivity implements View.OnClic
 
     private void updateViews() {
         if (exportStatus.equals(ExportStatus.EXPORT_NOT_STARTED)) {
-            progressBar.setVisibility(View.INVISIBLE);
-            textViewInfo.setVisibility(View.INVISIBLE);
-            buttonExport.setVisibility(View.VISIBLE);
+            textViewInfo.setText("Export cards");
             buttonExport.setText("Export cards");
         } else if (exportStatus.equals(ExportStatus.EXPORT_RUNNING)) {
-            progressBar.setVisibility(View.VISIBLE);
-            textViewInfo.setVisibility(View.VISIBLE);
-            buttonExport.setVisibility(View.VISIBLE);
             buttonExport.setText("Cancel export");
         } else if (exportStatus.equals(ExportStatus.EXPORT_CANCELLED)) {
-            progressBar.setVisibility(View.INVISIBLE);
-            textViewInfo.setVisibility(View.VISIBLE);
             textViewInfo.setText("Export cancelled");
-            buttonExport.setVisibility(View.VISIBLE);
             buttonExport.setText("Export cards");
         } else if (exportStatus.equals(ExportStatus.EXPORT_FINISHED)) {
-            progressBar.setVisibility(View.INVISIBLE);
-            textViewInfo.setVisibility(View.VISIBLE);
             textViewInfo.setText("Export finished");
-            buttonExport.setVisibility(View.VISIBLE);
             buttonExport.setText("Export cards");
         }
     }
@@ -101,7 +89,7 @@ public class CardExportActivity extends AppCompatActivity implements View.OnClic
             i.addCategory(Intent.CATEGORY_OPENABLE);
             i.setType("application/zip");
             i.putExtra(Intent.EXTRA_TITLE, "LLearn_backup.zip");
-            startActivityForResult(i, SAVE_REQUEST_CODE);
+            startActivityForResult(i, LLearnConstants.REQUEST_CODE_CREATE_DOCUMENT);
         }
     }
 
@@ -110,7 +98,7 @@ public class CardExportActivity extends AppCompatActivity implements View.OnClic
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == SAVE_REQUEST_CODE) {
+            if (requestCode == LLearnConstants.REQUEST_CODE_CREATE_DOCUMENT) {
                 if (data != null) {
                     Uri uri = data.getData();
                     if (uri != null) {
@@ -162,9 +150,6 @@ public class CardExportActivity extends AppCompatActivity implements View.OnClic
         protected void onPreExecute() {
             super.onPreExecute();
 
-            progressBar.setVisibility(View.VISIBLE);
-            textViewInfo.setVisibility(View.VISIBLE);
-            buttonExport.setText("Cancel export");
             exportStatus = ExportStatus.EXPORT_RUNNING;
             progressBar.setMax(100);
 
