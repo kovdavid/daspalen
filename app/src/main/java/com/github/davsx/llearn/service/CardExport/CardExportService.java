@@ -91,7 +91,7 @@ public class CardExportService {
             List<CardEntity> cards = cardRepository.getCardsChunked(maxCardId, false, chunkSize);
             for (CardEntity card : cards) {
                 currentProgress++;
-                csvWriter.writeNext(card.toCsvData());
+                csvWriter.writeNext(card.toCsvDataV1());
                 maxCardId = card.getId();
             }
 

@@ -48,7 +48,7 @@ public class CardEntity {
     public CardEntity() {
     }
 
-    public String[] toCsvData() {
+    public String[] toCsvDataV1() {
         String leanUpdateAtString = "0";
         if (learnUpdateAt != null) {
             leanUpdateAtString = Long.toString(learnUpdateAt);
@@ -62,6 +62,24 @@ public class CardEntity {
                 leanUpdateAtString,
                 Long.toString(createdAt)
         };
+    }
+
+    public static CardEntity fromCsvDataV1(String[] data) {
+        CardEntity card = new CardEntity();
+
+        card.id = Long.valueOf(data[0]);
+        card.front = data[1];
+        card.back = data[2];
+        card.type = Integer.valueOf(data[3]);
+        card.learnScore = Integer.valueOf(data[4]);
+        if (data[5].equals("0")) {
+            card.learnUpdateAt = null;
+        } else {
+            card.learnUpdateAt = Long.valueOf(data[5]);
+        }
+        card.createdAt = Long.valueOf(data[6]);
+
+        return card;
     }
 
     public void incrementLearnScore() {

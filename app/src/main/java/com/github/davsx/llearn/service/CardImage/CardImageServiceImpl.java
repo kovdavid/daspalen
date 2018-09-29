@@ -8,6 +8,7 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.zip.ZipInputStream;
 
 public class CardImageServiceImpl implements CardImageService {
 
@@ -91,6 +92,34 @@ public class CardImageServiceImpl implements CardImageService {
         });
 
         return new ArrayList<>(Arrays.asList(files));
+    }
+
+    @Override
+    public void deleteAllImages() {
+        File[] files = imageDir.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File pathname) {
+                return pathname.isFile();
+            }
+        });
+
+        for (File file : files) {
+            file.delete();
+        }
+    }
+
+    @Override
+    public void saveImageFromStream(String name, ZipInputStream zipInputStream) throws IOException {
+        File cardImageFile = getCardImageFile(name);
+        FileOutputStream fOut = new FileOutputStream(cardImageFile);
+        BufferedOutputStream out = new BufferedOutputStream(fOut);
+        byte[] buffer = new byte[8096];
+        int length;
+        while ((length = zipInputStream.read(buffer)) != -1) {
+            out.write(buffer, 0, length);
+        }
+        out.close();
+        fOut.close();
     }
 
     private File getCardImageFile(String fileName) {
