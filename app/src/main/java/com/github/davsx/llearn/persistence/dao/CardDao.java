@@ -26,8 +26,8 @@ public interface CardDao {
     @Query("SELECT count(*) FROM cards WHERE type = 1")
     Integer learnableCardCount();
 
-    @Query("SELECT count(*) FROM cards WHERE type = 2 AND next_review_at < NOW()")
-    Integer reviewableCardCount();
+    @Query("SELECT count(*) FROM cards WHERE type = 2 AND next_review_at < :timestamp")
+    Integer reviewableCardCount(long timestamp);
 
     @Query("SELECT * FROM cards WHERE id_card > :id AND type IN (:types) AND (front LIKE :query OR back LIKE :query)" +
             " ORDER BY id_card LIMIT :limit")
@@ -43,11 +43,11 @@ public interface CardDao {
             " ORDER BY learn_score DESC, learn_update_at DESC LIMIT :limit")
     List<CardEntity> getLearnCandidates(Integer learnScore, Integer limit);
 
-    @Query("SELECT * FROM cards WHERE type = 2 AND next_review_at < NOW() ORDER BY next_review_at ASC LIMIT :limit")
-    List<CardEntity> getReviewCandidates(int limit);
+    @Query("SELECT * FROM cards WHERE type = 2 AND next_review_at < :timestamp ORDER BY next_review_at ASC LIMIT :limit")
+    List<CardEntity> getReviewCandidates(long timestamp, int limit);
 
-    @Query("SELECT * FROM cards WHERE type = 2 AND next_review_at > NOW() ORDER BY next_review_at DESC LIMIT :limit")
-    List<CardEntity> getReviewFillCandidates(int limit);
+    @Query("SELECT * FROM cards WHERE type = 2 AND next_review_at > :timestamp ORDER BY next_review_at DESC LIMIT :limit")
+    List<CardEntity> getReviewFillCandidates(long timestamp, int limit);
 
     @Query("SELECT * FROM cards WHERE id_card = :id_card")
     CardEntity getCardWithId(Long id_card);

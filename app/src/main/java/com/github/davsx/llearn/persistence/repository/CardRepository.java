@@ -47,7 +47,7 @@ public class CardRepository {
     }
 
     public Integer reviewableCardCount() {
-        return cardDao.reviewableCardCount();
+        return cardDao.reviewableCardCount(System.currentTimeMillis());
     }
 
     public void deleteCard(CardEntity card) {
@@ -86,10 +86,16 @@ public class CardRepository {
     }
 
     public List<CardEntity> getReviewCandidates() {
-        return cardDao.getReviewCandidates(LLearnConstants.REVIEW_SESSION_CANDIDATE_CARDS);
+        return cardDao.getReviewCandidates(
+                System.currentTimeMillis(),
+                LLearnConstants.REVIEW_SESSION_CANDIDATE_CARDS
+        );
     }
 
     public List<CardEntity> getReviewFillCandidates() {
-        return cardDao.getReviewFillCandidates(LLearnConstants.REVIEW_SESSION_CANDIDATE_CARDS);
+        return cardDao.getReviewFillCandidates(
+                System.currentTimeMillis(),
+                LLearnConstants.REVIEW_SESSION_CANDIDATE_CARDS
+        );
     }
 }
