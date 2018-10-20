@@ -29,8 +29,7 @@ public interface CardDao {
     @Query("SELECT count(*) FROM cards WHERE type = 2 AND next_review_at < :timestamp")
     Integer reviewableCardCount(long timestamp);
 
-    @Query("SELECT * FROM cards WHERE id_card > :id AND type IN (:types) AND (front LIKE :query OR back LIKE :query)" +
-            " ORDER BY id_card LIMIT :limit")
+    @Query("SELECT * FROM cards WHERE id_card > :id AND type IN (:types) AND (front LIKE :query OR back LIKE :query) ORDER BY id_card LIMIT :limit")
     List<CardEntity> searchCardsChunked(String query, Long id, List<Integer> types, int limit);
 
     @Query("SELECT * FROM cards WHERE id_card > :id AND type IN (:types) ORDER BY id_card ASC LIMIT :limit")
@@ -39,8 +38,7 @@ public interface CardDao {
     @Query("SELECT * FROM cards WHERE type != 0 ORDER BY RANDOM() LIMIT :limit")
     List<CardEntity> getRandomCards(int limit);
 
-    @Query("SELECT * FROM cards WHERE type = 1 AND learn_score < :learnScore" +
-            " ORDER BY learn_score DESC, learn_update_at DESC LIMIT :limit")
+    @Query("SELECT * FROM cards WHERE type = 1 AND learn_score < :learnScore ORDER BY learn_score DESC, learn_update_at DESC LIMIT :limit")
     List<CardEntity> getLearnCandidates(Integer learnScore, Integer limit);
 
     @Query("SELECT * FROM cards WHERE type = 2 AND next_review_at < :timestamp ORDER BY next_review_at ASC LIMIT :limit")
