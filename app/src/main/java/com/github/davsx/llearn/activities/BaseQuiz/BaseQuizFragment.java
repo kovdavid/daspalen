@@ -1,12 +1,12 @@
-package com.github.davsx.llearn.activities.LearnQuiz;
+package com.github.davsx.llearn.activities.BaseQuiz;
 
-import android.speech.tts.TextToSpeech;
 import android.support.v4.app.Fragment;
-import com.github.davsx.llearn.service.LearnQuiz.LearnQuizData;
+import com.github.davsx.llearn.service.BaseQuiz.AnswerReceiver;
+import com.github.davsx.llearn.service.BaseQuiz.QuizData;
 import com.github.davsx.llearn.service.Speaker.SpeakerService;
 
-abstract class LearnQuizFragmentBase extends Fragment {
-    LearnQuizData learnQuizData;
+abstract class BaseQuizFragment extends Fragment {
+    QuizData quizData;
     AnswerReceiver answerReceiver;
     SpeakerService speakerService;
 
@@ -14,8 +14,8 @@ abstract class LearnQuizFragmentBase extends Fragment {
         this.answerReceiver = answerReceiver;
     }
 
-    void setData(LearnQuizData data) {
-        this.learnQuizData = data;
+    void setData(QuizData data) {
+        this.quizData = data;
     }
 
     void setSpeakerService(SpeakerService speakerService) {

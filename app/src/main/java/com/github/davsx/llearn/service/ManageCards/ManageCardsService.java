@@ -69,25 +69,6 @@ public class ManageCardsService {
         loadMoreCards(LOAD_CHUNK_SIZE * 2);
     }
 
-    public Long createCard(CardEntity card) {
-//        Long idCard = cardRepository.save(card);
-//        CardEntity savedCard = cardRepository.getCardWithId(idCard);
-//        allCards.add(savedCard);
-//        if (filteredCards != allCards) {
-//            filteredCards.add(savedCard);
-//        }
-//        return idCard;
-        return null;
-    }
-
-    public void updateCard(CardEntity card) {
-        cardRepository.save(card);
-    }
-
-    public void deleteCard(CardEntity card) {
-        cardRepository.deleteCard(card);
-    }
-
     public boolean onScrolled(int lastVisibleItemPosition) {
         if (lastVisibleItemPosition + LOAD_CHUNK_SIZE / 2 > cards.size()) {
             if (hasMoreCards) {

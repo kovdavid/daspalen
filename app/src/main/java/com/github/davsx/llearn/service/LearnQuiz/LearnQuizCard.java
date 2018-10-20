@@ -1,6 +1,9 @@
 package com.github.davsx.llearn.service.LearnQuiz;
 
 import com.github.davsx.llearn.LLearnConstants;
+import com.github.davsx.llearn.service.BaseQuiz.BaseQuizCardScheduler;
+import com.github.davsx.llearn.service.BaseQuiz.QuizData;
+import com.github.davsx.llearn.service.BaseQuiz.QuizTypeEnum;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
 import com.github.davsx.llearn.persistence.repository.CardRepository;
 
@@ -9,7 +12,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
-public class LearnQuizCard {
+class LearnQuizCard {
 
     private CardRepository cardRepository;
     private CardEntity cardEntity;
@@ -20,7 +23,7 @@ public class LearnQuizCard {
 
     private Boolean gotBadAnswer = false;
 
-    public LearnQuizCard(CardRepository cardRepository, CardEntity cardEntity) {
+    LearnQuizCard(CardRepository cardRepository, CardEntity cardEntity) {
         this.cardRepository = cardRepository;
         this.cardEntity = cardEntity;
         this.doShowCard = cardEntity.getLearnScore() == 0;
@@ -30,7 +33,7 @@ public class LearnQuizCard {
         this.rng = new Random(System.currentTimeMillis());
     }
 
-    public void handleAnswer(LearnQuizCardScheduler<LearnQuizCard> scheduler, String answer) {
+    void handleAnswer(BaseQuizCardScheduler<LearnQuizCard> scheduler, String answer) {
         boolean isCorrectAnswer = evaluateAnswer(answer);
 
         if (isCorrectAnswer) {
@@ -39,7 +42,7 @@ public class LearnQuizCard {
                     doShowCard = false;
                 } else {
                     completedRounds++;
-                    cardEntity.incrementLearnScore();
+                    cardEntity.processCorrectLearnAnswer();
                     cardRepository.save(cardEntity);
                 }
                 Integer scheduleOffset = calculateScheduleOffset();
@@ -91,37 +94,37 @@ public class LearnQuizCard {
     }
 
     private boolean evaluateAnswer(String answer) {
-        LearnQuizType type = getCardType();
-        if (type.equals(LearnQuizType.SHOW_CARD) || type.equals(LearnQuizType.SHOW_CARD_WITH_IMAGE)) {
+        QuizTypeEnum type = getCardType();
+        if (type.equals(QuizTypeEnum.SHOW_CARD) || type.equals(QuizTypeEnum.SHOW_CARD_WITH_IMAGE)) {
             return true;
         }
-        if (type.equals(LearnQuizType.CHOICE_1of4) || type.equals(LearnQuizType.KEYBOARD_INPUT)) {
+        if (type.equals(QuizTypeEnum.CHOICE_1of4) || type.equals(QuizTypeEnum.KEYBOARD_INPUT)) {
             return answer.equals(cardEntity.getBack());
         }
-        if (type.equals(LearnQuizType.CHOICE_1of4_REVERSE)) {
+        if (type.equals(QuizTypeEnum.CHOICE_1of4_REVERSE)) {
             return answer.equals(cardEntity.getFront());
         }
         return true;
     }
 
-    LearnQuizData buildQuizData(List<CardEntity> randomCards) {
-        return LearnQuizData.build(getCardType(), cardEntity, randomCards);
+    QuizData buildQuizData(List<CardEntity> randomCards) {
+        return QuizData.build(getCardType(), cardEntity, randomCards);
     }
 
-    private LearnQuizType getCardType() {
-        if (doShowCard) return LearnQuizType.SHOW_CARD;
+    private QuizTypeEnum getCardType() {
+        if (doShowCard) return QuizTypeEnum.SHOW_CARD;
 
         if (gotBadAnswer || cardEntity.getLearnScore() == 0) {
-            return LearnQuizType.CHOICE_1of4;
+            return QuizTypeEnum.CHOICE_1of4;
         }
 
-        List<LearnQuizType> types = Arrays.asList(
-                LearnQuizType.CHOICE_1of4,
-                LearnQuizType.CHOICE_1of4,
-                LearnQuizType.CHOICE_1of4,
-                LearnQuizType.KEYBOARD_INPUT,
-                LearnQuizType.KEYBOARD_INPUT,
-                LearnQuizType.CHOICE_1of4_REVERSE
+        List<QuizTypeEnum> types = Arrays.asList(
+                QuizTypeEnum.CHOICE_1of4,
+                QuizTypeEnum.CHOICE_1of4,
+                QuizTypeEnum.CHOICE_1of4,
+                QuizTypeEnum.KEYBOARD_INPUT,
+                QuizTypeEnum.KEYBOARD_INPUT,
+                QuizTypeEnum.CHOICE_1of4_REVERSE
         );
 
         int typeIndex = new Random(System.currentTimeMillis()).nextInt(types.size());

@@ -2,7 +2,6 @@ package com.github.davsx.llearn;
 
 import android.app.Activity;
 import android.app.Application;
-import com.github.davsx.llearn.activities.KindleImport.KindleImportActivity;
 import com.github.davsx.llearn.di.component.ApplicationComponent;
 import com.github.davsx.llearn.di.component.DaggerApplicationComponent;
 import com.github.davsx.llearn.di.module.ContextModule;

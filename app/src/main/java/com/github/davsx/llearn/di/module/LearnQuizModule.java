@@ -6,10 +6,9 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module(includes = CardRepositoryModule.class)
-public class LearnCardModule {
+public class LearnQuizModule {
     @Provides
-    LearnQuizService provideLearnCardService(CardRepository cardRepository) {
+    LearnQuizService provideLearnQuizService(CardRepository cardRepository) {
         return new LearnQuizService(cardRepository);
     }
-
 }

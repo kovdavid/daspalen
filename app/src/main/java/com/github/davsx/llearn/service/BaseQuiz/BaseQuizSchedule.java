@@ -1,17 +1,19 @@
-package com.github.davsx.llearn.service.LearnQuiz;
+package com.github.davsx.llearn.service.BaseQuiz;
+
+import com.github.davsx.llearn.service.BaseQuiz.BaseQuizCardScheduler;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LearnQuizSchedule<T> implements LearnQuizCardScheduler<T> {
+public class BaseQuizSchedule<T> implements BaseQuizCardScheduler<T> {
 
     private Map<Integer, T> schedule;
     private List<T> queue;
     private int nextTick;
     private int maxTick;
 
-    LearnQuizSchedule(List<T> queue) {
+    public BaseQuizSchedule(List<T> queue) {
         this.queue = queue;
         this.schedule = new HashMap<Integer, T>();
         this.nextTick = 0;
@@ -39,7 +41,7 @@ public class LearnQuizSchedule<T> implements LearnQuizCardScheduler<T> {
         }
 
         for (int t = freeTick; t > targetTick; t--) {
-            schedule.put(t, schedule.get(t-1));
+            schedule.put(t, schedule.get(t - 1));
         }
 
         if (freeTick > maxTick) {
@@ -49,7 +51,13 @@ public class LearnQuizSchedule<T> implements LearnQuizCardScheduler<T> {
         schedule.put(targetTick, elem);
     }
 
-    T nextElem() {
+    @Override
+    public void scheduleToEnd(T elem) {
+        maxTick = maxTick + 1 + queue.size();
+        schedule.put(maxTick, elem);
+    }
+
+    public T nextElem() {
         if (queue.size() == 0 && nextTick > maxTick) {
             return null;
         }

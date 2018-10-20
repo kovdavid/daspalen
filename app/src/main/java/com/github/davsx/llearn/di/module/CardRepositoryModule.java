@@ -4,9 +4,7 @@ import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.util.Log;
 import com.github.davsx.llearn.persistence.LLearnDatabase;
-import com.github.davsx.llearn.persistence.dao.CardDao;
 import com.github.davsx.llearn.persistence.repository.CardRepository;
-import com.github.davsx.llearn.persistence.repository.CardRepositoryImpl;
 import dagger.Module;
 import dagger.Provides;
 
@@ -20,7 +18,7 @@ public class CardRepositoryModule {
     @Singleton
     @Provides
     CardRepository provideCardRepository(LLearnDatabase database) {
-        return new CardRepositoryImpl(database.cardDao());
+        return new CardRepository(database.cardDao());
     }
 
     @Provides

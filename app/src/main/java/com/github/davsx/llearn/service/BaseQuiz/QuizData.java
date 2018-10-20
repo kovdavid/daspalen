@@ -1,4 +1,4 @@
-package com.github.davsx.llearn.service.LearnQuiz;
+package com.github.davsx.llearn.service.BaseQuiz;
 
 import android.net.Uri;
 import android.util.Pair;
@@ -12,8 +12,8 @@ import java.util.*;
 import static com.github.davsx.llearn.LLearnConstants.LEARN_CARD_KEYBOARD_COLUMNS;
 import static com.github.davsx.llearn.LLearnConstants.SPANISH_LOWERCASE_LETTERS;
 
-public class LearnQuizData {
-    private LearnQuizType learnQuizType;
+public class QuizData {
+    private QuizTypeEnum quizType;
     private String frontText;
     private String backText;
     private Uri imageUri;
@@ -22,35 +22,35 @@ public class LearnQuizData {
     private Boolean isReversed = false;
     private Integer cardScore;
 
-    public static LearnQuizData buildFinishData() {
-        LearnQuizData data = new LearnQuizData();
-        data.setLearnQuizType(LearnQuizType.QUIZ_FINISHED);
+    public static QuizData buildFinishData() {
+        QuizData data = new QuizData();
+        data.setQuizType(QuizTypeEnum.QUIZ_FINISHED);
         return data;
     }
 
-    public static LearnQuizData build(LearnQuizType quizType, CardEntity card, List<CardEntity> randomCards) {
-        if (quizType.equals(LearnQuizType.NONE)) {
+    public static QuizData build(QuizTypeEnum quizType, CardEntity card, List<CardEntity> randomCards) {
+        if (quizType.equals(QuizTypeEnum.NONE)) {
             return null;
         }
-        LearnQuizData data = new LearnQuizData();
+        QuizData data = new QuizData();
         data.setFrontText(card.getFront());
         data.setBackText(card.getBack());
-        data.setLearnQuizType(quizType);
+        data.setQuizType(quizType);
         data.setCardScore(card.getLearnScore());
-        if (quizType.equals(LearnQuizType.SHOW_CARD_WITH_IMAGE)) {
+        if (quizType.equals(QuizTypeEnum.SHOW_CARD_WITH_IMAGE)) {
             data.setImageUri(null);
-        } else if (quizType.equals(LearnQuizType.CHOICE_1of4)) {
+        } else if (quizType.equals(QuizTypeEnum.CHOICE_1of4)) {
             data.setChoices(findChoicesFor(data, randomCards));
-        } else if (quizType.equals(LearnQuizType.CHOICE_1of4_REVERSE)) {
+        } else if (quizType.equals(QuizTypeEnum.CHOICE_1of4_REVERSE)) {
             data.setReversed(true);
             data.setChoices(findChoicesFor(data, randomCards));
-        } else if (quizType.equals(LearnQuizType.KEYBOARD_INPUT)) {
+        } else if (quizType.equals(QuizTypeEnum.KEYBOARD_INPUT)) {
             data.setKeyboardKeys(findKeyboardKeysFor(card.getBack()));
         }
         return data;
     }
 
-    private static List<String> findChoicesFor(LearnQuizData data, List<CardEntity> randomCards) {
+    private static List<String> findChoicesFor(QuizData data, List<CardEntity> randomCards) {
         String original = data.getReversed() ? data.getFrontText() : data.getBackText();
         ArrayList<Pair<Integer, String>> candidates = new ArrayList<>();
         for (CardEntity card : randomCards) {
@@ -179,12 +179,12 @@ public class LearnQuizData {
         this.keyboardKeys = keyboardKeys;
     }
 
-    public LearnQuizType getLearnQuizType() {
-        return learnQuizType;
+    public QuizTypeEnum getQuizType() {
+        return quizType;
     }
 
-    public void setLearnQuizType(LearnQuizType learnQuizType) {
-        this.learnQuizType = learnQuizType;
+    public void setQuizType(QuizTypeEnum learnQuizType) {
+        this.quizType = learnQuizType;
     }
 
     private Boolean getReversed() {

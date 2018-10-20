@@ -1,7 +1,6 @@
 package com.github.davsx.llearn.activities.Main;
 
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +11,7 @@ import com.github.davsx.llearn.activities.CardExport.CardExportActivity;
 import com.github.davsx.llearn.activities.CardImport.CardImportActivity;
 import com.github.davsx.llearn.activities.LearnQuiz.LearnQuizActivity;
 import com.github.davsx.llearn.activities.ManageCards.ManageCardsActivity;
+import com.github.davsx.llearn.activities.ReviewQuiz.ReviewQuizActivity;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
 import com.github.davsx.llearn.persistence.repository.CardRepository;
 
@@ -28,6 +28,7 @@ public class MainActivity extends Activity {
     CardRepository cardRepository;
 
     private Button btnLearnCards;
+    private Button btnReviewCards;
     private Button btnManageCards;
     private Button btnResetCards;
     private Button btnExportCards;
@@ -43,6 +44,7 @@ public class MainActivity extends Activity {
 
         btnManageCards = findViewById(R.id.button_manage_cards);
         btnLearnCards = findViewById(R.id.button_learn_cards);
+        btnReviewCards = findViewById(R.id.button_review_cards);
         btnResetCards = findViewById(R.id.button_reset_cards);
         btnExportCards = findViewById(R.id.button_export_cards);
         btnImportCards = findViewById(R.id.button_import_cards);
@@ -57,7 +59,7 @@ public class MainActivity extends Activity {
 
     private void updateButtons() {
         Integer learnableCardCount = cardRepository.learnableCardCount();
-        btnLearnCards.setText("Learn new cards (" + Integer.toString(learnableCardCount) + ")");
+        btnLearnCards.setText("Learn cards (" + Integer.toString(learnableCardCount) + ")");
         if (learnableCardCount > 0) {
             btnLearnCards.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -70,10 +72,22 @@ public class MainActivity extends Activity {
             btnLearnCards.setOnClickListener(null);
         }
 
+        Integer allCardsCount = cardRepository.allCardsCount();
+        btnManageCards.setText("Manage cards (" + Integer.toString(allCardsCount) + ")");
         btnManageCards.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(MainActivity.this, ManageCardsActivity.class);
+                MainActivity.this.startActivity(i);
+            }
+        });
+
+        Integer reviewableCardCount = cardRepository.reviewableCardCount();
+        btnReviewCards.setText("Review cards (" + Integer.toString(reviewableCardCount) + ")");
+        btnReviewCards.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, ReviewQuizActivity.class);
                 MainActivity.this.startActivity(i);
             }
         });

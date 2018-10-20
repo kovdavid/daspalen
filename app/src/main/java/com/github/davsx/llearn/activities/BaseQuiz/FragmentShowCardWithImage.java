@@ -1,4 +1,4 @@
-package com.github.davsx.llearn.activities.LearnQuiz;
+package com.github.davsx.llearn.activities.BaseQuiz;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.github.davsx.llearn.R;
 
-public class FragmentShowCardWithImage extends LearnQuizFragmentBase {
+public class FragmentShowCardWithImage extends BaseQuizFragment {
     private TextView textViewFront;
     private TextView textViewBack;
     private TextView textViewCardScore;
@@ -31,14 +31,14 @@ public class FragmentShowCardWithImage extends LearnQuizFragmentBase {
         buttonNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                answerReceiver.onAnswer(learnQuizData.getBackText());
+                answerReceiver.onAnswer(quizData.getBackText());
             }
         });
 
         view.findViewById(R.id.button_tts).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                speakerService.speak(learnQuizData.getBackText());
+                speakerService.speak(quizData.getBackText());
             }
         });
 
@@ -49,11 +49,11 @@ public class FragmentShowCardWithImage extends LearnQuizFragmentBase {
     public void onResume() {
         super.onResume();
 
-        textViewFront.setText(learnQuizData.getFrontText());
-        textViewBack.setText(learnQuizData.getBackText());
-        textViewCardScore.setText(learnQuizData.getCardScore().toString());
-        if (learnQuizData.getImageUri() != null) {
-            imageView.setImageURI(learnQuizData.getImageUri());
+        textViewFront.setText(quizData.getFrontText());
+        textViewBack.setText(quizData.getBackText());
+        textViewCardScore.setText(quizData.getCardScore().toString());
+        if (quizData.getImageUri() != null) {
+            imageView.setImageURI(quizData.getImageUri());
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.github.davsx.llearn.activities.LearnQuiz;
+package com.github.davsx.llearn.activities.BaseQuiz;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import com.github.davsx.llearn.R;
 
-public class FragmentQuizFinished extends LearnQuizFragmentBase {
+public class FragmentQuizFinished extends BaseQuizFragment {
 
     private Button buttonConfirm;
 

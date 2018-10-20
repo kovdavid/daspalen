@@ -1,5 +1,6 @@
 package com.github.davsx.llearn.service.LearnQuiz;
 
+import com.github.davsx.llearn.service.BaseQuiz.BaseQuizSchedule;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ public class LearnQuizScheduleTest {
     public void testScheduleFromQueue() {
         List<Integer> queue = new ArrayList<>(Arrays.asList(1, 2, 3, 4));
 
-        LearnQuizSchedule<Integer> schedule = new LearnQuizSchedule<>(queue);
+        BaseQuizSchedule<Integer> schedule = new BaseQuizSchedule<>(queue);
 
         assertEquals(1, (int) schedule.nextElem());
         assertEquals(2, (int) schedule.nextElem());
@@ -27,7 +28,7 @@ public class LearnQuizScheduleTest {
     @Test
     public void testScheduleAfterOffset() {
         List<Integer> queue = new ArrayList<>();
-        LearnQuizSchedule<Integer> schedule = new LearnQuizSchedule<>(queue);
+        BaseQuizSchedule<Integer> schedule = new BaseQuizSchedule<>(queue);
 
         schedule.scheduleAfterOffset(1, 1);
         schedule.scheduleAfterOffset(1, 2);
@@ -44,7 +45,7 @@ public class LearnQuizScheduleTest {
     @Test
     public void testScheduleAfterOffsetWithQueue() {
         List<Integer> queue = new ArrayList<Integer>(Arrays.asList(4, 5));
-        LearnQuizSchedule<Integer> schedule = new LearnQuizSchedule<>(queue);
+        BaseQuizSchedule<Integer> schedule = new BaseQuizSchedule<>(queue);
 
         schedule.scheduleAfterOffset(1, 1);
         schedule.scheduleAfterOffset(5, 2);
@@ -59,7 +60,7 @@ public class LearnQuizScheduleTest {
     @Test
     public void testScheduleExactOffset() {
         List<Integer> queue = new ArrayList<>();
-        LearnQuizSchedule<Integer> schedule = new LearnQuizSchedule<>(queue);
+        BaseQuizSchedule<Integer> schedule = new BaseQuizSchedule<>(queue);
 
         schedule.scheduleAfterOffset(1, 1);
         schedule.scheduleAfterOffset(1, 2);

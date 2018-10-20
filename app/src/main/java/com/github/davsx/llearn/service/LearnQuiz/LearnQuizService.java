@@ -1,8 +1,11 @@
 package com.github.davsx.llearn.service.LearnQuiz;
 
 import com.github.davsx.llearn.LLearnConstants;
+import com.github.davsx.llearn.service.BaseQuiz.BaseQuizSchedule;
+import com.github.davsx.llearn.service.BaseQuiz.CardQuizService;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
 import com.github.davsx.llearn.persistence.repository.CardRepository;
+import com.github.davsx.llearn.service.BaseQuiz.QuizData;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,9 +28,9 @@ import java.util.List;
 // Do a weight system, where we would use the cards with the lowest weight
 // After using a card, it's weight could be recalculated, so that it would be used before or after a card with score 7
 
-public class LearnQuizService {
+public class LearnQuizService implements CardQuizService {
     private CardRepository cardRepository;
-    private LearnQuizSchedule learnQuizSchedule;
+    private BaseQuizSchedule quizSchedule;
     private List<LearnQuizCard> cards;
     private List<CardEntity> randomCards;
     private Integer totalRounds;
@@ -40,6 +43,7 @@ public class LearnQuizService {
         this.isFinished = false;
     }
 
+    @Override
     public boolean startSession() {
         this.cards = prepareCards();
 
@@ -48,7 +52,7 @@ public class LearnQuizService {
         }
 
         ArrayList<LearnQuizCard> cardQueue = new ArrayList<>(this.cards);
-        this.learnQuizSchedule = new LearnQuizSchedule<>(cardQueue);
+        this.quizSchedule = new BaseQuizSchedule<>(cardQueue);
 
         this.randomCards = cardRepository.getRandomCards(LLearnConstants.LEARN_SESSION_RANDOM_CARDS_COUNT);
 
@@ -57,21 +61,44 @@ public class LearnQuizService {
         return true;
     }
 
-    private void prepareNextCard() {
-        currentCard = (LearnQuizCard) learnQuizSchedule.nextElem();
+    @Override
+    public void processAnswer(String answer) {
+        if (!isFinished) {
+            currentCard.handleAnswer(quizSchedule, answer);
+        }
+        prepareNextCard();
     }
 
-    public LearnQuizData getNextCardData() {
+    @Override
+    public Integer getCompletedRounds() {
+        Integer completedRounds = 0;
+        for (LearnQuizCard card : cards) {
+            completedRounds += card.getCompletedRounds();
+        }
+        return completedRounds;
+    }
+
+    @Override
+    public QuizData getNextCardData() {
         if (currentCard == null) {
             if (isFinished) {
                 return null;
             } else {
                 isFinished = true;
-                return LearnQuizData.buildFinishData();
+                return QuizData.buildFinishData();
             }
         }
 
         return currentCard.buildQuizData(randomCards);
+    }
+
+    @Override
+    public Integer getTotalRounds() {
+        return totalRounds;
+    }
+
+    private void prepareNextCard() {
+        currentCard = (LearnQuizCard) quizSchedule.nextElem();
     }
 
     private List<LearnQuizCard> prepareCards() {
@@ -108,24 +135,5 @@ public class LearnQuizService {
         Collections.sort(chosenCards, new LearnQuizCard.LearnQuizCardComparator());
 
         return chosenCards;
-    }
-
-    public void processAnswer(String answer) {
-        if (!isFinished) {
-            currentCard.handleAnswer(learnQuizSchedule, answer);
-        }
-        prepareNextCard();
-    }
-
-    public Integer getCompletedRounds() {
-        Integer completedRounds = 0;
-        for (LearnQuizCard card : cards) {
-            completedRounds += card.getCompletedRounds();
-        }
-        return completedRounds;
-    }
-
-    public Integer getTotalRounds() {
-        return totalRounds;
     }
 }

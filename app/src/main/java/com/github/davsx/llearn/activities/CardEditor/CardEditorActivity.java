@@ -89,7 +89,7 @@ public class CardEditorActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        speakerService.setLanguage(new Locale("es", "ES"));
+        speakerService.setLanguage(new Locale("spa", "ESP"));
 
         editTextFront.setText(frontText);
         editTextBack.setText(backText);
@@ -540,10 +540,10 @@ public class CardEditorActivity extends AppCompatActivity {
                     .setLearnScore(0);
         } else {
             if (!newFront.equals(card.getFront()) || !newBack.equals(card.getBack())) {
-                card.setType(CardEntity.TYPE_INCOMPLETE);
-                card.setLearnScore(0);
-                card.setFront(newFront);
-                card.setBack(newBack);
+                card.setType(CardEntity.TYPE_INCOMPLETE)
+                        .setLearnScore(0)
+                        .setFront(newFront)
+                        .setBack(newBack);
             }
         }
 

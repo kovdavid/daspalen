@@ -1,4 +1,4 @@
-package com.github.davsx.llearn.activities.LearnQuiz;
+package com.github.davsx.llearn.activities.BaseQuiz;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class FragmentKeyboardInput extends LearnQuizFragmentBase implements View.OnClickListener {
+public class FragmentKeyboardInput extends BaseQuizFragment implements View.OnClickListener {
     private TextView textViewFront;
     private TextView textViewCardScore;
     private EditText textViewInput;
@@ -61,7 +61,7 @@ public class FragmentKeyboardInput extends LearnQuizFragmentBase implements View
 
         layoutKeyboard.removeAllViews();
 
-        for (final List<Character> row : learnQuizData.getKeyboardKeys()) {
+        for (final List<Character> row : quizData.getKeyboardKeys()) {
             View keyboardRowView = inflater.inflate(
                     R.layout.fragment_learn_keyboard_input_button_row, layoutKeyboard, false);
             for (int i = 0; i < row.size(); i++) {
@@ -96,8 +96,8 @@ public class FragmentKeyboardInput extends LearnQuizFragmentBase implements View
             }
         });
 
-        textViewCardScore.setText(learnQuizData.getCardScore().toString());
-        textViewFront.setText(learnQuizData.getFrontText());
+        textViewCardScore.setText(quizData.getCardScore().toString());
+        textViewFront.setText(quizData.getFrontText());
     }
 
     @Override
@@ -108,7 +108,7 @@ public class FragmentKeyboardInput extends LearnQuizFragmentBase implements View
             return;
         }
 
-        String correctAnswer = learnQuizData.getBackText();
+        String correctAnswer = quizData.getBackText();
 
         int color;
         int timerInterval = 2000;
