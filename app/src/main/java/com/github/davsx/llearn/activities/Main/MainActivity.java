@@ -115,10 +115,10 @@ public class MainActivity extends Activity {
                 List<String> strings = Arrays.asList("aaaa", "bbbb", "cccc", "dddd", "eeee", "ffff", "gggg", "hhhh", "jjjj", "kkkk");
 
                 List<CardEntity> cards = new ArrayList<>();
-                for (int i = 0; i < 1000; i++) {
+                for (int i = 0; i < 1; i++) {
                     for (String string : strings) {
                         CardEntity card = new CardEntity();
-                        String text = string + String.valueOf(i);
+                        String text = string; // + String.valueOf(i);
                         card.setFront(text);
                         if (i % 2 == 0) {
                             card.setBack(text);

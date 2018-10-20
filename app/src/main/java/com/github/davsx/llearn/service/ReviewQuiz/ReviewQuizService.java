@@ -6,6 +6,7 @@ import com.github.davsx.llearn.persistence.repository.CardRepository;
 import com.github.davsx.llearn.service.BaseQuiz.BaseQuizSchedule;
 import com.github.davsx.llearn.service.BaseQuiz.CardQuizService;
 import com.github.davsx.llearn.service.BaseQuiz.QuizData;
+import com.github.davsx.llearn.service.CardImage.CardImageService;
 
 import java.util.*;
 
@@ -16,14 +17,16 @@ public class ReviewQuizService implements CardQuizService {
     public static final String ANSWER_GOOD = "GOOD";
 
     private CardRepository cardRepository;
+    private CardImageService cardImageService;
 
     private List<ReviewQuizCard> cards;
     private BaseQuizSchedule<ReviewQuizCard> quizSchedule;
     private ReviewQuizCard currentCard;
     private boolean isFinished;
 
-    public ReviewQuizService(CardRepository cardRepository) {
+    public ReviewQuizService(CardRepository cardRepository, CardImageService cardImageService) {
         this.cardRepository = cardRepository;
+        this.cardImageService = cardImageService;
         this.isFinished = false;
     }
 
@@ -90,7 +93,7 @@ public class ReviewQuizService implements CardQuizService {
 
         while (cards.size() < LLearnConstants.REVIEW_SESSION_MAX_CARDS && candidateCards.size() > 0) {
             CardEntity card = candidateCards.remove(0);
-            cards.add(ReviewQuizCard.createUpdatableCard(cardRepository, card));
+            cards.add(ReviewQuizCard.createUpdatableCard(cardRepository, cardImageService, card));
         }
 
         Random rng = new Random(System.currentTimeMillis());
@@ -106,11 +109,11 @@ public class ReviewQuizService implements CardQuizService {
                     fillCards.add(fillCandidates.get(index));
                 }
                 for (CardEntity card : fillCards) {
-                    cards.add(ReviewQuizCard.createNonUpdatableCard(cardRepository, card));
+                    cards.add(ReviewQuizCard.createNonUpdatableCard(cardRepository, cardImageService, card));
                 }
             } else {
                 for (CardEntity card : fillCandidates) {
-                    cards.add(ReviewQuizCard.createNonUpdatableCard(cardRepository, card));
+                    cards.add(ReviewQuizCard.createNonUpdatableCard(cardRepository, cardImageService, card));
                 }
             }
         }

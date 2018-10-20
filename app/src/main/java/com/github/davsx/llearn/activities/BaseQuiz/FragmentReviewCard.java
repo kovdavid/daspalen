@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.github.davsx.llearn.R;
 import com.github.davsx.llearn.service.ReviewQuiz.ReviewQuizService;
@@ -16,6 +17,7 @@ import java.util.TimerTask;
 public class FragmentReviewCard extends BaseQuizFragment {
     private ViewGroup viewHolder;
     private TextView textViewFront;
+    private ImageView imageView;
 
     @Nullable
     @Override
@@ -33,6 +35,8 @@ public class FragmentReviewCard extends BaseQuizFragment {
             }
         });
 
+        imageView = subView.findViewById(R.id.image_view);
+
         viewHolder.addView(subView);
 
         return view;
@@ -43,6 +47,9 @@ public class FragmentReviewCard extends BaseQuizFragment {
         super.onResume();
 
         textViewFront.setText(quizData.getFrontText());
+        if (quizData.getImageUri() != null) {
+            imageView.setImageURI(quizData.getImageUri());
+        }
     }
 
     private void checkAnswerClicked() {

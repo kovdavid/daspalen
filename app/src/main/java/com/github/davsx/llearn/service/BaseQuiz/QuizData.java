@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.util.Pair;
 import com.github.davsx.llearn.LLearnConstants;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
+import com.github.davsx.llearn.service.CardImage.CardImageService;
 import com.google.common.collect.Lists;
 import info.debatty.java.stringsimilarity.Levenshtein;
 
@@ -28,7 +29,7 @@ public class QuizData {
         return data;
     }
 
-    public static QuizData build(QuizTypeEnum quizType, CardEntity card, List<CardEntity> randomCards) {
+    public static QuizData build(QuizTypeEnum quizType, CardImageService cardImageService, CardEntity card, List<CardEntity> randomCards) {
         if (quizType.equals(QuizTypeEnum.NONE)) {
             return null;
         }
@@ -37,12 +38,15 @@ public class QuizData {
         data.setBackText(card.getBack());
         data.setQuizType(quizType);
         data.setCardScore(card.getLearnScore());
-        if (quizType.equals(QuizTypeEnum.SHOW_CARD_WITH_IMAGE)) {
-            data.setImageUri(null);
+        if (quizType.equals(QuizTypeEnum.SHOW_CARD)) {
+            String path = cardImageService.getCardImagePath(card.getId());
+            if (path != null) {
+                data.setImageUri(Uri.parse(path));
+            }
         } else if (quizType.equals(QuizTypeEnum.CHOICE_1of4)) {
             data.setChoices(findChoicesFor(data, randomCards));
         } else if (quizType.equals(QuizTypeEnum.CHOICE_1of4_REVERSE)) {
-            data.setReversed(true);
+            data.setReversed();
             data.setChoices(findChoicesFor(data, randomCards));
         } else if (quizType.equals(QuizTypeEnum.KEYBOARD_INPUT)) {
             data.setKeyboardKeys(findKeyboardKeysFor(card.getBack()));
@@ -143,63 +147,63 @@ public class QuizData {
         return backText;
     }
 
-    public void setBackText(String backText) {
-        this.backText = backText;
+    private void setReversed() {
+        isReversed = true;
     }
 
     public List<String> getChoices() {
         return choices;
     }
 
-    public void setChoices(List<String> choices) {
-        this.choices = choices;
+    private void setBackText(String backText) {
+        this.backText = backText;
     }
 
     public String getFrontText() {
         return frontText;
     }
 
-    public void setFrontText(String frontText) {
-        this.frontText = frontText;
+    private void setCardScore(Integer cardScore) {
+        this.cardScore = cardScore;
     }
 
     public Uri getImageUri() {
         return imageUri;
     }
 
-    public void setImageUri(Uri imageUri) {
-        this.imageUri = imageUri;
+    private void setChoices(List<String> choices) {
+        this.choices = choices;
     }
 
     public List<List<Character>> getKeyboardKeys() {
         return keyboardKeys;
     }
 
-    public void setKeyboardKeys(List<List<Character>> keyboardKeys) {
-        this.keyboardKeys = keyboardKeys;
+    private void setFrontText(String frontText) {
+        this.frontText = frontText;
     }
 
     public QuizTypeEnum getQuizType() {
         return quizType;
     }
 
-    public void setQuizType(QuizTypeEnum learnQuizType) {
-        this.quizType = learnQuizType;
+    private void setImageUri(Uri imageUri) {
+        this.imageUri = imageUri;
     }
 
     private Boolean getReversed() {
         return isReversed;
     }
 
-    private void setReversed(Boolean reversed) {
-        isReversed = reversed;
+    private void setKeyboardKeys(List<List<Character>> keyboardKeys) {
+        this.keyboardKeys = keyboardKeys;
     }
 
     public Integer getCardScore() {
         return cardScore;
     }
 
-    public void setCardScore(Integer cardScore) {
-        this.cardScore = cardScore;
+    private void setQuizType(QuizTypeEnum learnQuizType) {
+        this.quizType = learnQuizType;
     }
 }

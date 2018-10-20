@@ -15,15 +15,24 @@ public class FragmentShowCard extends BaseQuizFragment {
     private TextView textViewFront;
     private TextView textViewBack;
     private TextView textViewCardScore;
+    private ImageView imageView;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_learn_show_card, container, false);
+        int layout = R.layout.fragment_learn_show_card;
+        if (quizData.getImageUri() != null) {
+            layout = R.layout.fragment_learn_show_card_with_image;
+        }
+
+        View view = inflater.inflate(layout, container, false);
 
         textViewFront = view.findViewById(R.id.textview_front);
         textViewBack = view.findViewById(R.id.textview_back);
         textViewCardScore = view.findViewById(R.id.textview_card_score);
+        if (quizData.getImageUri() != null) {
+            imageView = view.findViewById(R.id.image_view);
+        }
 
         Button buttonNext = view.findViewById(R.id.button_next);
         buttonNext.setOnClickListener(new View.OnClickListener() {
@@ -33,8 +42,7 @@ public class FragmentShowCard extends BaseQuizFragment {
             }
         });
 
-        ImageView imageViewTTS = view.findViewById(R.id.button_tts);
-        imageViewTTS.setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.button_tts).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 speakerService.speak(quizData.getBackText());
@@ -51,5 +59,8 @@ public class FragmentShowCard extends BaseQuizFragment {
         textViewFront.setText(quizData.getFrontText());
         textViewBack.setText(quizData.getBackText());
         textViewCardScore.setText(quizData.getCardScore().toString());
+        if (quizData.getImageUri() != null) {
+            imageView.setImageURI(quizData.getImageUri());
+        }
     }
 }

@@ -1,11 +1,12 @@
 package com.github.davsx.llearn.service.LearnQuiz;
 
 import com.github.davsx.llearn.LLearnConstants;
+import com.github.davsx.llearn.persistence.entity.CardEntity;
+import com.github.davsx.llearn.persistence.repository.CardRepository;
 import com.github.davsx.llearn.service.BaseQuiz.BaseQuizCardScheduler;
 import com.github.davsx.llearn.service.BaseQuiz.QuizData;
 import com.github.davsx.llearn.service.BaseQuiz.QuizTypeEnum;
-import com.github.davsx.llearn.persistence.entity.CardEntity;
-import com.github.davsx.llearn.persistence.repository.CardRepository;
+import com.github.davsx.llearn.service.CardImage.CardImageService;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -15,6 +16,7 @@ import java.util.Random;
 class LearnQuizCard {
 
     private CardRepository cardRepository;
+    private CardImageService cardImageService;
     private CardEntity cardEntity;
     private Boolean doShowCard;
     private Integer completedRounds;
@@ -23,8 +25,9 @@ class LearnQuizCard {
 
     private Boolean gotBadAnswer = false;
 
-    LearnQuizCard(CardRepository cardRepository, CardEntity cardEntity) {
+    LearnQuizCard(CardRepository cardRepository, CardImageService cardImageService, CardEntity cardEntity) {
         this.cardRepository = cardRepository;
+        this.cardImageService = cardImageService;
         this.cardEntity = cardEntity;
         this.doShowCard = cardEntity.getLearnScore() == 0;
         this.completedRounds = 0;
@@ -95,7 +98,7 @@ class LearnQuizCard {
 
     private boolean evaluateAnswer(String answer) {
         QuizTypeEnum type = getCardType();
-        if (type.equals(QuizTypeEnum.SHOW_CARD) || type.equals(QuizTypeEnum.SHOW_CARD_WITH_IMAGE)) {
+        if (type.equals(QuizTypeEnum.SHOW_CARD)) {
             return true;
         }
         if (type.equals(QuizTypeEnum.CHOICE_1of4) || type.equals(QuizTypeEnum.KEYBOARD_INPUT)) {
@@ -108,7 +111,7 @@ class LearnQuizCard {
     }
 
     QuizData buildQuizData(List<CardEntity> randomCards) {
-        return QuizData.build(getCardType(), cardEntity, randomCards);
+        return QuizData.build(getCardType(), cardImageService, cardEntity, randomCards);
     }
 
     private QuizTypeEnum getCardType() {

@@ -6,6 +6,7 @@ import android.widget.ProgressBar;
 import com.github.davsx.llearn.LLearnApplication;
 import com.github.davsx.llearn.R;
 import com.github.davsx.llearn.activities.BaseQuiz.BaseQuizActivity;
+import com.github.davsx.llearn.service.CardImage.CardImageService;
 import com.github.davsx.llearn.service.ReviewQuiz.ReviewQuizService;
 import com.github.davsx.llearn.service.Speaker.SpeakerService;
 
@@ -15,6 +16,8 @@ public class ReviewQuizActivity extends BaseQuizActivity {
 
     @Inject
     ReviewQuizService reviewQuizService;
+    @Inject
+    CardImageService cardImageService;
     @Inject
     SpeakerService speakerService;
 
@@ -28,6 +31,7 @@ public class ReviewQuizActivity extends BaseQuizActivity {
         setProgressBar((ProgressBar) findViewById(R.id.progress_bar));
         setSpeakerService(speakerService);
         setCardQuizService(reviewQuizService);
+        setCardImageService(cardImageService);
 
         startQuiz();
     }

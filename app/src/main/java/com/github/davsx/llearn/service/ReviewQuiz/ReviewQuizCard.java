@@ -5,28 +5,32 @@ import com.github.davsx.llearn.persistence.repository.CardRepository;
 import com.github.davsx.llearn.service.BaseQuiz.BaseQuizCardScheduler;
 import com.github.davsx.llearn.service.BaseQuiz.QuizData;
 import com.github.davsx.llearn.service.BaseQuiz.QuizTypeEnum;
+import com.github.davsx.llearn.service.CardImage.CardImageService;
 
 import java.util.Comparator;
 
 class ReviewQuizCard {
 
     private CardRepository cardRepository;
+    private CardImageService cardImageService;
+
     private CardEntity cardEntity;
     private boolean updateCardOnAnswer;
     private boolean answered = false;
 
-    private ReviewQuizCard(CardRepository cardRepository, CardEntity cardEntity, boolean updateCardOnAnswer) {
+    private ReviewQuizCard(CardRepository cardRepository, CardImageService cardImageService, CardEntity cardEntity, boolean updateCardOnAnswer) {
         this.cardRepository = cardRepository;
+        this.cardImageService = cardImageService;
         this.cardEntity = cardEntity;
         this.updateCardOnAnswer = updateCardOnAnswer;
     }
 
-    static ReviewQuizCard createUpdatableCard(CardRepository cardRepository, CardEntity cardEntity) {
-        return new ReviewQuizCard(cardRepository, cardEntity, true);
+    static ReviewQuizCard createUpdatableCard(CardRepository cardRepository, CardImageService cardImageService, CardEntity cardEntity) {
+        return new ReviewQuizCard(cardRepository, cardImageService, cardEntity, true);
     }
 
-    static ReviewQuizCard createNonUpdatableCard(CardRepository cardRepository, CardEntity cardEntity) {
-        return new ReviewQuizCard(cardRepository, cardEntity, false);
+    static ReviewQuizCard createNonUpdatableCard(CardRepository cardRepository, CardImageService cardImageService, CardEntity cardEntity) {
+        return new ReviewQuizCard(cardRepository, cardImageService, cardEntity, false);
     }
 
     private static Double cardReviewDueFactor(CardEntity card) {
@@ -56,7 +60,7 @@ class ReviewQuizCard {
     }
 
     QuizData buildQuizData() {
-        return QuizData.build(QuizTypeEnum.REVIEW_CARD, cardEntity, null);
+        return QuizData.build(QuizTypeEnum.REVIEW_CARD, cardImageService, cardEntity, null);
     }
 
     boolean isAnswered() {

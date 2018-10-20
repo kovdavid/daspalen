@@ -1,11 +1,12 @@
 package com.github.davsx.llearn.service.LearnQuiz;
 
 import com.github.davsx.llearn.LLearnConstants;
-import com.github.davsx.llearn.service.BaseQuiz.BaseQuizSchedule;
-import com.github.davsx.llearn.service.BaseQuiz.CardQuizService;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
 import com.github.davsx.llearn.persistence.repository.CardRepository;
+import com.github.davsx.llearn.service.BaseQuiz.BaseQuizSchedule;
+import com.github.davsx.llearn.service.BaseQuiz.CardQuizService;
 import com.github.davsx.llearn.service.BaseQuiz.QuizData;
+import com.github.davsx.llearn.service.CardImage.CardImageService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,7 +30,10 @@ import java.util.List;
 // After using a card, it's weight could be recalculated, so that it would be used before or after a card with score 7
 
 public class LearnQuizService implements CardQuizService {
+
     private CardRepository cardRepository;
+    private CardImageService cardImageService;
+
     private BaseQuizSchedule quizSchedule;
     private List<LearnQuizCard> cards;
     private List<CardEntity> randomCards;
@@ -37,8 +41,9 @@ public class LearnQuizService implements CardQuizService {
     private LearnQuizCard currentCard;
     private Boolean isFinished;
 
-    public LearnQuizService(CardRepository cardRepository) {
+    public LearnQuizService(CardRepository cardRepository, CardImageService cardImageService) {
         this.cardRepository = cardRepository;
+        this.cardImageService = cardImageService;
         this.totalRounds = 0;
         this.isFinished = false;
     }
@@ -120,7 +125,7 @@ public class LearnQuizService implements CardQuizService {
                 newCardCounter++;
             }
 
-            LearnQuizCard learnQuizCard = new LearnQuizCard(cardRepository, card);
+            LearnQuizCard learnQuizCard = new LearnQuizCard(cardRepository, cardImageService, card);
             chosenCards.add(learnQuizCard);
             totalRounds += learnQuizCard.getPlannedRounds();
 
