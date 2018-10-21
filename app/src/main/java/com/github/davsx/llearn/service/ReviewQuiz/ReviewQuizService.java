@@ -3,6 +3,7 @@ package com.github.davsx.llearn.service.ReviewQuiz;
 import com.github.davsx.llearn.LLearnConstants;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
 import com.github.davsx.llearn.persistence.repository.CardRepository;
+import com.github.davsx.llearn.persistence.repository.JournalRepository;
 import com.github.davsx.llearn.service.BaseQuiz.BaseQuizSchedule;
 import com.github.davsx.llearn.service.BaseQuiz.CardQuizService;
 import com.github.davsx.llearn.service.BaseQuiz.QuizData;
@@ -13,6 +14,7 @@ import java.util.*;
 public class ReviewQuizService implements CardQuizService {
 
     private CardRepository cardRepository;
+    private JournalRepository journalRepository;
     private CardImageService cardImageService;
 
     private List<ReviewQuizCard> cards;
@@ -20,8 +22,10 @@ public class ReviewQuizService implements CardQuizService {
     private ReviewQuizCard currentCard;
     private boolean isFinished;
 
-    public ReviewQuizService(CardRepository cardRepository, CardImageService cardImageService) {
+    public ReviewQuizService(CardRepository cardRepository, JournalRepository journalRepository,
+                             CardImageService cardImageService) {
         this.cardRepository = cardRepository;
+        this.journalRepository = journalRepository;
         this.cardImageService = cardImageService;
         this.isFinished = false;
     }
@@ -49,13 +53,42 @@ public class ReviewQuizService implements CardQuizService {
         prepareNextCard();
     }
 
-    @Override
-    public Integer getCompletedRounds() {
-        Integer completedRounds = 0;
-        for (ReviewQuizCard card : cards) {
-            if (card.isAnswered()) completedRounds++;
+    private List<ReviewQuizCard> prepareCards() {
+        List<ReviewQuizCard> cards = new ArrayList<>();
+        List<CardEntity> candidateCards = cardRepository.getReviewCandidates();
+
+        Collections.sort(candidateCards, new ReviewQuizCard.ReviewQuizCardComparator());
+
+        while (cards.size() < LLearnConstants.REVIEW_SESSION_MAX_CARDS && candidateCards.size() > 0) {
+            CardEntity card = candidateCards.remove(0);
+            cards.add(ReviewQuizCard.createUpdatableCard(cardRepository, journalRepository, cardImageService, card));
         }
-        return completedRounds;
+
+        Random rng = new Random(System.currentTimeMillis());
+
+        if (candidateCards.size() < LLearnConstants.REVIEW_SESSION_MAX_CARDS) {
+            List<CardEntity> fillCandidates = cardRepository.getReviewFillCandidates();
+            int fillCount = LLearnConstants.REVIEW_SESSION_MAX_CARDS - candidateCards.size();
+
+            if (fillCandidates.size() > fillCount) {
+                Set<CardEntity> fillCards = new HashSet<>();
+                while (fillCards.size() < fillCount) {
+                    int index = rng.nextInt(fillCandidates.size());
+                    fillCards.add(fillCandidates.get(index));
+                }
+                for (CardEntity card : fillCards) {
+                    cards.add(ReviewQuizCard.createNonUpdatableCard(cardRepository, journalRepository,
+                            cardImageService, card));
+                }
+            } else {
+                for (CardEntity card : fillCandidates) {
+                    cards.add(ReviewQuizCard.createNonUpdatableCard(cardRepository, journalRepository,
+                            cardImageService, card));
+                }
+            }
+        }
+
+        return cards;
     }
 
     @Override
@@ -81,40 +114,13 @@ public class ReviewQuizService implements CardQuizService {
         currentCard = quizSchedule.nextElem();
     }
 
-    private List<ReviewQuizCard> prepareCards() {
-        List<ReviewQuizCard> cards = new ArrayList<>();
-        List<CardEntity> candidateCards = cardRepository.getReviewCandidates();
-
-        Collections.sort(candidateCards, new ReviewQuizCard.ReviewQuizCardComparator());
-
-        while (cards.size() < LLearnConstants.REVIEW_SESSION_MAX_CARDS && candidateCards.size() > 0) {
-            CardEntity card = candidateCards.remove(0);
-            cards.add(ReviewQuizCard.createUpdatableCard(cardRepository, cardImageService, card));
+    @Override
+    public Integer getCompletedRounds() {
+        Integer completedRounds = 0;
+        for (ReviewQuizCard card : cards) {
+            if (card.isAnsweredCorrectly()) completedRounds++;
         }
-
-        Random rng = new Random(System.currentTimeMillis());
-
-        if (candidateCards.size() < LLearnConstants.REVIEW_SESSION_MAX_CARDS) {
-            List<CardEntity> fillCandidates = cardRepository.getReviewFillCandidates();
-            int fillCount = LLearnConstants.REVIEW_SESSION_MAX_CARDS - candidateCards.size();
-
-            if (fillCandidates.size() > fillCount) {
-                Set<CardEntity> fillCards = new HashSet<>();
-                while (fillCards.size() < fillCount) {
-                    int index = rng.nextInt(fillCandidates.size());
-                    fillCards.add(fillCandidates.get(index));
-                }
-                for (CardEntity card : fillCards) {
-                    cards.add(ReviewQuizCard.createNonUpdatableCard(cardRepository, cardImageService, card));
-                }
-            } else {
-                for (CardEntity card : fillCandidates) {
-                    cards.add(ReviewQuizCard.createNonUpdatableCard(cardRepository, cardImageService, card));
-                }
-            }
-        }
-
-        return cards;
+        return completedRounds;
     }
 
 }

@@ -53,6 +53,7 @@ public class CardEditorActivity extends AppCompatActivity {
     private TextView textViewCardScore;
     private ImageButton imageButtonFront;
     private ImageButton imageButtonBack;
+    private ImageView buttonSwap;
 
     private CardEntity card = null;
     private Long cardId = 0L;
@@ -197,6 +198,17 @@ public class CardEditorActivity extends AppCompatActivity {
                     }
                 });
                 popup.show();
+            }
+        });
+
+        buttonSwap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String frontText = editTextFront.getText().toString();
+                String backText = editTextBack.getText().toString();
+
+                editTextFront.setText(backText);
+                editTextBack.setText(frontText);
             }
         });
     }
@@ -618,6 +630,7 @@ public class CardEditorActivity extends AppCompatActivity {
         textViewCardScore = findViewById(R.id.textview_card_score);
         imageButtonFront = findViewById(R.id.imagebutton_front_text);
         imageButtonBack = findViewById(R.id.imagebutton_back_text);
+        buttonSwap = findViewById(R.id.button_swap_front_back);
     }
 
 }

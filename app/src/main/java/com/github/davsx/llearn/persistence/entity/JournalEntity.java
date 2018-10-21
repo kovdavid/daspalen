@@ -19,12 +19,8 @@ public class JournalEntity {
     public Long id;
 
     @NonNull
-    @ColumnInfo(name = "quiz_session")
-    public Long quizSession = 0L;
-
-    @NonNull
-    @ColumnInfo(name = "quiz_type")
-    public Integer type = 0;
+    @ColumnInfo(name = "card_type")
+    public Integer cardType = 0;
 
     @NonNull
     @ColumnInfo(name = "id_card")
@@ -45,11 +41,10 @@ public class JournalEntity {
         JournalEntity journal = new JournalEntity();
 
         journal.id = Long.valueOf(data[0]);
-        journal.quizSession = Long.valueOf(data[1]);
-        journal.type = Integer.valueOf(data[2]);
-        journal.cardId = Long.valueOf(data[3]);
-        journal.answer = Integer.valueOf(data[4]);
-        journal.timestamp = Long.valueOf(data[5]);
+        journal.cardId = Long.valueOf(data[1]);
+        journal.cardType = Integer.valueOf(data[2]);
+        journal.answer = Integer.valueOf(data[3]);
+        journal.timestamp = Long.valueOf(data[4]);
 
         return journal;
     }
@@ -57,9 +52,8 @@ public class JournalEntity {
     public String[] toCsvDataV1() {
         return new String[]{
                 Long.toString(id),
-                Long.toString(quizSession),
-                Integer.toString(type),
                 Long.toString(cardId),
+                Integer.toString(cardType),
                 Integer.toString(answer),
                 Long.toString(timestamp)
         };
@@ -67,6 +61,22 @@ public class JournalEntity {
 
     public Long getId() {
         return id;
+    }
+
+    public void setAnswer(@NonNull Integer answer) {
+        this.answer = answer;
+    }
+
+    public void setCardId(@NonNull Long cardId) {
+        this.cardId = cardId;
+    }
+
+    public void setCardType(@NonNull Integer cardType) {
+        this.cardType = cardType;
+    }
+
+    public void setTimestamp(@NonNull Long timestamp) {
+        this.timestamp = timestamp;
     }
 }
 

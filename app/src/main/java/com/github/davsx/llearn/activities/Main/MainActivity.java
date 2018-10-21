@@ -14,6 +14,7 @@ import com.github.davsx.llearn.activities.ManageCards.ManageCardsActivity;
 import com.github.davsx.llearn.activities.ReviewQuiz.ReviewQuizActivity;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
 import com.github.davsx.llearn.persistence.repository.CardRepository;
+import com.github.davsx.llearn.persistence.repository.JournalRepository;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -26,6 +27,8 @@ public class MainActivity extends Activity {
 
     @Inject
     CardRepository cardRepository;
+    @Inject
+    JournalRepository journalRepository;
 
     private Button btnLearnCards;
     private Button btnReviewCards;
@@ -112,6 +115,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 cardRepository.deleteAllCards();
+                journalRepository.deleteAllJournals();
                 List<String> strings = Arrays.asList("aaaa", "bbbb", "cccc", "dddd", "eeee", "ffff", "gggg", "hhhh", "jjjj", "kkkk");
 
                 List<CardEntity> cards = new ArrayList<>();
@@ -123,6 +127,7 @@ public class MainActivity extends Activity {
                         if (i % 2 == 0) {
                             card.setBack(text);
                         }
+                        card.setLearnScore(7);
                         card.setCreatedAt(System.currentTimeMillis());
                         cards.add(card);
                     }

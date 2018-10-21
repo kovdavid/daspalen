@@ -2,7 +2,9 @@ package com.github.davsx.llearn.service.LearnQuiz;
 
 import com.github.davsx.llearn.LLearnConstants;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
+import com.github.davsx.llearn.persistence.entity.JournalEntity;
 import com.github.davsx.llearn.persistence.repository.CardRepository;
+import com.github.davsx.llearn.persistence.repository.JournalRepository;
 import com.github.davsx.llearn.service.BaseQuiz.BaseQuizCardScheduler;
 import com.github.davsx.llearn.service.BaseQuiz.QuizData;
 import com.github.davsx.llearn.service.BaseQuiz.QuizTypeEnum;
@@ -16,8 +18,10 @@ import java.util.Random;
 class LearnQuizCard {
 
     private CardRepository cardRepository;
+    private JournalRepository journalRepository;
     private CardImageService cardImageService;
     private CardEntity cardEntity;
+
     private Boolean doShowCard;
     private Integer completedRounds;
     private Integer plannedRounds;
@@ -25,8 +29,12 @@ class LearnQuizCard {
 
     private Boolean gotBadAnswer = false;
 
-    LearnQuizCard(CardRepository cardRepository, CardImageService cardImageService, CardEntity cardEntity) {
+    LearnQuizCard(CardRepository cardRepository,
+                  JournalRepository journalRepository,
+                  CardImageService cardImageService,
+                  CardEntity cardEntity) {
         this.cardRepository = cardRepository;
+        this.journalRepository = journalRepository;
         this.cardImageService = cardImageService;
         this.cardEntity = cardEntity;
         this.doShowCard = cardEntity.getLearnScore() == 0;
@@ -39,7 +47,13 @@ class LearnQuizCard {
     void handleAnswer(BaseQuizCardScheduler<LearnQuizCard> scheduler, String answer) {
         boolean isCorrectAnswer = evaluateAnswer(answer);
 
+        JournalEntity journal = new JournalEntity();
+        journal.setTimestamp(System.currentTimeMillis());
+        journal.setCardType(LLearnConstants.CARD_TYPE_LEARN);
+        journal.setCardId(cardEntity.getId());
+
         if (isCorrectAnswer) {
+            journal.setAnswer(LLearnConstants.JOURNAL_ANSWER_GOOD);
             if (!gotBadAnswer) {
                 if (doShowCard) {
                     doShowCard = false;
@@ -64,10 +78,13 @@ class LearnQuizCard {
                 }
             }
         } else {
+            journal.setAnswer(LLearnConstants.JOURNAL_ANSWER_BAD);
             gotBadAnswer = true;
             doShowCard = true;
             scheduler.scheduleToExactOffset(1, this);
         }
+
+        journalRepository.save(journal);
     }
 
     private Integer calculateScheduleOffset() {

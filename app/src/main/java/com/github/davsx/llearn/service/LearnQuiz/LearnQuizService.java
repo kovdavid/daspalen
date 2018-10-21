@@ -3,6 +3,7 @@ package com.github.davsx.llearn.service.LearnQuiz;
 import com.github.davsx.llearn.LLearnConstants;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
 import com.github.davsx.llearn.persistence.repository.CardRepository;
+import com.github.davsx.llearn.persistence.repository.JournalRepository;
 import com.github.davsx.llearn.service.BaseQuiz.BaseQuizSchedule;
 import com.github.davsx.llearn.service.BaseQuiz.CardQuizService;
 import com.github.davsx.llearn.service.BaseQuiz.QuizData;
@@ -27,22 +28,26 @@ import java.util.List;
 // For 0 - do the first real card 1-2 cards after the show card - space out the rest
 
 // Do a weight system, where we would use the cards with the lowest weight
-// After using a card, it's weight could be recalculated, so that it would be used before or after a card with score 7
+// After using a card, it's weight could be recalculated, so that it would be used before or
+// after a card with score 7
 
 public class LearnQuizService implements CardQuizService {
 
     private CardRepository cardRepository;
+    private JournalRepository journalRepository;
     private CardImageService cardImageService;
 
-    private BaseQuizSchedule quizSchedule;
+    private BaseQuizSchedule<LearnQuizCard> quizSchedule;
     private List<LearnQuizCard> cards;
     private List<CardEntity> randomCards;
     private Integer totalRounds;
     private LearnQuizCard currentCard;
     private Boolean isFinished;
 
-    public LearnQuizService(CardRepository cardRepository, CardImageService cardImageService) {
+    public LearnQuizService(CardRepository cardRepository, JournalRepository journalRepository,
+                            CardImageService cardImageService) {
         this.cardRepository = cardRepository;
+        this.journalRepository = journalRepository;
         this.cardImageService = cardImageService;
         this.totalRounds = 0;
         this.isFinished = false;
@@ -59,7 +64,8 @@ public class LearnQuizService implements CardQuizService {
         ArrayList<LearnQuizCard> cardQueue = new ArrayList<>(this.cards);
         this.quizSchedule = new BaseQuizSchedule<>(cardQueue);
 
-        this.randomCards = cardRepository.getRandomCards(LLearnConstants.LEARN_SESSION_RANDOM_CARDS_COUNT);
+        this.randomCards =
+                cardRepository.getRandomCards(LLearnConstants.LEARN_SESSION_RANDOM_CARDS_COUNT);
 
         prepareNextCard();
 
@@ -125,7 +131,8 @@ public class LearnQuizService implements CardQuizService {
                 newCardCounter++;
             }
 
-            LearnQuizCard learnQuizCard = new LearnQuizCard(cardRepository, cardImageService, card);
+            LearnQuizCard learnQuizCard = new LearnQuizCard(cardRepository, journalRepository,
+                    cardImageService, card);
             chosenCards.add(learnQuizCard);
             totalRounds += learnQuizCard.getPlannedRounds();
 

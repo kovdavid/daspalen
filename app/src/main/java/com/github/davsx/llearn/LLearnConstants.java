@@ -42,6 +42,10 @@ public class LLearnConstants {
     public static final String REVIEW_ANSWER_OK = "OK";
     public static final String REVIEW_ANSWER_GOOD = "GOOD";
 
+    public static final Integer JOURNAL_ANSWER_BAD = 0;
+    public static final Integer JOURNAL_ANSWER_OK = 1;
+    public static final Integer JOURNAL_ANSWER_GOOD = 2;
+
     public static final Integer CARD_TYPE_INCOMPLETE = 0;
     public static final Integer CARD_TYPE_LEARN = 1;
     public static final Integer CARD_TYPE_REVIEW = 2;
