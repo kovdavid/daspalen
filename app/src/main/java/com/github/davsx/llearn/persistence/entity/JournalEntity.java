@@ -78,5 +78,20 @@ public class JournalEntity {
     public void setTimestamp(@NonNull Long timestamp) {
         this.timestamp = timestamp;
     }
+
+    @NonNull
+    public Integer getAnswer() {
+        return answer;
+    }
+
+    @NonNull
+    public Integer getCardType() {
+        return cardType;
+    }
+
+    @NonNull
+    public Long getTimestamp() {
+        return timestamp;
+    }
 }
 

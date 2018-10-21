@@ -1,6 +1,7 @@
 package com.github.davsx.llearn.persistence.repository;
 
 import com.github.davsx.llearn.persistence.dao.JournalDao;
+import com.github.davsx.llearn.persistence.entity.CardEntity;
 import com.github.davsx.llearn.persistence.entity.JournalEntity;
 
 import javax.inject.Inject;
@@ -33,5 +34,9 @@ public class JournalRepository {
 
     public List<JournalEntity> getJournalsChunked(long journalId, int limit) {
         return journalDao.getJournalsChunked(journalId, limit);
+    }
+
+    public List<JournalEntity> getJournalsForCard(CardEntity card) {
+        return journalDao.getJournalsForCard(card.getId());
     }
 }

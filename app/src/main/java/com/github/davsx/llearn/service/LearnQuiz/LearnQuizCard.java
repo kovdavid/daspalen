@@ -46,6 +46,7 @@ class LearnQuizCard {
 
     void handleAnswer(BaseQuizCardScheduler<LearnQuizCard> scheduler, String answer) {
         boolean isCorrectAnswer = evaluateAnswer(answer);
+        boolean saveJournal = !doShowCard;
 
         JournalEntity journal = new JournalEntity();
         journal.setTimestamp(System.currentTimeMillis());
@@ -84,7 +85,9 @@ class LearnQuizCard {
             scheduler.scheduleToExactOffset(1, this);
         }
 
-        journalRepository.save(journal);
+        if (saveJournal) {
+            journalRepository.save(journal);
+        }
     }
 
     private Integer calculateScheduleOffset() {

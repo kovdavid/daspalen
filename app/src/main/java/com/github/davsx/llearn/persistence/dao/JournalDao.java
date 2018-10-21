@@ -23,6 +23,10 @@ public interface JournalDao {
     @Query("SELECT count(*) FROM journal")
     Integer allJournalsCount();
 
-    @Query("SELECT * FROM journal WHERE id_journal > :id LIMIT :limit")
-    List<JournalEntity> getJournalsChunked(long id, int limit);
+    @Query("SELECT * FROM journal WHERE id_journal > :journalId LIMIT :limit")
+    List<JournalEntity> getJournalsChunked(long journalId, int limit);
+
+    @Query("SELECT * FROM journal WHERE id_card = :cardId ORDER BY timestamp ASC")
+    List<JournalEntity> getJournalsForCard(long cardId);
+
 }

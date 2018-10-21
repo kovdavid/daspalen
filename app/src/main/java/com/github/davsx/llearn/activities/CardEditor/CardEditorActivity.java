@@ -14,8 +14,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
@@ -24,12 +28,15 @@ import com.github.davsx.llearn.LLearnConstants;
 import com.github.davsx.llearn.R;
 import com.github.davsx.llearn.activities.ManageCards.ManageCardsActivity;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
+import com.github.davsx.llearn.persistence.entity.JournalEntity;
 import com.github.davsx.llearn.persistence.repository.CardRepository;
+import com.github.davsx.llearn.persistence.repository.JournalRepository;
 import com.github.davsx.llearn.service.CardImage.CardImageService;
 import com.github.davsx.llearn.service.ManageCards.ManageCardsService;
 import com.github.davsx.llearn.service.Speaker.SpeakerService;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Locale;
 
 public class CardEditorActivity extends AppCompatActivity {
@@ -38,6 +45,8 @@ public class CardEditorActivity extends AppCompatActivity {
 
     @Inject
     CardRepository cardRepository;
+    @Inject
+    JournalRepository journalRepository;
     @Inject
     CardImageService cardImageService;
     @Inject
@@ -50,6 +59,7 @@ public class CardEditorActivity extends AppCompatActivity {
     private Button buttonSave;
     private Button buttonCancel;
     private Button buttonDelete;
+    private Button buttonShowJournal;
     private TextView textViewCardScore;
     private ImageButton imageButtonFront;
     private ImageButton imageButtonBack;
@@ -211,6 +221,19 @@ public class CardEditorActivity extends AppCompatActivity {
                 editTextBack.setText(frontText);
             }
         });
+
+        if (card != null) {
+            final List<JournalEntity> journals = journalRepository.getJournalsForCard(card);
+            if (journals.size() > 0) {
+                buttonShowJournal.setVisibility(View.VISIBLE);
+                buttonShowJournal.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showJournalsDialog(journals);
+                    }
+                });
+            }
+        }
     }
 
     private void handleIntent(Intent intent) {
@@ -218,6 +241,10 @@ public class CardEditorActivity extends AppCompatActivity {
         String type = intent.getType();
 
         Log.d(TAG, "handleIntent action[" + action + "] type[" + type + "]");
+
+        // TODO remove
+        intent.putExtra("ID_CARD", 1L);
+        action = null;
 
         if (action == null) {
             cardId = intent.getLongExtra("ID_CARD", 0L);
@@ -501,6 +528,23 @@ public class CardEditorActivity extends AppCompatActivity {
         startActivity(i);
     }
 
+    private void showJournalsDialog(List<JournalEntity> journals) {
+        View view = LayoutInflater.from(this).inflate(R.layout.activity_card_editor_journal_dialog, null);
+        JournalDialogAdapter adapter = new JournalDialogAdapter(this, journals);
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        recyclerView.setAdapter(adapter);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(view);
+        builder.setCancelable(true);
+
+        builder.show();
+    }
+
     private void onSaveCard() {
         CardEntity dupCard = findDupCard();
 
@@ -531,7 +575,8 @@ public class CardEditorActivity extends AppCompatActivity {
     private void showDupCardAlert(@NonNull CardEntity dupCard) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         String dialogMessage = String.format(
-                "The current card cannot be saved, because a duplicate card was found:<br /><br />Front<br /><b>%s</b><br />Back<br /><b>%s</b>",
+                "The current card cannot be saved, because a duplicate card was found:<br /><br />Front<br " +
+                        "/><b>%s</b><br />Back<br /><b>%s</b>",
                 dupCard.getFront(),
                 dupCard.getBack());
         builder.setTitle("Error")
@@ -627,6 +672,7 @@ public class CardEditorActivity extends AppCompatActivity {
         buttonSave = findViewById(R.id.button_save);
         buttonCancel = findViewById(R.id.button_cancel);
         buttonDelete = findViewById(R.id.button_delete);
+        buttonShowJournal = findViewById(R.id.button_show_journal);
         textViewCardScore = findViewById(R.id.textview_card_score);
         imageButtonFront = findViewById(R.id.imagebutton_front_text);
         imageButtonBack = findViewById(R.id.imagebutton_back_text);
