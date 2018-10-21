@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent">
+
+    <Button
+            android:id="@+id/button_choose_file"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Choose File"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="16dp"
+            android:theme="@style/AppTheme.ButtonConfirm"
+            />
+
+
+    <ProgressBar
+            android:id="@+id/progress_bar"
+            style="@android:style/Widget.Material.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleY="3.0"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp"
+            android:progress="80"
+            app:layout_constraintTop_toBottomOf="@+id/button_choose_file"
+            />
+
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/label_front"
+            android:text="Front"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/progress_bar"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="76dp"
+            android:textSize="16dp"
+            />
+
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/edittext_front"
+            android:inputType="textNoSuggestions|textMultiLine"
+            android:textSize="20sp"
+            app:layout_constraintTop_toBottomOf="@id/label_front"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:text=""
+            />
+
+
+    <ImageView
+            android:id="@+id/button_swap_front_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_popup_sync"
+            android:tint="@color/colorPrimary"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/label_back"
+            app:layout_constraintBottom_toBottomOf="@+id/label_back"
+            />
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/label_back"
+            android:text="Back"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edittext_front"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="16dp"
+            android:textSize="16dp"
+            />
+
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/edittext_back"
+            android:inputType="textNoSuggestions|textMultiLine"
+            android:textSize="20sp"
+            app:layout_constraintTop_toBottomOf="@id/label_back"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:text=""
+            />
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_margin="16dp"
+            android:id="@+id/layout_buttons"
+            >
+
+        <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"/>
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="64dp"
+                android:theme="@style/AppTheme.ButtonDelete"
+                android:text="✗ Skip"
+                android:textAllCaps="false"
+                android:id="@+id/button_skip"
+                android:textStyle="bold"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:textSize="20sp"
+                />
+
+        <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"/>
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="64dp"
+                android:theme="@style/AppTheme.ButtonConfirm"
+                android:text="✓ Save"
+                android:textStyle="bold"
+                android:textAllCaps="false"
+                android:id="@+id/button_save"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:textSize="20sp"
+                />
+
+        <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"/>
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

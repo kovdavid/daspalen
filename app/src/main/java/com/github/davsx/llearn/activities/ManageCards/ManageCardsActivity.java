@@ -3,6 +3,7 @@ package com.github.davsx.llearn.activities.ManageCards;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.*;
 import android.view.Menu;
@@ -36,6 +37,9 @@ public class ManageCardsActivity extends AppCompatActivity {
         adapter = new ManageCardsAdapter(this, manageCardsService);
 
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("Manage cards");
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setAdapter(adapter);

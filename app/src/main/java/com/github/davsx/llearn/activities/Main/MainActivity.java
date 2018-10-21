@@ -11,6 +11,7 @@ import com.github.davsx.llearn.activities.CardExport.CardExportActivity;
 import com.github.davsx.llearn.activities.CardImport.CardImportActivity;
 import com.github.davsx.llearn.activities.LearnQuiz.LearnQuizActivity;
 import com.github.davsx.llearn.activities.ManageCards.ManageCardsActivity;
+import com.github.davsx.llearn.activities.MemriseImport.MemriseImportActivity;
 import com.github.davsx.llearn.activities.ReviewQuiz.ReviewQuizActivity;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
 import com.github.davsx.llearn.persistence.repository.CardRepository;
@@ -36,6 +37,7 @@ public class MainActivity extends Activity {
     private Button btnResetCards;
     private Button btnExportCards;
     private Button btnImportCards;
+    private Button btnMemriseImport;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,7 @@ public class MainActivity extends Activity {
         btnResetCards = findViewById(R.id.button_reset_cards);
         btnExportCards = findViewById(R.id.button_export_cards);
         btnImportCards = findViewById(R.id.button_import_cards);
+        btnMemriseImport = findViewById(R.id.button_memrise_import);
     }
 
     @Override
@@ -107,6 +110,14 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(MainActivity.this, CardImportActivity.class);
+                MainActivity.this.startActivity(i);
+            }
+        });
+
+        btnMemriseImport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, MemriseImportActivity.class);
                 MainActivity.this.startActivity(i);
             }
         });

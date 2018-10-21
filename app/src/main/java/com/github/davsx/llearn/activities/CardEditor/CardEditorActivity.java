@@ -242,10 +242,6 @@ public class CardEditorActivity extends AppCompatActivity {
 
         Log.d(TAG, "handleIntent action[" + action + "] type[" + type + "]");
 
-        // TODO remove
-        intent.putExtra("ID_CARD", 1L);
-        action = null;
-
         if (action == null) {
             cardId = intent.getLongExtra("ID_CARD", 0L);
             if (cardId > 0L) {

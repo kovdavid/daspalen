@@ -26,9 +26,9 @@ public class LLearnConstants {
     public static final Double REVIEW_CARD_MAX_EASINESS_FACTOR = 2.5;
 
     public static final char[] SPANISH_LOWERCASE_LETTERS =
-            "abcdefghijklmnñopqrstuvwxyzáéíñóúü".toCharArray();
+            "abcdefghijklmnñopqrstuvwxyzáéíñóúü0123456789!¿?,.'\"".toCharArray();
     public static final char[] SPANISH_UPPERCASE_LETTERS =
-            "ABCDEFGHIJKLMNÑOPQRSTUVWXYZÁÉÍÑÓÚÜ".toCharArray();
+            "ABCDEFGHIJKLMNÑOPQRSTUVWXYZÁÉÍÑÓÚÜ0123456789!¿?,.'\"".toCharArray();
 
     public static final String PKG_SPANISHDICT = "com.spanishdict.spanishdict";
     public static final String PKG_GOOGLE_TRANSLATE = "com.google.android.apps.translate";

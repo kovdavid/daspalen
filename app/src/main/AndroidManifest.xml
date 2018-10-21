@@ -5,8 +5,10 @@
           tools:ignore="InnerclassSeparator"
         >
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="18" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission
+            android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+            android:maxSdkVersion="18"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
             android:icon="@mipmap/ic_launcher_icon"
@@ -17,54 +19,78 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             >
 
-        <activity android:name=".activities.Main.MainActivity" android:launchMode="singleInstance">
+        <activity
+                android:name=".activities.Main.MainActivity"
+                android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activities.ManageCards.ManageCardsActivity" android:launchMode="singleInstance">
+        <activity
+                android:name=".activities.ManageCards.ManageCardsActivity"
+                android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activities.CardEditor.CardEditorActivity" android:launchMode="singleInstance">
+        <activity
+                android:name=".activities.CardEditor.CardEditorActivity"
+                android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <action android:name="android.intent.action.SEND"/>
+
                 <category android:name="android.intent.category.DEFAULT"/>
+
                 <data android:mimeType="image/jpeg"/>
                 <data android:mimeType="image/png"/>
                 <data android:mimeType="image/gif"/>
                 <data android:mimeType="text/plain"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activities.LearnQuiz.LearnQuizActivity" android:launchMode="singleInstance">
+        <activity
+                android:name=".activities.LearnQuiz.LearnQuizActivity"
+                android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activities.ReviewQuiz.ReviewQuizActivity" android:launchMode="singleInstance">
+        <activity
+                android:name=".activities.ReviewQuiz.ReviewQuizActivity"
+                android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activities.CardExport.CardExportActivity" android:launchMode="singleInstance">
+        <activity
+                android:name=".activities.CardExport.CardExportActivity"
+                android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activities.CardImport.CardImportActivity" android:launchMode="singleInstance">
+        <activity
+                android:name=".activities.CardImport.CardImportActivity"
+                android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activities.KindleImport.KindleImportActivity" android:launchMode="singleInstance">
+        <activity
+                android:name=".activities.KindleImport.KindleImportActivity"
+                android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.SEND_MULTIPLE"/>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <data android:mimeType="message/rfc822"/>
+            </intent-filter>
+        </activity>
+        <activity
+                android:name=".activities.MemriseImport.MemriseImportActivity"
+                android:launchMode="singleInstance">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
 

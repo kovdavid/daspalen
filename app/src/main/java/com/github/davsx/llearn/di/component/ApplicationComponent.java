@@ -8,14 +8,15 @@ import com.github.davsx.llearn.activities.KindleImport.KindleImportActivity;
 import com.github.davsx.llearn.activities.LearnQuiz.LearnQuizActivity;
 import com.github.davsx.llearn.activities.Main.MainActivity;
 import com.github.davsx.llearn.activities.ManageCards.ManageCardsActivity;
+import com.github.davsx.llearn.activities.MemriseImport.MemriseImportActivity;
 import com.github.davsx.llearn.activities.ReviewQuiz.ReviewQuizActivity;
 import com.github.davsx.llearn.di.module.*;
-import com.github.davsx.llearn.service.BaseQuiz.CardQuizService;
 import com.github.davsx.llearn.service.CardExport.CardExportService;
 import com.github.davsx.llearn.service.CardImage.CardImageService;
 import com.github.davsx.llearn.service.CardImport.CardImportService;
 import com.github.davsx.llearn.service.LearnQuiz.LearnQuizService;
 import com.github.davsx.llearn.service.ManageCards.ManageCardsService;
+import com.github.davsx.llearn.service.MemriseImport.MemriseImportService;
 import com.github.davsx.llearn.service.ReviewQuiz.ReviewQuizService;
 import com.github.davsx.llearn.service.Speaker.SpeakerService;
 import dagger.Component;
@@ -30,6 +31,7 @@ import javax.inject.Singleton;
         CardImageModule.class,
         SpeakerModule.class,
         CardExportModule.class,
+        MemriseImportModule.class,
         CardImportModule.class
 })
 public interface ApplicationComponent {
@@ -43,6 +45,8 @@ public interface ApplicationComponent {
     void inject(LearnQuizActivity activity);
 
     void inject(KindleImportActivity activity);
+
+    void inject(MemriseImportActivity activity);
 
     void inject(CardEditorActivity activity);
 
@@ -63,6 +67,8 @@ public interface ApplicationComponent {
     ManageCardsService getManageCardsService();
 
     ReviewQuizService getReviewQuizService();
+
+    MemriseImportService getMemriseImportService();
 
     SpeakerService getSpeakerService();
 
