@@ -52,18 +52,17 @@ public class MemriseImportService {
         currentCard++;
     }
 
+    public CardEntity findDuplicateCard(String front, String back) {
+        return cardRepository.findDuplicateCard(front, back);
+    }
+
     public void saveCard(String front, String back) {
-        CardEntity duplicateCard = cardRepository.findDuplicateCard(front, back);
-        if (duplicateCard == null) {
-            CardEntity card = new CardEntity()
-                    .setFront(front)
-                    .setBack(back)
-                    .setCreatedAt(System.currentTimeMillis())
-                    .setLearnScore(0);
-            cardRepository.save(card);
-        } else {
-            // TODO SHOW DUPLICATE CARD ALERT OR SOMETHING!!!!
-        }
+        CardEntity card = new CardEntity()
+                .setFront(front)
+                .setBack(back)
+                .setCreatedAt(System.currentTimeMillis())
+                .setLearnScore(0);
+        cardRepository.save(card);
 
         currentCard++;
     }

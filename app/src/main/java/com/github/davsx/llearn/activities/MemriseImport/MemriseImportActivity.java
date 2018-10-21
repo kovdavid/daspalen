@@ -5,11 +5,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
+import android.support.v7.app.AlertDialog;
+import android.text.Html;
 import android.view.View;
 import android.widget.*;
 import com.github.davsx.llearn.LLearnApplication;
 import com.github.davsx.llearn.LLearnConstants;
 import com.github.davsx.llearn.R;
+import com.github.davsx.llearn.persistence.entity.CardEntity;
 import com.github.davsx.llearn.service.MemriseImport.MemriseImportService;
 
 import javax.inject.Inject;
@@ -26,6 +29,7 @@ public class MemriseImportActivity extends Activity {
     private EditText editTextBack;
     private Button buttonSkip;
     private Button buttonSave;
+    private Button buttonReset;
     private ProgressBar progressBar;
     private ImageView buttonSwap;
 
@@ -39,6 +43,7 @@ public class MemriseImportActivity extends Activity {
         buttonChooseFile = findViewById(R.id.button_choose_file);
         buttonSave = findViewById(R.id.button_save);
         buttonSkip = findViewById(R.id.button_skip);
+        buttonReset = findViewById(R.id.button_reset);
         editTextFront = findViewById(R.id.edittext_front);
         editTextBack = findViewById(R.id.edittext_back);
         progressBar = findViewById(R.id.progress_bar);
@@ -71,8 +76,9 @@ public class MemriseImportActivity extends Activity {
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                memriseImportService.saveCard(editTextFront.getText().toString(), editTextBack.getText().toString());
-                showNextCard();
+                if (saveCard()) {
+                    showNextCard();
+                }
             }
         });
         buttonSwap.setOnClickListener(new View.OnClickListener() {
@@ -83,6 +89,12 @@ public class MemriseImportActivity extends Activity {
 
                 editTextFront.setText(backText);
                 editTextBack.setText(frontText);
+            }
+        });
+        buttonReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showNextCard();
             }
         });
     }
@@ -101,6 +113,29 @@ public class MemriseImportActivity extends Activity {
                 }
             }
         }
+    }
+
+    private boolean saveCard() {
+        String frontText = editTextFront.getText().toString();
+        String backText = editTextBack.getText().toString();
+
+        CardEntity duplicateCard = memriseImportService.findDuplicateCard(frontText, backText);
+        if (duplicateCard == null) {
+            memriseImportService.saveCard(frontText, backText);
+            return true;
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            String dialogMessage = String.format(
+                    "The current card cannot be saved, because a duplicate card was found:<br /><br />Front<br " +
+                            "/><b>%s</b><br />Back<br /><b>%s</b>",
+                    duplicateCard.getFront(),
+                    duplicateCard.getBack());
+            builder.setTitle("Error")
+                    .setMessage(Html.fromHtml(dialogMessage))
+                    .setPositiveButton("Ok", null)
+                    .show();
+        }
+        return false;
     }
 
     private void showNextCard() {
