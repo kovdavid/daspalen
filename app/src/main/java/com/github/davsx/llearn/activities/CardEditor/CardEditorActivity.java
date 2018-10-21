@@ -540,7 +540,7 @@ public class CardEditorActivity extends AppCompatActivity {
                     .setLearnScore(0);
         } else {
             if (!newFront.equals(card.getFront()) || !newBack.equals(card.getBack())) {
-                card.setType(CardEntity.TYPE_INCOMPLETE)
+                card.setType(LLearnConstants.CARD_TYPE_INCOMPLETE)
                         .setLearnScore(0)
                         .setFront(newFront)
                         .setBack(newBack);

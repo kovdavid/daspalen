@@ -88,7 +88,7 @@ public class CardExportActivity extends AppCompatActivity implements View.OnClic
             Intent i = new Intent(Intent.ACTION_CREATE_DOCUMENT);
             i.addCategory(Intent.CATEGORY_OPENABLE);
             i.setType("application/zip");
-            i.putExtra(Intent.EXTRA_TITLE, "LLearn_backup.zip");
+            i.putExtra(Intent.EXTRA_TITLE, cardExportService.getDefaultFileName());
             startActivityForResult(i, LLearnConstants.REQUEST_CODE_CREATE_DOCUMENT);
         }
     }
@@ -139,7 +139,8 @@ public class CardExportActivity extends AppCompatActivity implements View.OnClic
             boolean run;
             do {
                 run = cardExportService.doNextChunk();
-                Pair<Integer, String> p = new Pair<>(cardExportService.getCurrentProgress(), cardExportService.getStatus());
+                Pair<Integer, String> p = new Pair<>(cardExportService.getCurrentProgress(),
+                        cardExportService.getStatus());
                 publishProgress(p);
             } while (run);
 
@@ -157,12 +158,6 @@ public class CardExportActivity extends AppCompatActivity implements View.OnClic
         }
 
         @Override
-        protected void onCancelled() {
-            super.onCancelled();
-            cardExportService.cancelExport();
-        }
-
-        @Override
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
 
@@ -176,6 +171,12 @@ public class CardExportActivity extends AppCompatActivity implements View.OnClic
 
             progressBar.setProgress(values[0].first);
             textViewInfo.setText(values[0].second);
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            cardExportService.cancelExport();
         }
     }
 }

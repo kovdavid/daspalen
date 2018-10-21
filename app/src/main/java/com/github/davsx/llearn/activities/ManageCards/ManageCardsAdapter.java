@@ -45,8 +45,18 @@ public class ManageCardsAdapter extends RecyclerView.Adapter<ManageCardsAdapter.
         }
     }
 
-    void showOnlyIncomplete(boolean checked) {
-        manageCardsService.setShowOnlyIncomplete(checked);
+    void showIncompleteCards(boolean show) {
+        manageCardsService.setShowIncompleteCards(show);
+        notifyDataSetChanged();
+    }
+
+    void showLearnableCards(boolean show) {
+        manageCardsService.setShowLearnableCards(show);
+        notifyDataSetChanged();
+    }
+
+    void showReviewableCards(boolean show) {
+        manageCardsService.setShowReviewableCards(show);
         notifyDataSetChanged();
     }
 

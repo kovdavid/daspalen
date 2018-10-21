@@ -8,8 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.github.davsx.llearn.LLearnConstants;
 import com.github.davsx.llearn.R;
-import com.github.davsx.llearn.service.ReviewQuiz.ReviewQuizService;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -60,19 +60,19 @@ public class FragmentReviewCard extends BaseQuizFragment {
         view.findViewById(R.id.button_answer_wrong).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                handleAnswer(ReviewQuizService.ANSWER_WRONG);
+                handleAnswer(LLearnConstants.REVIEW_ANSWER_WRONG);
             }
         });
         view.findViewById(R.id.button_answer_ok).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                handleAnswer(ReviewQuizService.ANSWER_OK);
+                handleAnswer(LLearnConstants.REVIEW_ANSWER_OK);
             }
         });
         view.findViewById(R.id.button_answer_good).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                handleAnswer(ReviewQuizService.ANSWER_GOOD);
+                handleAnswer(LLearnConstants.REVIEW_ANSWER_GOOD);
             }
         });
 

@@ -1,24 +1,18 @@
 package com.github.davsx.llearn.persistence.repository;
 
-import android.util.Log;
 import com.github.davsx.llearn.LLearnConstants;
 import com.github.davsx.llearn.persistence.dao.CardDao;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class CardRepository {
-
-    private static final String TAG = "CardRepositoryImpl";
 
     private CardDao cardDao;
 
     @Inject
     public CardRepository(CardDao cardDao) {
-        Log.d(TAG, "new CardRepositoryImpl");
         this.cardDao = cardDao;
     }
 
@@ -62,27 +56,23 @@ public class CardRepository {
         return cardDao.getRandomCards(limit);
     }
 
-    public List<CardEntity> getCardsChunked(Long id, boolean onlyIncomplete, int limit) {
-        ArrayList<Integer> types = new ArrayList<Integer>(Arrays.asList(CardEntity.TYPE_INCOMPLETE));
-        if (!onlyIncomplete) {
-            types.add(CardEntity.TYPE_LEARN);
-            types.add(CardEntity.TYPE_REVIEW);
-        }
+    public List<CardEntity> getCardsChunked(Long id, List<Integer> types, int limit) {
         return cardDao.getCardsChunked(id, types, limit);
     }
 
-    public List<CardEntity> searchCardsChunked(String query, Long id, boolean onlyIncomplete, int limit) {
-        ArrayList<Integer> types = new ArrayList<>(Arrays.asList(CardEntity.TYPE_INCOMPLETE));
-        if (!onlyIncomplete) {
-            types.add(CardEntity.TYPE_LEARN);
-            types.add(CardEntity.TYPE_REVIEW);
-        }
+    public List<CardEntity> searchCardsChunked(String query,
+                                               Long id,
+                                               List<Integer> types,
+                                               int limit) {
         String queryStr = "%" + query + "%";
         return cardDao.searchCardsChunked(queryStr, id, types, limit);
     }
 
     public List<CardEntity> getLearnCandidates() {
-        return cardDao.getLearnCandidates(LLearnConstants.MAX_CARD_LEARN_SCORE, LLearnConstants.LEARN_SESSION_CANDIDATE_CARDS);
+        return cardDao.getLearnCandidates(
+                LLearnConstants.MAX_CARD_LEARN_SCORE,
+                LLearnConstants.LEARN_SESSION_CANDIDATE_CARDS
+        );
     }
 
     public List<CardEntity> getReviewCandidates() {

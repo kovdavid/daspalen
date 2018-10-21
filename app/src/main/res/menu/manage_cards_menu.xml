@@ -17,12 +17,34 @@
             app:actionViewClass="android.support.v7.widget.SearchView"
             />
 
-    <item
-            android:id="@+id/checkbox_show_incomplete"
-            android:title="Show incomplete cards"
-            android:theme="@style/Theme.AppCompat"
-            app:actionViewClass="android.widget.CheckBox"
-            app:showAsAction="never|withText"
-            android:checkable="true"/>
+    <group
+            android:id="@+id/group_card_type"
+            android:checkableBehavior="all">
+
+        <item
+                android:id="@+id/checkbox_show_incomplete"
+                android:title="Show Incomplete cards"
+                android:theme="@style/Theme.AppCompat"
+                app:actionViewClass="android.widget.CheckBox"
+                app:showAsAction="never|withText"
+                android:checkable="true"/>
+
+        <item
+                android:id="@+id/checkbox_show_learn"
+                android:title="Show Learnable cards"
+                android:theme="@style/Theme.AppCompat"
+                app:actionViewClass="android.widget.CheckBox"
+                app:showAsAction="never|withText"
+                android:checkable="true"/>
+
+        <item
+                android:id="@+id/checkbox_show_review"
+                android:title="Show Reviewable cards"
+                android:theme="@style/Theme.AppCompat"
+                app:actionViewClass="android.widget.CheckBox"
+                app:showAsAction="never|withText"
+                android:checkable="true"/>
+
+    </group>
 
 </menu>

@@ -19,9 +19,6 @@ import java.util.Random;
         }
 )
 public class CardEntity {
-    public static final Integer TYPE_INCOMPLETE = 0;
-    public static final Integer TYPE_LEARN = 1;
-    public static final Integer TYPE_REVIEW = 2;
 
     @PrimaryKey
     @ColumnInfo(name = "id_card")
@@ -37,7 +34,7 @@ public class CardEntity {
 
     @NonNull
     @ColumnInfo(name = "type")
-    public Integer type = TYPE_INCOMPLETE;
+    public Integer type = LLearnConstants.CARD_TYPE_INCOMPLETE;
 
     @ColumnInfo(name = "learn_score")
     public Integer learnScore = 0;
@@ -103,12 +100,12 @@ public class CardEntity {
     }
 
     public void processCorrectLearnAnswer() {
-        if (!type.equals(TYPE_LEARN)) return;
+        if (!type.equals(LLearnConstants.CARD_TYPE_LEARN)) return;
 
         this.learnScore = Math.min(this.learnScore + 1, LLearnConstants.MAX_CARD_LEARN_SCORE);
         this.learnUpdateAt = System.currentTimeMillis();
         if (this.learnScore >= LLearnConstants.MAX_CARD_LEARN_SCORE) {
-            this.type = TYPE_REVIEW;
+            this.type = LLearnConstants.CARD_TYPE_REVIEW;
             this.easinessFactor = LLearnConstants.REVIEW_CARD_MIN_EASINESS_FACTOR;
             this.badReviewAnswers = 0;
             this.goodReviewAnswers = 0;
@@ -167,7 +164,7 @@ public class CardEntity {
         this.badReviewAnswers++;
 
         if (badReviewAnswers >= LLearnConstants.REVIEW_CARD_MAX_BAD_ANSWERS) {
-            this.type = TYPE_LEARN;
+            this.type = LLearnConstants.CARD_TYPE_LEARN;
             this.learnScore = 0;
             this.learnUpdateAt = System.currentTimeMillis();
             return;
@@ -196,13 +193,13 @@ public class CardEntity {
 
     private Integer calculateType() {
         if (front.length() > 0 && back.length() > 0) {
-            if (type.equals(TYPE_INCOMPLETE)) {
-                return TYPE_LEARN;
+            if (type.equals(LLearnConstants.CARD_TYPE_INCOMPLETE)) {
+                return LLearnConstants.CARD_TYPE_LEARN;
             } else {
                 return type;
             }
         } else {
-            return TYPE_INCOMPLETE;
+            return LLearnConstants.CARD_TYPE_INCOMPLETE;
         }
     }
 

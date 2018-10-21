@@ -1,19 +1,19 @@
 package com.github.davsx.llearn.di.module;
 
 import com.github.davsx.llearn.persistence.LLearnDatabase;
-import com.github.davsx.llearn.persistence.repository.CardRepository;
+import com.github.davsx.llearn.persistence.repository.JournalRepository;
 import dagger.Module;
 import dagger.Provides;
 
 import javax.inject.Singleton;
 
 @Module(includes = LLearnDatabaseModule.class)
-public class CardRepositoryModule {
+public class JournalRepositoryModule {
 
     @Singleton
     @Provides
-    CardRepository provideCardRepository(LLearnDatabase database) {
-        return new CardRepository(database.cardDao());
+    JournalRepository provideJournalRepository(LLearnDatabase database) {
+        return new JournalRepository(database.journalDao());
     }
 
 }

@@ -1,5 +1,6 @@
 package com.github.davsx.llearn.service.ManageCards;
 
+import com.github.davsx.llearn.LLearnConstants;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
 import com.github.davsx.llearn.persistence.repository.CardRepository;
 
@@ -19,7 +20,10 @@ public class ManageCardsService {
     private Long maxLoadedCardId = 0L;
     private boolean hasMoreCards = true;
     private String searchQuery = null;
-    private boolean showOnlyIncomplete = false;
+
+    private boolean showIncompleteCards = true;
+    private boolean showLearnableCards = true;
+    private boolean showReviewableCards = true;
 
     public ManageCardsService(CardRepository cardRepository) {
         this.cardRepository = cardRepository;
@@ -35,9 +39,10 @@ public class ManageCardsService {
     private boolean loadMoreCards(int limit) {
         List<CardEntity> moreCards;
         if (searchQuery == null) {
-            moreCards = cardRepository.getCardsChunked(maxLoadedCardId, showOnlyIncomplete, limit);
+            moreCards = cardRepository.getCardsChunked(maxLoadedCardId, getCardTypes(), limit);
         } else {
-            moreCards = cardRepository.searchCardsChunked(searchQuery, maxLoadedCardId, showOnlyIncomplete, limit);
+            moreCards = cardRepository.searchCardsChunked(searchQuery, maxLoadedCardId,
+                    getCardTypes(), limit);
         }
         if (moreCards.size() > 0) {
             maxLoadedCardId = moreCards.get(moreCards.size() - 1).getId();
@@ -90,10 +95,38 @@ public class ManageCardsService {
         loadMoreCards(LOAD_CHUNK_SIZE);
     }
 
-    public void setShowOnlyIncomplete(boolean showOnlyIncomplete) {
+    public void setShowIncompleteCards(boolean show) {
         reset();
-        this.showOnlyIncomplete = showOnlyIncomplete;
+        this.showIncompleteCards = show;
         loadMoreCards(LOAD_CHUNK_SIZE * 2);
+    }
+
+    public void setShowLearnableCards(boolean show) {
+        reset();
+        this.showLearnableCards = show;
+        loadMoreCards(LOAD_CHUNK_SIZE * 2);
+    }
+
+    public void setShowReviewableCards(boolean show) {
+        reset();
+        this.showReviewableCards = show;
+        loadMoreCards(LOAD_CHUNK_SIZE * 2);
+    }
+
+    private List<Integer> getCardTypes() {
+        List<Integer> types = new ArrayList<>();
+
+        if (showIncompleteCards) {
+            types.add(LLearnConstants.CARD_TYPE_INCOMPLETE);
+        }
+        if (showLearnableCards) {
+            types.add(LLearnConstants.CARD_TYPE_LEARN);
+        }
+        if (showReviewableCards) {
+            types.add(LLearnConstants.CARD_TYPE_REVIEW);
+        }
+
+        return types;
     }
 
     public int getItemCount() {

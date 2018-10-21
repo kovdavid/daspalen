@@ -21,7 +21,7 @@ public class KindleImportService {
 
     public static void doImport(Context context, Intent intent, CardRepository cardRepository) {
         ArrayList<Uri> uris = intent.getExtras().getParcelableArrayList(Intent.EXTRA_STREAM);
-        if (uris.size() != 1) {
+        if (uris == null || uris.size() != 1) {
             return;
         }
 
@@ -30,6 +30,7 @@ public class KindleImportService {
         String html;
         try {
             InputStream inputStream = context.getContentResolver().openInputStream(uri);
+            if (inputStream == null) return;
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             StringBuilder builder = new StringBuilder();
             String line;
@@ -53,7 +54,7 @@ public class KindleImportService {
         if (newBackStrings.size() > 0) {
             ArrayList<CardEntity> newCards = new ArrayList<>();
             for (String back : newBackStrings) {
-                Log.i(TAG, "importing Card with text "+back);
+                Log.i(TAG, "importing Card with text " + back);
                 CardEntity card = new CardEntity()
                         .setCreatedAt(System.currentTimeMillis())
                         .setBack(back);

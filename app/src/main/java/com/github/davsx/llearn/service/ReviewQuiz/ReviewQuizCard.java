@@ -1,5 +1,6 @@
 package com.github.davsx.llearn.service.ReviewQuiz;
 
+import com.github.davsx.llearn.LLearnConstants;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
 import com.github.davsx.llearn.persistence.repository.CardRepository;
 import com.github.davsx.llearn.service.BaseQuiz.BaseQuizCardScheduler;
@@ -40,14 +41,14 @@ class ReviewQuizCard {
     }
 
     void handleAnswer(BaseQuizCardScheduler<ReviewQuizCard> scheduler, String answer) {
-        if (answer.equals(ReviewQuizService.ANSWER_GOOD)) {
+        if (answer.equals(LLearnConstants.REVIEW_ANSWER_GOOD)) {
             if (updateCardOnAnswer && !answered) {
                 cardEntity.processGoodReviewAnswer();
                 cardRepository.save(cardEntity);
             }
         } else {
             if (updateCardOnAnswer && !answered) {
-                if (answer.equals(ReviewQuizService.ANSWER_OK)) {
+                if (answer.equals(LLearnConstants.REVIEW_ANSWER_OK)) {
                     cardEntity.processOkReviewAnswer();
                 } else {
                     cardEntity.processBadReviewAnswer();

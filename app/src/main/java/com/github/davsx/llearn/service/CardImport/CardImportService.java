@@ -1,11 +1,15 @@
 package com.github.davsx.llearn.service.CardImport;
 
 import com.github.davsx.llearn.persistence.entity.CardEntity;
+import com.github.davsx.llearn.persistence.entity.JournalEntity;
 import com.github.davsx.llearn.persistence.repository.CardRepository;
+import com.github.davsx.llearn.persistence.repository.JournalRepository;
 import com.github.davsx.llearn.service.CardImage.CardImageService;
 import com.opencsv.CSVReader;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -14,6 +18,7 @@ import java.util.zip.ZipInputStream;
 public class CardImportService {
 
     private CardRepository cardRepository;
+    private JournalRepository journalRepository;
     private CardImageService cardImageService;
 
     private ZipInputStream zipInputStream;
@@ -22,8 +27,10 @@ public class CardImportService {
     private String status;
     private ImportStatus importStatus = ImportStatus.IMPORT_NOT_RUNNING;
 
-    public CardImportService(CardRepository cardRepository, CardImageService cardImageService) {
+    public CardImportService(CardRepository cardRepository, JournalRepository journalRepository,
+                             CardImageService cardImageService) {
         this.cardRepository = cardRepository;
+        this.journalRepository = journalRepository;
         this.cardImageService = cardImageService;
     }
 
@@ -54,6 +61,7 @@ public class CardImportService {
             status = "Deleting data";
 
             cardRepository.deleteAllCards();
+            journalRepository.deleteAllJournals();
             cardImageService.deleteAllImages();
             importStatus = ImportStatus.LOADING_DATA;
 
@@ -68,6 +76,8 @@ public class CardImportService {
                 }
                 if (zipEntry.getName().equals("cards_export_V1.csv")) {
                     loadCardsFromCsvV1(zipInputStream);
+                } else if (zipEntry.getName().equals("journals_export_V1.csv")) {
+                    loadJournalsFromCsvV1(zipInputStream);
                 } else {
                     cardImageService.saveImageFromStream(zipEntry.getName(), zipInputStream);
                 }
@@ -98,12 +108,20 @@ public class CardImportService {
         isr.close();
     }
 
-    public String getStatus() {
-        return status;
-    }
+    private void loadJournalsFromCsvV1(ZipInputStream zipInputStream) throws IOException {
+        InputStreamReader isr = new InputStreamReader(zipInputStream);
+        CSVReader csv = new CSVReader(isr);
 
-    public boolean getFinished() {
-        return importStatus.equals(ImportStatus.FINISHED);
+        List<JournalEntity> journals = new ArrayList<>();
+
+        String[] row;
+        while ((row = csv.readNext()) != null) {
+            journals.add(JournalEntity.fromCsvDataV1(row));
+        }
+
+        journalRepository.saveMany(journals);
+
+        isr.close();
     }
 
     private enum ImportStatus {
@@ -112,5 +130,13 @@ public class CardImportService {
         LOADING_DATA,
         FINISHED,
         ERROR
+    }
+
+    public boolean getFinished() {
+        return importStatus.equals(ImportStatus.FINISHED);
+    }
+
+    public String getStatus() {
+        return status;
     }
 }

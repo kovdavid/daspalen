@@ -12,10 +12,6 @@ import java.util.*;
 
 public class ReviewQuizService implements CardQuizService {
 
-    public static final String ANSWER_WRONG = "WRONG";
-    public static final String ANSWER_OK = "OK";
-    public static final String ANSWER_GOOD = "GOOD";
-
     private CardRepository cardRepository;
     private CardImageService cardImageService;
 

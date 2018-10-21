@@ -22,6 +22,8 @@ public class ManageCardsActivity extends AppCompatActivity {
 
     private ManageCardsAdapter adapter;
     private MenuItem menuShowIncomplete;
+    private MenuItem menuShowLearnable;
+    private MenuItem menuShowReviewable;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,7 +40,8 @@ public class ManageCardsActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        recyclerView.addItemDecoration(new DividerItemDecoration(this,
+                DividerItemDecoration.VERTICAL));
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -61,6 +64,11 @@ public class ManageCardsActivity extends AppCompatActivity {
         inflater.inflate(R.menu.manage_cards_menu, menu);
 
         menuShowIncomplete = menu.findItem(R.id.checkbox_show_incomplete);
+        menuShowLearnable = menu.findItem(R.id.checkbox_show_learn);
+        menuShowReviewable = menu.findItem(R.id.checkbox_show_review);
+        menuShowIncomplete.setChecked(true);
+        menuShowLearnable.setChecked(true);
+        menuShowReviewable.setChecked(true);
 
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -90,7 +98,15 @@ public class ManageCardsActivity extends AppCompatActivity {
                 break;
             case R.id.checkbox_show_incomplete:
                 menuShowIncomplete.setChecked(!menuShowIncomplete.isChecked());
-                adapter.showOnlyIncomplete(menuShowIncomplete.isChecked());
+                adapter.showIncompleteCards(menuShowIncomplete.isChecked());
+                break;
+            case R.id.checkbox_show_learn:
+                menuShowLearnable.setChecked(!menuShowLearnable.isChecked());
+                adapter.showLearnableCards(menuShowLearnable.isChecked());
+                break;
+            case R.id.checkbox_show_review:
+                menuShowReviewable.setChecked(!menuShowReviewable.isChecked());
+                adapter.showReviewableCards(menuShowReviewable.isChecked());
                 break;
         }
 
@@ -110,7 +126,8 @@ public class ManageCardsActivity extends AppCompatActivity {
 
         long cardId = intent.getLongExtra("ID_CARD", 0L);
         int cardPosition = intent.getIntExtra("CARD_POSITION", 0);
-        int result = intent.getIntExtra("RESULT", ManageCardsService.RESULT_CARD_CHANGED); // Reload card just to be sure
+        int result = intent.getIntExtra("RESULT", ManageCardsService.RESULT_CARD_CHANGED); //
+        // Reload card just to be sure
 
         if (result == ManageCardsService.RESULT_CARD_CHANGED) {
             manageCardsService.cardChanged(cardId, cardPosition);
