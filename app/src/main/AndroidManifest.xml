@@ -94,6 +94,19 @@
             </intent-filter>
         </activity>
 
+        <receiver android:name=".service.BootReceiver.BootReceiverService">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+        <receiver
+                android:name=".service.WordOfTheDay.WordOfTheDayNotificationService"
+                android:exported="false">
+            <intent-filter>
+                <action android:name="com.github.davsx.llearn.WordOfTheDay"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

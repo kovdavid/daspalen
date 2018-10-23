@@ -38,8 +38,8 @@ public interface CardDao {
     @Query("SELECT * FROM cards WHERE type != 0 ORDER BY RANDOM() LIMIT :limit")
     List<CardEntity> getRandomCards(int limit);
 
-    @Query("SELECT * FROM cards WHERE type = 1 AND learn_score < :learnScore ORDER BY learn_score DESC, learn_update_at DESC LIMIT :limit")
-    List<CardEntity> getLearnCandidates(Integer learnScore, Integer limit);
+    @Query("SELECT * FROM cards WHERE type = 1 ORDER BY learn_score DESC, learn_update_at DESC LIMIT :limit")
+    List<CardEntity> getLearnCandidates(Integer limit);
 
     @Query("SELECT * FROM cards WHERE type = 2 AND next_review_at < :timestamp ORDER BY next_review_at ASC LIMIT :limit")
     List<CardEntity> getReviewCandidates(long timestamp, int limit);

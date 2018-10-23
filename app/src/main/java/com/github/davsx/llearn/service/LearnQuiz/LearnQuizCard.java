@@ -111,8 +111,19 @@ class LearnQuizCard {
         int limit1 = Double.valueOf(LLearnConstants.MAX_CARD_LEARN_SCORE * 0.50).intValue();
         int limit2 = Double.valueOf(LLearnConstants.MAX_CARD_LEARN_SCORE * 0.75).intValue();
 
-        if (cardEntity.getLearnScore() < limit1) return 3;
-        if (cardEntity.getLearnScore() < limit2) return 2;
+        Random rng = new Random(System.currentTimeMillis());
+        double rand = rng.nextDouble();
+
+        if (cardEntity.getLearnScore() < limit1) {
+            if (rand > 0.5) {
+                return 3;
+            } else {
+                return 2;
+            }
+        }
+        if (cardEntity.getLearnScore() < limit2) {
+            return 2;
+        }
         return 1;
     }
 
@@ -166,9 +177,9 @@ class LearnQuizCard {
     public static class LearnQuizCardComparator implements Comparator<LearnQuizCard> {
         @Override
         public int compare(LearnQuizCard c1, LearnQuizCard c2) {
-            int c = c1.doShowCard.compareTo(c2.doShowCard);
+            int c = c2.doShowCard.compareTo(c1.doShowCard); // true, then false
             if (c == 0) {
-                c = c1.plannedRounds.compareTo(c2.plannedRounds);
+                c = c1.plannedRounds.compareTo(c2.plannedRounds); // 0, then 5
             }
             return c;
         }

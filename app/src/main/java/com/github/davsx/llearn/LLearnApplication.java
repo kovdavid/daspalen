@@ -5,6 +5,7 @@ import android.app.Application;
 import com.github.davsx.llearn.di.component.ApplicationComponent;
 import com.github.davsx.llearn.di.component.DaggerApplicationComponent;
 import com.github.davsx.llearn.di.module.ContextModule;
+import com.github.davsx.llearn.service.WordOfTheDay.WordOfTheDayAlarmService;
 
 public class LLearnApplication extends Application {
 
@@ -17,6 +18,8 @@ public class LLearnApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        WordOfTheDayAlarmService.setAlarm(getApplicationContext());
 
         applicationComponent = DaggerApplicationComponent.builder()
                 .contextModule(new ContextModule(this))

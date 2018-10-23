@@ -26,9 +26,9 @@ public class LLearnConstants {
     public static final Double REVIEW_CARD_MAX_EASINESS_FACTOR = 2.5;
 
     public static final char[] SPANISH_LOWERCASE_LETTERS =
-            "abcdefghijklmnñopqrstuvwxyzáéíñóúü0123456789!¿?,.'\"".toCharArray();
+            "abcdefghijklmnñopqrstuvwxyzáéíñóúü".toCharArray();
     public static final char[] SPANISH_UPPERCASE_LETTERS =
-            "ABCDEFGHIJKLMNÑOPQRSTUVWXYZÁÉÍÑÓÚÜ0123456789!¿?,.'\"".toCharArray();
+            "ABCDEFGHIJKLMNÑOPQRSTUVWXYZÁÉÍÑÓÚÜ".toCharArray();
 
     public static final String PKG_SPANISHDICT = "com.spanishdict.spanishdict";
     public static final String PKG_GOOGLE_TRANSLATE = "com.google.android.apps.translate";
@@ -37,6 +37,7 @@ public class LLearnConstants {
     public static final Integer REQUEST_CODE_OPEN_DOCUMENT = 2;
 
     public static final Long ONE_DAY_MILLIS = (long) (24 * 3600 * 1000);
+    public static final Long ONE_HOUR_MILLIS = (long) (3600 * 1000);
 
     public static final String REVIEW_ANSWER_WRONG = "WRONG";
     public static final String REVIEW_ANSWER_OK = "OK";
@@ -52,4 +53,5 @@ public class LLearnConstants {
 
     public static final List<Integer> CARD_TYPES_ALL =
             new ArrayList<>(Arrays.asList(CARD_TYPE_INCOMPLETE, CARD_TYPE_LEARN, CARD_TYPE_REVIEW));
+    public static final String WORD_OF_THE_DAY_INTENT = "com.github.davsx.llearn.WordOfTheDay";
 }

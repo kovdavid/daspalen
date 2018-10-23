@@ -19,6 +19,7 @@ import com.github.davsx.llearn.service.ManageCards.ManageCardsService;
 import com.github.davsx.llearn.service.MemriseImport.MemriseImportService;
 import com.github.davsx.llearn.service.ReviewQuiz.ReviewQuizService;
 import com.github.davsx.llearn.service.Speaker.SpeakerService;
+import com.github.davsx.llearn.service.WordOfTheDay.WordOfTheDayNotificationService;
 import dagger.Component;
 
 import javax.inject.Singleton;
@@ -55,6 +56,8 @@ public interface ApplicationComponent {
     void inject(CardImportActivity activity);
 
     void inject(ReviewQuizActivity activity);
+
+    void inject(WordOfTheDayNotificationService service);
 
     CardExportService getCardExportService();
 

@@ -64,8 +64,7 @@ public class LearnQuizService implements CardQuizService {
         ArrayList<LearnQuizCard> cardQueue = new ArrayList<>(this.cards);
         this.quizSchedule = new BaseQuizSchedule<>(cardQueue);
 
-        this.randomCards =
-                cardRepository.getRandomCards(LLearnConstants.LEARN_SESSION_RANDOM_CARDS_COUNT);
+        this.randomCards = cardRepository.getRandomCards(LLearnConstants.LEARN_SESSION_RANDOM_CARDS_COUNT);
 
         prepareNextCard();
 
@@ -109,7 +108,7 @@ public class LearnQuizService implements CardQuizService {
     }
 
     private void prepareNextCard() {
-        currentCard = (LearnQuizCard) quizSchedule.nextElem();
+        currentCard = quizSchedule.nextElem();
     }
 
     private List<LearnQuizCard> prepareCards() {
@@ -131,8 +130,8 @@ public class LearnQuizService implements CardQuizService {
                 newCardCounter++;
             }
 
-            LearnQuizCard learnQuizCard = new LearnQuizCard(cardRepository, journalRepository,
-                    cardImageService, card);
+            LearnQuizCard learnQuizCard = new LearnQuizCard(
+                    cardRepository, journalRepository, cardImageService, card);
             chosenCards.add(learnQuizCard);
             totalRounds += learnQuizCard.getPlannedRounds();
 

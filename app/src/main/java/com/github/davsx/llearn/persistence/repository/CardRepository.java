@@ -69,10 +69,7 @@ public class CardRepository {
     }
 
     public List<CardEntity> getLearnCandidates() {
-        return cardDao.getLearnCandidates(
-                LLearnConstants.MAX_CARD_LEARN_SCORE,
-                LLearnConstants.LEARN_SESSION_CANDIDATE_CARDS
-        );
+        return cardDao.getLearnCandidates(LLearnConstants.LEARN_SESSION_CANDIDATE_CARDS);
     }
 
     public List<CardEntity> getReviewCandidates() {
