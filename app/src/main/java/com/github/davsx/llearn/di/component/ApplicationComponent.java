@@ -1,5 +1,6 @@
 package com.github.davsx.llearn.di.component;
 
+import android.content.SharedPreferences;
 import com.github.davsx.llearn.LLearnApplication;
 import com.github.davsx.llearn.activities.CardEditor.CardEditorActivity;
 import com.github.davsx.llearn.activities.CardExport.CardExportActivity;
@@ -10,15 +11,9 @@ import com.github.davsx.llearn.activities.Main.MainActivity;
 import com.github.davsx.llearn.activities.ManageCards.ManageCardsActivity;
 import com.github.davsx.llearn.activities.MemriseImport.MemriseImportActivity;
 import com.github.davsx.llearn.activities.ReviewQuiz.ReviewQuizActivity;
+import com.github.davsx.llearn.activities.Settings.SettingsActivity;
 import com.github.davsx.llearn.di.module.*;
-import com.github.davsx.llearn.service.CardExport.CardExportService;
-import com.github.davsx.llearn.service.CardImage.CardImageService;
-import com.github.davsx.llearn.service.CardImport.CardImportService;
-import com.github.davsx.llearn.service.LearnQuiz.LearnQuizService;
-import com.github.davsx.llearn.service.ManageCards.ManageCardsService;
-import com.github.davsx.llearn.service.MemriseImport.MemriseImportService;
-import com.github.davsx.llearn.service.ReviewQuiz.ReviewQuizService;
-import com.github.davsx.llearn.service.Speaker.SpeakerService;
+import com.github.davsx.llearn.service.BootReceiver.BootReceiverService;
 import com.github.davsx.llearn.service.WordOfTheDay.WordOfTheDayNotificationService;
 import dagger.Component;
 
@@ -57,22 +52,12 @@ public interface ApplicationComponent {
 
     void inject(ReviewQuizActivity activity);
 
+    void inject(SettingsActivity activity);
+
     void inject(WordOfTheDayNotificationService service);
 
-    CardExportService getCardExportService();
+    void inject(BootReceiverService service);
 
-    CardImageService getCardImageService();
-
-    CardImportService getCardImportService();
-
-    LearnQuizService getLearnQuizService();
-
-    ManageCardsService getManageCardsService();
-
-    ReviewQuizService getReviewQuizService();
-
-    MemriseImportService getMemriseImportService();
-
-    SpeakerService getSpeakerService();
+    SharedPreferences getSharedPreferences();
 
 }

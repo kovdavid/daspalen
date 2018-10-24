@@ -13,6 +13,7 @@ import com.github.davsx.llearn.activities.LearnQuiz.LearnQuizActivity;
 import com.github.davsx.llearn.activities.ManageCards.ManageCardsActivity;
 import com.github.davsx.llearn.activities.MemriseImport.MemriseImportActivity;
 import com.github.davsx.llearn.activities.ReviewQuiz.ReviewQuizActivity;
+import com.github.davsx.llearn.activities.Settings.SettingsActivity;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
 import com.github.davsx.llearn.persistence.repository.CardRepository;
 import com.github.davsx.llearn.persistence.repository.JournalRepository;
@@ -37,6 +38,7 @@ public class MainActivity extends Activity {
     private Button btnResetCards;
     private Button btnExportCards;
     private Button btnImportCards;
+    private Button btnSettings;
     private Button btnMemriseImport;
 
     @Override
@@ -53,6 +55,7 @@ public class MainActivity extends Activity {
         btnResetCards = findViewById(R.id.button_reset_cards);
         btnExportCards = findViewById(R.id.button_export_cards);
         btnImportCards = findViewById(R.id.button_import_cards);
+        btnSettings = findViewById(R.id.button_settings);
         btnMemriseImport = findViewById(R.id.button_memrise_import);
     }
 
@@ -114,6 +117,14 @@ public class MainActivity extends Activity {
             }
         });
 
+        btnSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, SettingsActivity.class);
+                MainActivity.this.startActivity(i);
+            }
+        });
+
         btnMemriseImport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,6 +136,12 @@ public class MainActivity extends Activity {
         btnResetCards.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+//                Intent i = new Intent();
+//                i.setAction(LLearnConstants.WORD_OF_THE_DAY_INTENT);
+//                WordOfTheDayNotificationService s = new WordOfTheDayNotificationService();
+//                s.onReceive(getApplicationContext(), i);
+
                 cardRepository.deleteAllCards();
                 journalRepository.deleteAllJournals();
                 List<String> strings = Arrays.asList("aaaa", "bbbb", "cccc", "dddd", "eeee", "ffff", "gggg", "hhhh", "jjjj", "kkkk");

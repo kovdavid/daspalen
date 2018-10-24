@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import com.github.davsx.llearn.LLearnConstants;
 
 import java.util.Calendar;
@@ -22,7 +23,9 @@ public class WordOfTheDayAlarmService {
         return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
-    public static void setAlarm(Context context) {
+    public static void setAlarm(Context context, SharedPreferences sharedPreferences) {
+        WordOfTheDaySettingsService settings = new WordOfTheDaySettingsService(sharedPreferences);
+
         if (hasPendingIntent(context)) {
             return;
         }

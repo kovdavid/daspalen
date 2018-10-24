@@ -37,7 +37,6 @@ import com.github.davsx.llearn.service.Speaker.SpeakerService;
 
 import javax.inject.Inject;
 import java.util.List;
-import java.util.Locale;
 
 public class CardEditorActivity extends AppCompatActivity {
 
@@ -100,7 +99,7 @@ public class CardEditorActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        speakerService.setLanguage(new Locale("spa", "ESP"));
+//        speakerService.setLanguage(new Locale("spa"));
 
         editTextFront.setText(frontText);
         editTextBack.setText(backText);
@@ -392,7 +391,7 @@ public class CardEditorActivity extends AppCompatActivity {
             return;
         }
         translateFront = false;
-        translateWithGoogleTranslate(backText, "es", "en");
+        translateWithGoogleTranslate(backText);
     }
 
     private void translateFrontWithGoogleTranslate() {
@@ -402,10 +401,10 @@ public class CardEditorActivity extends AppCompatActivity {
             return;
         }
         translateFront = true;
-        translateWithGoogleTranslate(frontText, "en", "es");
+        translateWithGoogleTranslate(frontText);
     }
 
-    private void translateWithGoogleTranslate(String text, String lngFrom, String lngTo) {
+    private void translateWithGoogleTranslate(String text) {
         PackageManager pm = getPackageManager();
         PackageInfo packageInfo = null;
         try {
@@ -415,7 +414,7 @@ public class CardEditorActivity extends AppCompatActivity {
 
         if (packageInfo != null) {
             putDataToSharedPrefs();
-            openGoogleTranslate(text, lngFrom, lngTo);
+            openGoogleTranslate(text);
         } else {
             String appName = "Google Translate";
             String pkgName = LLearnConstants.PKG_GOOGLE_TRANSLATE;
@@ -424,14 +423,12 @@ public class CardEditorActivity extends AppCompatActivity {
         }
     }
 
-    private void openGoogleTranslate(String text, String lngFrom, String lngTo) {
+    private void openGoogleTranslate(String text) {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_SEND);
         intent.putExtra(Intent.EXTRA_TEXT, text);
         intent.putExtra("key_text_input", text);
         intent.putExtra("key_text_output", "");
-        intent.putExtra("key_language_from", lngFrom);
-        intent.putExtra("key_language_to", lngTo);
         intent.putExtra("key_suggest_translation", "");
         intent.putExtra("key_from_floating_window", false);
         intent.setComponent(new ComponentName(

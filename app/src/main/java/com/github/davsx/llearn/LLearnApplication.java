@@ -19,11 +19,11 @@ public class LLearnApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        WordOfTheDayAlarmService.setAlarm(getApplicationContext());
-
         applicationComponent = DaggerApplicationComponent.builder()
                 .contextModule(new ContextModule(this))
                 .build();
+
+        WordOfTheDayAlarmService.setAlarm(getApplicationContext(), applicationComponent.getSharedPreferences());
     }
 
     public ApplicationComponent getApplicationComponent() {

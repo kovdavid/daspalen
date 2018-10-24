@@ -12,8 +12,6 @@ import com.github.davsx.llearn.service.BaseQuiz.QuizTypeEnum;
 import com.github.davsx.llearn.service.CardImage.CardImageService;
 import com.github.davsx.llearn.service.Speaker.SpeakerService;
 
-import java.util.Locale;
-
 public abstract class BaseQuizActivity extends FragmentActivity implements AnswerReceiver {
     private CardQuizService cardQuizService;
     private CardImageService cardImageService;
@@ -32,7 +30,8 @@ public abstract class BaseQuizActivity extends FragmentActivity implements Answe
     @Override
     protected void onResume() {
         super.onResume();
-        speakerService.setLanguage(new Locale("spa", "ESP"));
+
+//        speakerService.setLanguage(new Locale("esp"));
     }
 
     private void showNextFragment() {

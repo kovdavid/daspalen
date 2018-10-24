@@ -93,6 +93,13 @@
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
+        <activity
+                android:name=".activities.Settings.SettingsActivity"
+                android:launchMode="singleInstance">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
 
         <receiver android:name=".service.BootReceiver.BootReceiverService">
             <intent-filter>
