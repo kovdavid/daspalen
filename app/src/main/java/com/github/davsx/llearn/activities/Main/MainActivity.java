@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateButtons() {
         Integer learnableCardCount = cardRepository.learnableCardCount();
-        btnLearnCards.setText("Learn cards (" + Integer.toString(learnableCardCount) + ")");
+        btnLearnCards.setText("Learn cards\n(" + Integer.toString(learnableCardCount) + ")");
         if (learnableCardCount > 0) {
             btnLearnCards.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Integer allCardsCount = cardRepository.allCardsCount();
-        btnManageCards.setText("Manage cards (" + Integer.toString(allCardsCount) + ")");
+        btnManageCards.setText("Manage cards\n(" + Integer.toString(allCardsCount) + ")");
         btnManageCards.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Integer reviewableCardCount = cardRepository.reviewableCardCount();
-        btnReviewCards.setText("Review cards (" + Integer.toString(reviewableCardCount) + ")");
+        btnReviewCards.setText("Review cards\n(" + Integer.toString(reviewableCardCount) + ")");
         btnReviewCards.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
