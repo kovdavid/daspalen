@@ -21,7 +21,6 @@ public class CardExportService {
     private StringWriter csvStringWriter;
     private CSVWriter csvWriter;
     private ZipOutputStream zipOutputStream;
-    private StringBuilder manifestBuilder;
 
     private CardRepository cardRepository;
     private JournalRepository journalRepository;
@@ -50,7 +49,6 @@ public class CardExportService {
         csvStringWriter = new StringWriter();
         csvWriter = new CSVWriter(csvStringWriter);
         zipOutputStream = new ZipOutputStream(outputStream);
-        manifestBuilder = new StringBuilder();
         maxCardId = 0L;
         maxJournalId = 0L;
 
@@ -143,8 +141,6 @@ public class CardExportService {
             zipOutputStream.write(bytes);
             csvStringWriter.close();
             csvWriter.close();
-            manifestBuilder.append(fileName);
-            manifestBuilder.append("\n");
 
             csvStringWriter = new StringWriter();
             csvWriter = new CSVWriter(csvStringWriter);
@@ -187,8 +183,6 @@ public class CardExportService {
             zipOutputStream.write(bytes);
             csvStringWriter.close();
             csvWriter.close();
-            manifestBuilder.append(fileName);
-            manifestBuilder.append("\n");
 
             exportStatus = ExportStatus.EXPORTING_IMAGES;
             return true;
@@ -204,8 +198,6 @@ public class CardExportService {
         status = "Export finished";
 
         try {
-            zipOutputStream.putNextEntry(new ZipEntry("MANIFEST"));
-            zipOutputStream.write(manifestBuilder.toString().getBytes());
             zipOutputStream.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -229,9 +221,6 @@ public class CardExportService {
 
                 zipOutputStream.putNextEntry(new ZipEntry(img.getName()));
                 FileInputStream imgInputStream = new FileInputStream(img);
-
-                manifestBuilder.append(img.getName());
-                manifestBuilder.append("\n");
 
                 int length;
                 byte[] buffer = new byte[1024];
