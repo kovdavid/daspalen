@@ -68,6 +68,16 @@ public class ManageCardsService {
         loadMoreCards(LOAD_CHUNK_SIZE * 2);
     }
 
+    public void enableCard(CardEntity card) {
+        card.setEnabled(true);
+        cardRepository.save(card);
+    }
+
+    public void disableCard(CardEntity card) {
+        card.setEnabled(false);
+        cardRepository.save(card);
+    }
+
     public void cancelSearch() {
         reset();
         searchQuery = null;
@@ -93,6 +103,11 @@ public class ManageCardsService {
 
     public void cardAdded() {
         loadMoreCards(LOAD_CHUNK_SIZE);
+    }
+
+    public void deleteCard(CardEntity card, int position) {
+        cardRepository.deleteCard(card);
+        cards.remove(position);
     }
 
     public void setShowIncompleteCards(boolean show) {

@@ -147,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
     private void showWipeConfirmDialog(final boolean confirmed) {
         String message = confirmed ? "Are you really sure?" : "Are you sure?";
         final AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle("Wipe data")
                 .setMessage(message)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override

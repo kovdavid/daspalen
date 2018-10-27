@@ -1,6 +1,8 @@
 package com.github.davsx.llearn.activities.ManageCards;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -50,6 +52,11 @@ public class ManageCardsAdapter extends RecyclerView.Adapter<ManageCardsAdapter.
         }
     }
 
+    @Override
+    public int getItemCount() {
+        return manageCardsService.getItemCount();
+    }
+
     void showIncompleteCards(boolean show) {
         manageCardsService.setShowIncompleteCards(show);
         notifyDataSetChanged();
@@ -63,11 +70,6 @@ public class ManageCardsAdapter extends RecyclerView.Adapter<ManageCardsAdapter.
     void showReviewableCards(boolean show) {
         manageCardsService.setShowReviewableCards(show);
         notifyDataSetChanged();
-    }
-
-    @Override
-    public int getItemCount() {
-        return manageCardsService.getItemCount();
     }
 
     void searchCards(String query) {
@@ -84,7 +86,8 @@ public class ManageCardsAdapter extends RecyclerView.Adapter<ManageCardsAdapter.
         return manageCardsService.onScrolled(lastVisibleItemPosition);
     }
 
-    public class CardViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class CardViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
+            View.OnLongClickListener {
         private TextView textViewIdCard;
         private TextView textViewLearnScore;
         private TextView textViewFront;
@@ -104,6 +107,11 @@ public class ManageCardsAdapter extends RecyclerView.Adapter<ManageCardsAdapter.
             textViewFront.setOnClickListener(this);
             textViewBack.setOnClickListener(this);
             textViewLearnScore.setOnClickListener(this);
+
+            textViewIdCard.setOnLongClickListener(this);
+            textViewFront.setOnLongClickListener(this);
+            textViewBack.setOnLongClickListener(this);
+            textViewLearnScore.setOnLongClickListener(this);
         }
 
         @Override
@@ -112,6 +120,67 @@ public class ManageCardsAdapter extends RecyclerView.Adapter<ManageCardsAdapter.
             i.putExtra("ID_CARD", card.getId());
             i.putExtra("CARD_POSITION", position);
             context.startActivity(i);
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            String[] items;
+            if (card.getEnabled()) {
+                items = new String[]{"Disable card", "Delete card"};
+            } else {
+                items = new String[]{"Enable card", "Delete card"};
+            }
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setItems(items, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (which == 0) {
+                        if (card.getEnabled()) {
+                            manageCardsService.disableCard(card);
+                        } else {
+                            manageCardsService.enableCard(card);
+                        }
+                        notifyDataSetChanged();
+                    } else if (which == 1) {
+                        showConfirmDeleteDialog(false);
+                    }
+                }
+            });
+            builder.setTitle("Choose action");
+            builder.setCancelable(true);
+            builder.show();
+            return true;
+        }
+
+        private void showConfirmDeleteDialog(final boolean confirmed) {
+            String message = confirmed ? "Are you really sure?" : "Are you sure?";
+            final android.support.v7.app.AlertDialog.Builder builder =
+                    new android.support.v7.app.AlertDialog.Builder(context)
+                            .setTitle("Delete card")
+                            .setMessage(message)
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if (confirmed) {
+                                        deleteCard();
+                                    } else {
+                                        dialog.dismiss();
+                                        showConfirmDeleteDialog(true);
+                                    }
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+            builder.show();
+        }
+
+        private void deleteCard() {
+            manageCardsService.deleteCard(card, position);
+            notifyDataSetChanged();
         }
     }
 }
