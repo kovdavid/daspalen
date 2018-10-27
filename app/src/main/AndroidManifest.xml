@@ -9,6 +9,8 @@
             android:name="android.permission.WRITE_EXTERNAL_STORAGE"
             android:maxSdkVersion="18"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.SET_ALARM"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
             android:icon="@mipmap/ic_launcher_icon"
@@ -106,9 +108,7 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
-        <receiver
-                android:name=".service.WordOfTheDay.WordOfTheDayNotificationService"
-                android:exported="false">
+        <receiver android:name=".service.WordOfTheDay.WordOfTheDayNotificationService">
             <intent-filter>
                 <action android:name="com.github.davsx.llearn.WordOfTheDay"/>
             </intent-filter>

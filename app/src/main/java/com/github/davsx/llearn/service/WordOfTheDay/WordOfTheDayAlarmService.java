@@ -5,22 +5,27 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.widget.Toast;
-import com.github.davsx.llearn.LLearnConstants;
 
 import java.util.Calendar;
-import java.util.TimeZone;
 
 public class WordOfTheDayAlarmService {
 
     private static PendingIntent createPendingIntent(Context context) {
-        Intent intent = new Intent(LLearnConstants.WORD_OF_THE_DAY_INTENT);
+        Intent intent = new Intent(context, WordOfTheDayNotificationService.class);
         return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     private static PendingIntent getPendingIntent(Context context) {
-        Intent intent = new Intent(LLearnConstants.WORD_OF_THE_DAY_INTENT);
+        Intent intent = new Intent(context, WordOfTheDayNotificationService.class);
         return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_NO_CREATE);
+    }
+
+    public static void resetAlarm(Context context, SharedPreferences sharedPreferences) {
+        PendingIntent pi = getPendingIntent(context);
+        if (pi != null) {
+            pi.cancel();
+        }
+        setNextAlarm(context, sharedPreferences);
     }
 
     public static void setNextAlarm(Context context, SharedPreferences sharedPreferences) {
@@ -45,8 +50,8 @@ public class WordOfTheDayAlarmService {
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         if (alarmManager != null) {
-            alarmManager.set(AlarmManager.RTC_WAKEUP, getNextAlarmTimestamp(settings), createPendingIntent(context));
-            Toast.makeText(context, "Created alarm", Toast.LENGTH_SHORT).show();
+            Calendar cal = getNextAlarm(settings);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), createPendingIntent(context));
         }
     }
 
@@ -59,9 +64,8 @@ public class WordOfTheDayAlarmService {
         return fromHour < toHour || (fromHour.equals(toHour) && toMinute - fromMinute > 10);
     }
 
-    private static long getNextAlarmTimestamp(WordOfTheDaySettingsService settings) {
+    private static Calendar getNextAlarm(WordOfTheDaySettingsService settings) {
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeZone(TimeZone.getDefault());
         calendar.setTimeInMillis(System.currentTimeMillis());
 
         calendar.add(Calendar.HOUR, settings.getNotificationIntervalHour());
@@ -76,7 +80,7 @@ public class WordOfTheDayAlarmService {
             calendar.add(Calendar.MINUTE, 10);
         }
 
-        return calendar.getTimeInMillis();
+        return calendar;
     }
 
     private static boolean isWithinLimits(Calendar calendar, Integer fromHour, Integer fromMinute, Integer toHour,

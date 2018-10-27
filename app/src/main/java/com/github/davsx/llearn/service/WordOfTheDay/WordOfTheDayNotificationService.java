@@ -27,10 +27,8 @@ public class WordOfTheDayNotificationService extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (intent.getAction() != null && intent.getAction().equals(LLearnConstants.WORD_OF_THE_DAY_INTENT)) {
-            ((LLearnApplication) context).getApplicationComponent().inject(this);
-            showNotification(context);
-        }
+        ((LLearnApplication) context.getApplicationContext()).getApplicationComponent().inject(this);
+        showNotification(context);
     }
 
     private void showNotification(Context context) {
@@ -53,6 +51,10 @@ public class WordOfTheDayNotificationService extends BroadcastReceiver {
         NotificationManager notificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
+        if (notificationManager == null) {
+            return;
+        }
+
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel notificationChannel = new NotificationChannel(
@@ -65,7 +67,7 @@ public class WordOfTheDayNotificationService extends BroadcastReceiver {
 
         notificationManager.notify(0, builder.build());
 
-        WordOfTheDayAlarmService.setNextAlarm(context, sharedPreferences);
+        WordOfTheDayAlarmService.resetAlarm(context, sharedPreferences);
     }
 
 }

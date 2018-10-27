@@ -27,6 +27,7 @@ public class SettingsActivity extends AppCompatActivity {
     private Button buttonNotificationFrom;
     private Button buttonNotificationTo;
     private Button buttonNotificationInterval;
+    private Button buttonResetAlarm;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,6 +47,7 @@ public class SettingsActivity extends AppCompatActivity {
         buttonNotificationFrom = findViewById(R.id.button_notification_from);
         buttonNotificationTo = findViewById(R.id.button_notification_to);
         buttonNotificationInterval = findViewById(R.id.button_notification_interval);
+        buttonResetAlarm = findViewById(R.id.button_reset_alarm);
 
         buttonNotificationFrom.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +73,12 @@ public class SettingsActivity extends AppCompatActivity {
                 wordOfTheDaySettingsService.setNotificationEnabled(isChecked);
             }
         });
+        buttonResetAlarm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                WordOfTheDayAlarmService.resetAlarm(SettingsActivity.this, sharedPreferences);
+            }
+        });
 
         updateViews();
     }
@@ -85,7 +93,7 @@ public class SettingsActivity extends AppCompatActivity {
         TimePickerDialog dialog = new TimePickerDialog(SettingsActivity.this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                setNotificationInterval(hourOfDay, 0);
+                setNotificationInterval(hourOfDay, minute);
             }
         }, getNotificationIntervalHour(), getNotificationIntervalMinute(), true);
         dialog.show();
@@ -147,16 +155,14 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void updateViews() {
-        String notificationFromString = String.format("%02d:%02d", getNotificationFromHour(),
-                getNotificationFromMinute());
-        buttonNotificationFrom.setText(notificationFromString);
+        buttonNotificationFrom.setText(
+                String.format("%02d:%02d", getNotificationFromHour(), getNotificationFromMinute()));
 
-        String notificationToString = String.format("%02d:%02d", getNotificationToHour(), getNotificationToMinute());
-        buttonNotificationTo.setText(notificationToString);
+        buttonNotificationTo.setText(
+                String.format("%02d:%02d", getNotificationToHour(), getNotificationToMinute()));
 
-        String notificationIntervalString = String.format("%02d:%02d", getNotificationIntervalHour(),
-                getNotificationIntervalMinute());
-        buttonNotificationInterval.setText(notificationIntervalString);
+        buttonNotificationInterval.setText(
+                String.format("%02d:%02d", getNotificationIntervalHour(), getNotificationIntervalMinute()));
 
         checkBoxWordOfTheDayEnable.setChecked(wordOfTheDaySettingsService.getNotificationEnabled());
     }

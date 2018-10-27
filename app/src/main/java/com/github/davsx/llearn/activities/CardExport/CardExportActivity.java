@@ -169,8 +169,10 @@ public class CardExportActivity extends AppCompatActivity implements View.OnClic
         protected void onProgressUpdate(Pair<Integer, String>... values) {
             super.onProgressUpdate(values);
 
-            progressBar.setProgress(values[0].first);
-            textViewInfo.setText(values[0].second);
+            if (values != null && values[0] != null && values[0].first != null) {
+                progressBar.setProgress(values[0].first);
+                textViewInfo.setText(values[0].second);
+            }
         }
 
         @Override
