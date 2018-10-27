@@ -8,13 +8,11 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:id="@+id/image_view"
-            android:src="@android:drawable/ic_delete"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/button_check_answer"
             android:layout_margin="16dp"
-            android:scaleType="center"
             />
 
     <Button

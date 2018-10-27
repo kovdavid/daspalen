@@ -41,12 +41,11 @@ public class QuizData {
         data.setBackText(card.getBack());
         data.setQuizType(quizType);
         data.setCardScore(card.getLearnScore());
-        if (quizType.equals(QuizTypeEnum.SHOW_CARD)) {
-            String path = cardImageService.getCardImagePath(card.getId());
-            if (path != null) {
-                data.setImageUri(Uri.parse(path));
-            }
-        } else if (quizType.equals(QuizTypeEnum.CHOICE_1of4)) {
+        String path = cardImageService.getCardImagePath(card.getId());
+        if (path != null) {
+            data.setImageUri(Uri.parse(path));
+        }
+        if (quizType.equals(QuizTypeEnum.CHOICE_1of4)) {
             data.setChoices(findChoicesFor(data, randomCards));
         } else if (quizType.equals(QuizTypeEnum.CHOICE_1of4_REVERSE)) {
             data.setReversed();

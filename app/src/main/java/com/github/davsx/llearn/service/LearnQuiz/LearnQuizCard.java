@@ -165,6 +165,14 @@ class LearnQuizCard {
         return QuizData.build(quizType, cardImageService, cardEntity, randomCards);
     }
 
+    Integer getCompletedRounds() {
+        return completedRounds;
+    }
+
+    Integer getPlannedRounds() {
+        return plannedRounds;
+    }
+
     private QuizTypeEnum getQuizType() {
         if (doShowCard) return QuizTypeEnum.SHOW_CARD;
 
@@ -181,14 +189,6 @@ class LearnQuizCard {
         } else {
             return QuizTypeEnum.KEYBOARD_INPUT;
         }
-    }
-
-    Integer getCompletedRounds() {
-        return completedRounds;
-    }
-
-    Integer getPlannedRounds() {
-        return plannedRounds;
     }
 
     public static class LearnQuizCardComparator implements Comparator<LearnQuizCard> {

@@ -505,7 +505,7 @@ public class CardEditorActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         cardImageService.removeCardImages(cardId);
                         imagePath = null;
-                        imageView.setImageResource(android.R.drawable.ic_delete);
+                        imageView.setImageResource(android.R.drawable.ic_menu_report_image);
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {

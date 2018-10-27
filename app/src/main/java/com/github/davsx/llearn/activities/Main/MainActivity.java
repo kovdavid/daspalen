@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
 
         Integer reviewableCardCount = cardRepository.reviewableCardCount();
         Integer reviewableOverdueCardCount = cardRepository.reviewableOverdueCardCount();
-        btnReviewCards.setText(String.format("Review cards\n(%d/%d)", reviewableCardCount, reviewableOverdueCardCount));
+        btnReviewCards.setText(String.format("Review cards\n(%d/%d)", reviewableOverdueCardCount, reviewableCardCount));
         btnReviewCards.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

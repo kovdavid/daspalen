@@ -29,7 +29,8 @@ public class FragmentKeyboardInput extends BaseQuizFragment implements View.OnCl
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_learn_keyboard_input, container, false);
 
         textViewFront = rootView.findViewById(R.id.textview_front);
@@ -74,7 +75,6 @@ public class FragmentKeyboardInput extends BaseQuizFragment implements View.OnCl
                         int cursorPosition = editTextInput.getSelectionStart();
                         String text = ((Button) v).getText().toString();
                         editTextInput.getText().insert(cursorPosition, text);
-//                        editTextInput.append(text);
                     }
                 });
             }
@@ -95,8 +95,11 @@ public class FragmentKeyboardInput extends BaseQuizFragment implements View.OnCl
                 if (length > 0) {
                     int cursorStart = editTextInput.getSelectionStart();
                     int cursorEnd = editTextInput.getSelectionEnd();
-                    editTextInput.getText().delete(cursorStart, cursorEnd);
-//                    editTextInput.getText().delete(length - 1, length);
+                    if (cursorStart < cursorEnd) {
+                        editTextInput.getText().delete(cursorStart, cursorEnd);
+                    } else {
+                        editTextInput.getText().delete(cursorStart - 1, cursorStart);
+                    }
                 }
             }
         });

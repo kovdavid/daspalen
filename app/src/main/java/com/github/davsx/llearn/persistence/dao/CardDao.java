@@ -48,8 +48,7 @@ public interface CardDao {
     @Query("SELECT * FROM cards WHERE type = 2 AND next_review_at < :timestamp AND enabled = 1 ORDER BY next_review_at ASC LIMIT :limit")
     List<CardEntity> getReviewCandidates(long timestamp, int limit);
 
-    @Query("SELECT * FROM cards WHERE type = 2 AND next_review_at > :timestamp AND enabled = 1 ORDER BY " +
-            "next_review_at DESC LIMIT :limit")
+    @Query("SELECT * FROM cards WHERE type = 2 AND next_review_at > :timestamp AND enabled = 1 ORDER BY RANDOM() LIMIT :limit")
     List<CardEntity> getReviewFillCandidates(long timestamp, int limit);
 
     @Query("SELECT * FROM cards WHERE id_card = :id_card")
