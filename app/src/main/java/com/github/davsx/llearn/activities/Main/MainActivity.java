@@ -136,6 +136,12 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.startActivity(i);
             }
         });
+
+        btnLearnCards.getBackground().setAlpha(45);
+        btnReviewCards.getBackground().setAlpha(45);
+        btnManageCards.getBackground().setAlpha(45);
+        btnSettings.getBackground().setAlpha(45);
+
     }
 
     private void showWipeConfirmDialog(final boolean confirmed) {

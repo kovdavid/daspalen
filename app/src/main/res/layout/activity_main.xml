@@ -35,6 +35,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:columnCount="2"
             android:rowCount="2"
+            android:padding="16dp"
+
             >
 
         <Button
@@ -42,11 +44,12 @@
                 android:layout_height="0dp"
                 android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
-                android:text="Learn New Cards (0)"
+                android:text="Learn Cards\n(0)"
                 android:id="@+id/button_learn_cards"
                 android:textSize="20sp"
                 android:textAllCaps="false"
-                android:background="@android:color/transparent"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp"
                 />
 
         <Button
@@ -54,11 +57,11 @@
                 android:layout_height="0dp"
                 android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
-                android:text="Review Cards (0)"
+                android:text="Review Cards\n(0)"
                 android:id="@+id/button_review_cards"
                 android:textSize="20sp"
                 android:textAllCaps="false"
-                android:background="@android:color/transparent"
+                android:layout_marginBottom="16dp"
                 />
 
         <Button
@@ -66,11 +69,11 @@
                 android:layout_height="0dp"
                 android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
-                android:text="Manage Cards"
+                android:text="Manage Cards\n(0)"
                 android:id="@+id/button_manage_cards"
                 android:textSize="20sp"
                 android:textAllCaps="false"
-                android:background="@android:color/transparent"
+                android:layout_marginRight="16dp"
                 />
 
         <Button
@@ -82,7 +85,6 @@
                 android:id="@+id/button_settings"
                 android:textSize="20sp"
                 android:textAllCaps="false"
-                android:background="@android:color/transparent"
                 />
 
     </GridLayout>
