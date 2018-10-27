@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import com.github.davsx.llearn.LLearnConstants;
 import com.github.davsx.llearn.R;
 import com.github.davsx.llearn.activities.CardEditor.CardEditorActivity;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
@@ -44,7 +45,11 @@ public class ManageCardsAdapter extends RecyclerView.Adapter<ManageCardsAdapter.
                 holder.textViewIdCard.setBackgroundResource(R.color.colorAccent);
             }
             holder.textViewIdCard.setText(Long.toString(card.getId()));
-            holder.textViewLearnScore.setText(Integer.toString(card.getLearnScore()));
+            if (card.getLearnScore() < LLearnConstants.MAX_CARD_LEARN_SCORE) {
+                holder.textViewLearnScore.setText(Integer.toString(card.getLearnScore()));
+            } else {
+                holder.textViewLearnScore.setText("R");
+            }
             holder.textViewFront.setText(card.getFront());
             holder.textViewBack.setText(card.getBack());
             holder.card = card;

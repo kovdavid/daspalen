@@ -36,6 +36,9 @@ import com.github.davsx.llearn.service.ManageCards.ManageCardsService;
 import com.github.davsx.llearn.service.Speaker.SpeakerService;
 
 import javax.inject.Inject;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class CardEditorActivity extends AppCompatActivity {
@@ -61,6 +64,7 @@ public class CardEditorActivity extends AppCompatActivity {
     private Button buttonDisable;
     private Button buttonShowJournal;
     private TextView textViewCardScore;
+    private TextView textViewNextReview;
     private ImageButton imageButtonFront;
     private ImageButton imageButtonBack;
     private ImageView buttonSwap;
@@ -117,7 +121,22 @@ public class CardEditorActivity extends AppCompatActivity {
         }
 
         int learnScore = card != null ? card.getLearnScore() : 0;
-        textViewCardScore.setText(Integer.toString(learnScore));
+        if (learnScore < LLearnConstants.MAX_CARD_LEARN_SCORE) {
+            textViewCardScore.setVisibility(View.VISIBLE);
+            textViewCardScore.setText(Integer.toString(learnScore));
+            textViewNextReview.setVisibility(View.INVISIBLE);
+        } else {
+            textViewCardScore.setVisibility(View.INVISIBLE);
+            textViewNextReview.setVisibility(View.VISIBLE);
+            Calendar cal = Calendar.getInstance();
+            cal.setTimeInMillis(card.getNextReviewAt());
+            Date dateTime = cal.getTime();
+            SimpleDateFormat format_date = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat format_time = new SimpleDateFormat("hh:mm:ss");
+            textViewNextReview.setText(
+                    String.format("%s\n%s", format_date.format(dateTime), format_time.format(dateTime))
+            );
+        }
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -672,6 +691,7 @@ public class CardEditorActivity extends AppCompatActivity {
         buttonDisable = findViewById(R.id.button_disable);
         buttonShowJournal = findViewById(R.id.button_show_journal);
         textViewCardScore = findViewById(R.id.textview_card_score);
+        textViewNextReview = findViewById(R.id.textview_next_review);
         imageButtonFront = findViewById(R.id.imagebutton_front_text);
         imageButtonBack = findViewById(R.id.imagebutton_back_text);
         buttonSwap = findViewById(R.id.button_swap_front_back);
