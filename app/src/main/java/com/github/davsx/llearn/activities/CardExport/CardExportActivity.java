@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -33,7 +32,7 @@ public class CardExportActivity extends AppCompatActivity implements View.OnClic
 
     private ExportStatus exportStatus;
 
-    private AsyncTask<OutputStream, Pair<Integer, String>, Boolean> exportTask;
+    private AsyncTask<OutputStream, AsyncProgress, Boolean> exportTask;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -131,7 +130,17 @@ public class CardExportActivity extends AppCompatActivity implements View.OnClic
         EXPORT_FINISHED
     }
 
-    private class ExportTask extends AsyncTask<OutputStream, Pair<Integer, String>, Boolean> {
+    private class AsyncProgress {
+        Integer progress;
+        String status;
+
+        AsyncProgress(Integer progress, String status) {
+            this.progress = progress;
+            this.status = status;
+        }
+    }
+
+    private class ExportTask extends AsyncTask<OutputStream, AsyncProgress, Boolean> {
         @Override
         protected Boolean doInBackground(OutputStream... outputStreams) {
             cardExportService.startExport(outputStreams[0]);
@@ -139,9 +148,7 @@ public class CardExportActivity extends AppCompatActivity implements View.OnClic
             boolean run;
             do {
                 run = cardExportService.doNextChunk();
-                Pair<Integer, String> p = new Pair<>(cardExportService.getCurrentProgress(),
-                        cardExportService.getStatus());
-                publishProgress(p);
+                publishProgress(new AsyncProgress(cardExportService.getCurrentProgress(), cardExportService.getStatus()));
             } while (run);
 
             return cardExportService.getFinished();
@@ -166,13 +173,11 @@ public class CardExportActivity extends AppCompatActivity implements View.OnClic
         }
 
         @Override
-        protected void onProgressUpdate(Pair<Integer, String>... values) {
+        protected void onProgressUpdate(AsyncProgress... values) {
             super.onProgressUpdate(values);
 
-            if (values != null && values[0] != null && values[0].first != null) {
-                progressBar.setProgress(values[0].first);
-                textViewInfo.setText(values[0].second);
-            }
+            progressBar.setProgress(values[0].progress);
+            textViewInfo.setText(values[0].status);
         }
 
         @Override

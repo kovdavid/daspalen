@@ -19,6 +19,9 @@ android {
             minifyEnabled false
         }
     }
+    lintOptions {
+        checkReleaseBuilds false
+    }
 }
 
 dependencies {
