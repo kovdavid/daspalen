@@ -202,7 +202,7 @@ public class CardExportService {
         } catch (Exception e) {
             e.printStackTrace();
             exportStatus = ExportStatus.ERROR;
-            status = "Could not save MANIFEST to zip";
+            status = "Could close zip file";
             return false;
         }
 
