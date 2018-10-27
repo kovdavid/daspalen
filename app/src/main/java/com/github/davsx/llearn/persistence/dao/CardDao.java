@@ -30,10 +30,10 @@ public interface CardDao {
     Integer reviewableCardCount(long timestamp);
 
     @Query("SELECT * FROM cards WHERE id_card > :id AND type IN (:types) AND (front LIKE :query OR back LIKE :query) " +
-            "AND enabled = 1 ORDER BY id_card LIMIT :limit")
+            "ORDER BY id_card LIMIT :limit")
     List<CardEntity> searchCardsChunked(String query, Long id, List<Integer> types, int limit);
 
-    @Query("SELECT * FROM cards WHERE id_card > :id AND type IN (:types) AND enabled = 1 ORDER BY id_card ASC LIMIT :limit")
+    @Query("SELECT * FROM cards WHERE id_card > :id AND type IN (:types) ORDER BY id_card ASC LIMIT :limit")
     List<CardEntity> getCardsChunked(long id, List<Integer> types, int limit);
 
     @Query("SELECT * FROM cards WHERE type != 0 AND enabled = 1 ORDER BY RANDOM() LIMIT :limit")
