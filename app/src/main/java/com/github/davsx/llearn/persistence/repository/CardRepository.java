@@ -41,8 +41,13 @@ public class CardRepository {
     }
 
     public Integer reviewableCardCount() {
-        return cardDao.reviewableCardCount(System.currentTimeMillis());
+        return cardDao.reviewableCardCount();
     }
+
+    public Integer reviewableOverdueCardCount() {
+        return cardDao.reviewableOverdueCardCount(System.currentTimeMillis());
+    }
+
 
     public void deleteCard(CardEntity card) {
         cardDao.delete(card);

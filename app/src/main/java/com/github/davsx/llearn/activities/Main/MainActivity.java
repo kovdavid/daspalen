@@ -109,22 +109,23 @@ public class MainActivity extends AppCompatActivity {
             btnLearnCards.setOnClickListener(null);
         }
 
+        Integer reviewableCardCount = cardRepository.reviewableCardCount();
+        Integer reviewableOverdueCardCount = cardRepository.reviewableOverdueCardCount();
+        btnReviewCards.setText(String.format("Review cards\n(%d/%d)", reviewableCardCount, reviewableOverdueCardCount));
+        btnReviewCards.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, ReviewQuizActivity.class);
+                MainActivity.this.startActivity(i);
+            }
+        });
+
         Integer allCardsCount = cardRepository.allCardsCount();
         btnManageCards.setText("Manage cards\n(" + Integer.toString(allCardsCount) + ")");
         btnManageCards.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(MainActivity.this, ManageCardsActivity.class);
-                MainActivity.this.startActivity(i);
-            }
-        });
-
-        Integer reviewableCardCount = cardRepository.reviewableCardCount();
-        btnReviewCards.setText("Review cards\n(" + Integer.toString(reviewableCardCount) + ")");
-        btnReviewCards.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, ReviewQuizActivity.class);
                 MainActivity.this.startActivity(i);
             }
         });

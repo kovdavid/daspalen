@@ -26,8 +26,11 @@ public interface CardDao {
     @Query("SELECT count(*) FROM cards WHERE type = 1 AND enabled = 1")
     Integer learnableCardCount();
 
+    @Query("SELECT count(*) FROM cards WHERE type = 2 AND enabled = 1")
+    Integer reviewableCardCount();
+
     @Query("SELECT count(*) FROM cards WHERE type = 2 AND next_review_at < :timestamp AND enabled = 1")
-    Integer reviewableCardCount(long timestamp);
+    Integer reviewableOverdueCardCount(long timestamp);
 
     @Query("SELECT * FROM cards WHERE id_card > :id AND type IN (:types) AND (front LIKE :query OR back LIKE :query) " +
             "ORDER BY id_card LIMIT :limit")
