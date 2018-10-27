@@ -57,7 +57,8 @@ public class CardEditorActivity extends AppCompatActivity {
     private ImageView buttonTTS;
     private Button buttonSave;
     private Button buttonCancel;
-    private Button buttonDelete;
+    private Button buttonEnable;
+    private Button buttonDisable;
     private Button buttonShowJournal;
     private TextView textViewCardScore;
     private ImageButton imageButtonFront;
@@ -98,8 +99,6 @@ public class CardEditorActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-//        speakerService.setLanguage(new Locale("spa"));
 
         editTextFront.setText(frontText);
         editTextBack.setText(backText);
@@ -153,15 +152,24 @@ public class CardEditorActivity extends AppCompatActivity {
         });
 
         if (cardId > 0L && card != null) {
-            buttonDelete.setOnClickListener(new View.OnClickListener() {
+            buttonEnable.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showDeleteDialog();
+                    toggleCardEnabled();
                 }
             });
+            buttonDisable.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    toggleCardEnabled();
+                }
+            });
+
+            redrawEnableButton();
         } else {
-            buttonDelete.setOnClickListener(null);
-            buttonDelete.setEnabled(false);
+            buttonEnable.setOnClickListener(null);
+            buttonEnable.setEnabled(false);
+            buttonEnable.setVisibility(View.GONE);
         }
 
         imageButtonFront.setOnClickListener(new View.OnClickListener() {
@@ -232,6 +240,16 @@ public class CardEditorActivity extends AppCompatActivity {
                     }
                 });
             }
+        }
+    }
+
+    private void redrawEnableButton() {
+        if (card.getEnabled()) {
+            buttonEnable.setVisibility(View.GONE);
+            buttonDisable.setVisibility(View.VISIBLE);
+        } else {
+            buttonEnable.setVisibility(View.VISIBLE);
+            buttonDisable.setVisibility(View.GONE);
         }
     }
 
@@ -605,30 +623,11 @@ public class CardEditorActivity extends AppCompatActivity {
         }
     }
 
-    private void showDeleteDialog() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this)
-                .setMessage("Are you sure?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        deleteCard();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        builder.show();
-    }
-
-    private void deleteCard() {
+    private void toggleCardEnabled() {
         if (card != null) {
-            cardRepository.deleteCard(card);
-            openManageCardsActivity(ManageCardsService.RESULT_CARD_DELETED);
+            card.setEnabled(!card.getEnabled());
+            redrawEnableButton();
         }
-        openManageCardsActivity(ManageCardsService.RESULT_CARD_NOT_CHANGED);
     }
 
     private void putDataToSharedPrefs() {
@@ -664,7 +663,8 @@ public class CardEditorActivity extends AppCompatActivity {
         buttonTTS = findViewById(R.id.button_tts);
         buttonSave = findViewById(R.id.button_save);
         buttonCancel = findViewById(R.id.button_cancel);
-        buttonDelete = findViewById(R.id.button_delete);
+        buttonEnable = findViewById(R.id.button_enable);
+        buttonDisable = findViewById(R.id.button_disable);
         buttonShowJournal = findViewById(R.id.button_show_journal);
         textViewCardScore = findViewById(R.id.textview_card_score);
         imageButtonFront = findViewById(R.id.imagebutton_front_text);

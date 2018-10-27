@@ -21,7 +21,7 @@ import java.util.TimerTask;
 public class FragmentKeyboardInput extends BaseQuizFragment implements View.OnClickListener {
     private TextView textViewFront;
     private TextView textViewCardScore;
-    private EditText textViewInput;
+    private EditText editTextInput;
     private Button buttonSpace;
     private Button buttonBackspace;
     private Button buttonConfirm;
@@ -33,7 +33,7 @@ public class FragmentKeyboardInput extends BaseQuizFragment implements View.OnCl
         View rootView = inflater.inflate(R.layout.fragment_learn_keyboard_input, container, false);
 
         textViewFront = rootView.findViewById(R.id.textview_front);
-        textViewInput = rootView.findViewById(R.id.edittext_input);
+        editTextInput = rootView.findViewById(R.id.edittext_input);
         textViewCardScore = rootView.findViewById(R.id.textview_card_score);
         buttonBackspace = rootView.findViewById(R.id.button_backspace);
         buttonSpace = rootView.findViewById(R.id.keyboard_spacebar);
@@ -71,8 +71,10 @@ public class FragmentKeyboardInput extends BaseQuizFragment implements View.OnCl
                 btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        int cursorPosition = editTextInput.getSelectionStart();
                         String text = ((Button) v).getText().toString();
-                        textViewInput.append(text);
+                        editTextInput.getText().insert(cursorPosition, text);
+//                        editTextInput.append(text);
                     }
                 });
             }
@@ -82,16 +84,19 @@ public class FragmentKeyboardInput extends BaseQuizFragment implements View.OnCl
         buttonSpace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                textViewInput.getText().append(" ");
+                editTextInput.getText().append(" ");
             }
         });
 
         buttonBackspace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int length = textViewInput.getText().length();
+                int length = editTextInput.getText().length();
                 if (length > 0) {
-                    textViewInput.getText().delete(length - 1, length);
+                    int cursorStart = editTextInput.getSelectionStart();
+                    int cursorEnd = editTextInput.getSelectionEnd();
+                    editTextInput.getText().delete(cursorStart, cursorEnd);
+//                    editTextInput.getText().delete(length - 1, length);
                 }
             }
         });
@@ -102,7 +107,7 @@ public class FragmentKeyboardInput extends BaseQuizFragment implements View.OnCl
 
     @Override
     public void onClick(View v) {
-        final String answer = textViewInput.getText().toString();
+        final String answer = editTextInput.getText().toString();
 
         if (answer.equals("")) {
             return;
@@ -118,7 +123,7 @@ public class FragmentKeyboardInput extends BaseQuizFragment implements View.OnCl
         } else {
             color = ContextCompat.getColor(getContext(), R.color.colorAccent);
         }
-        textViewInput.setTextColor(color);
+        editTextInput.setTextColor(color);
 
         buttonConfirm.setOnClickListener(null);
 

@@ -59,16 +59,22 @@ public class JournalEntity {
         };
     }
 
-    public Long getId() {
-        return id;
+    public void setCardId(@NonNull Long cardId) {
+        this.cardId = cardId;
+    }
+
+    @NonNull
+    public Integer getAnswer() {
+        return answer;
     }
 
     public void setAnswer(@NonNull Integer answer) {
         this.answer = answer;
     }
 
-    public void setCardId(@NonNull Long cardId) {
-        this.cardId = cardId;
+    @NonNull
+    public Integer getCardType() {
+        return cardType;
     }
 
     public void setCardType(@NonNull Integer cardType) {
@@ -80,18 +86,12 @@ public class JournalEntity {
     }
 
     @NonNull
-    public Integer getAnswer() {
-        return answer;
-    }
-
-    @NonNull
-    public Integer getCardType() {
-        return cardType;
-    }
-
-    @NonNull
     public Long getTimestamp() {
         return timestamp;
+    }
+
+    public Long getId() {
+        return id;
     }
 }
 

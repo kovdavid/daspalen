@@ -28,8 +28,11 @@ public class QuizData {
         return data;
     }
 
-    public static QuizData build(QuizTypeEnum quizType, CardImageService cardImageService, CardEntity card,
-                                 List<CardEntity> randomCards) {
+    public static QuizData build(
+            QuizTypeEnum quizType,
+            CardImageService cardImageService,
+            CardEntity card,
+            List<CardEntity> randomCards) {
         if (quizType.equals(QuizTypeEnum.NONE)) {
             return null;
         }

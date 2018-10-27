@@ -119,6 +119,10 @@ public class MemriseImportActivity extends Activity {
         String frontText = editTextFront.getText().toString();
         String backText = editTextBack.getText().toString();
 
+        if (frontText.length() == 0 && backText.length() == 0) {
+            return false;
+        }
+
         CardEntity duplicateCard = memriseImportService.findDuplicateCard(frontText, backText);
         if (duplicateCard == null) {
             memriseImportService.saveCard(frontText, backText);

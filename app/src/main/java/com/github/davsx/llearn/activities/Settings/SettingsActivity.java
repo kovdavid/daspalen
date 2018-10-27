@@ -4,7 +4,9 @@ import android.app.TimePickerDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.*;
 import com.github.davsx.llearn.LLearnApplication;
@@ -31,6 +33,12 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         ((LLearnApplication) getApplication()).getApplicationComponent().inject(this);
+
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("   Settings");
+        actionBar.setIcon(R.mipmap.ic_launcher_icon);
 
         wordOfTheDaySettingsService = new WordOfTheDaySettingsService(sharedPreferences);
 
@@ -70,14 +78,14 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        WordOfTheDayAlarmService.setAlarm(this, sharedPreferences);
+        WordOfTheDayAlarmService.setNextAlarm(this, sharedPreferences);
     }
 
     private void showNotificationIntervalTimePickerDialog() {
         TimePickerDialog dialog = new TimePickerDialog(SettingsActivity.this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                setNotificationInterval(hourOfDay, minute);
+                setNotificationInterval(hourOfDay, 0);
             }
         }, getNotificationIntervalHour(), getNotificationIntervalMinute(), true);
         dialog.show();
@@ -87,7 +95,7 @@ public class SettingsActivity extends AppCompatActivity {
         TimePickerDialog dialog = new TimePickerDialog(SettingsActivity.this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                setNotificationTo(hourOfDay, minute);
+                setNotificationTo(hourOfDay, 0);
             }
         }, getNotificationToHour(), getNotificationToMinute(), true);
         dialog.show();

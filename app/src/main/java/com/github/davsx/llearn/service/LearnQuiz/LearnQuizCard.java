@@ -1,5 +1,6 @@
 package com.github.davsx.llearn.service.LearnQuiz;
 
+import android.util.Log;
 import com.github.davsx.llearn.LLearnConstants;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
 import com.github.davsx.llearn.persistence.entity.JournalEntity;
@@ -17,16 +18,22 @@ import java.util.Random;
 
 class LearnQuizCard {
 
+    private static final String TAG = "LearnQuizCard";
+
+    private final List<QuizTypeEnum> learnQuizTypes = Arrays.asList(
+            QuizTypeEnum.CHOICE_1of4,
+            QuizTypeEnum.CHOICE_1of4_REVERSE,
+            QuizTypeEnum.KEYBOARD_INPUT
+    );
+
     private CardRepository cardRepository;
     private JournalRepository journalRepository;
     private CardImageService cardImageService;
     private CardEntity cardEntity;
-
     private Boolean doShowCard;
     private Integer completedRounds;
     private Integer plannedRounds;
     private Random rng;
-
     private Boolean gotBadAnswer = false;
 
     LearnQuizCard(CardRepository cardRepository,
@@ -40,8 +47,15 @@ class LearnQuizCard {
         this.doShowCard = cardEntity.getLearnScore() == 0;
         this.completedRounds = 0;
         this.plannedRounds = calculatePlannedRounds();
-
         this.rng = new Random(System.currentTimeMillis());
+
+        logCard("init");
+    }
+
+    private void logCard(String prefix) {
+        Log.d(TAG, String.format("%s cardId:%d learnScore:%d completedRounds: %d plannedRounds:%d front:%s back:%s",
+                prefix, cardEntity.getId(), cardEntity.getLearnScore(), completedRounds, plannedRounds,
+                cardEntity.getFront(), cardEntity.getBack()));
     }
 
     void handleAnswer(BaseQuizCardScheduler<LearnQuizCard> scheduler, String answer) {
@@ -53,8 +67,11 @@ class LearnQuizCard {
         journal.setCardType(LLearnConstants.CARD_TYPE_LEARN);
         journal.setCardId(cardEntity.getId());
 
+        logCard("handleAnswer");
+
         if (isCorrectAnswer) {
             journal.setAnswer(LLearnConstants.JOURNAL_ANSWER_GOOD);
+            Log.d(TAG, String.format("isCorrectAnswer:true gotBadAnswer:%s doShowCard:%s", gotBadAnswer, doShowCard));
             if (!gotBadAnswer) {
                 if (doShowCard) {
                     doShowCard = false;
@@ -83,6 +100,7 @@ class LearnQuizCard {
             gotBadAnswer = true;
             doShowCard = true;
             scheduler.scheduleToExactOffset(1, this);
+            Log.d(TAG, "isCorrectAnswer:false answer:" + answer);
         }
 
         if (saveJournal) {
@@ -128,7 +146,7 @@ class LearnQuizCard {
     }
 
     private boolean evaluateAnswer(String answer) {
-        QuizTypeEnum type = getCardType();
+        QuizTypeEnum type = getQuizType();
         if (type.equals(QuizTypeEnum.SHOW_CARD)) {
             return true;
         }
@@ -138,32 +156,31 @@ class LearnQuizCard {
         if (type.equals(QuizTypeEnum.CHOICE_1of4_REVERSE)) {
             return answer.equals(cardEntity.getFront());
         }
-        return true;
+        return false;
     }
 
     QuizData buildQuizData(List<CardEntity> randomCards) {
-        return QuizData.build(getCardType(), cardImageService, cardEntity, randomCards);
+        QuizTypeEnum quizType = getQuizType();
+        logCard("buildQuizData quizType:" + quizType);
+        return QuizData.build(quizType, cardImageService, cardEntity, randomCards);
     }
 
-    private QuizTypeEnum getCardType() {
+    private QuizTypeEnum getQuizType() {
         if (doShowCard) return QuizTypeEnum.SHOW_CARD;
 
-        if (gotBadAnswer || cardEntity.getLearnScore() == 0) {
+        Integer learnScore = cardEntity.getLearnScore();
+
+        if (gotBadAnswer || learnScore == 0) {
             return QuizTypeEnum.CHOICE_1of4;
         }
 
-        List<QuizTypeEnum> types = Arrays.asList(
-                QuizTypeEnum.CHOICE_1of4,
-                QuizTypeEnum.CHOICE_1of4,
-                QuizTypeEnum.CHOICE_1of4,
-                QuizTypeEnum.KEYBOARD_INPUT,
-                QuizTypeEnum.KEYBOARD_INPUT,
-                QuizTypeEnum.CHOICE_1of4_REVERSE
-        );
-
-        int typeIndex = new Random(System.currentTimeMillis()).nextInt(types.size());
-
-        return types.get(typeIndex);
+        if (learnScore == 2 || learnScore == 4 || learnScore == 7) {
+            return QuizTypeEnum.CHOICE_1of4;
+        } else if (learnScore == 1 || learnScore == 5) {
+            return QuizTypeEnum.CHOICE_1of4_REVERSE;
+        } else {
+            return QuizTypeEnum.KEYBOARD_INPUT;
+        }
     }
 
     Integer getCompletedRounds() {

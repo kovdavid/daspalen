@@ -1,5 +1,6 @@
 package com.github.davsx.llearn.service.ReviewQuiz;
 
+import android.util.Log;
 import com.github.davsx.llearn.LLearnConstants;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
 import com.github.davsx.llearn.persistence.entity.JournalEntity;
@@ -13,6 +14,8 @@ import com.github.davsx.llearn.service.CardImage.CardImageService;
 import java.util.Comparator;
 
 class ReviewQuizCard {
+
+    private static final String TAG = "ReviewQuizCard";
 
     private CardRepository cardRepository;
     private JournalRepository journalRepository;
@@ -30,6 +33,8 @@ class ReviewQuizCard {
         this.cardImageService = cardImageService;
         this.cardEntity = cardEntity;
         this.updateCardOnAnswer = updateCardOnAnswer;
+
+        logCard("init");
     }
 
     static ReviewQuizCard createUpdatableCard(CardRepository cardRepository,
@@ -52,6 +57,12 @@ class ReviewQuizCard {
         return (double) (overdueInterval / reviewInterval);
     }
 
+    private void logCard(String prefix) {
+        Log.d(TAG, String.format("%s cardId:%d front:%s back:%s answered:%s answeredCorrectly:%s updateCardOnAnswer:%s",
+                prefix, cardEntity.getId(), cardEntity.getFront(), cardEntity.getBack(), answered, answeredCorrectly,
+                updateCardOnAnswer));
+    }
+
     void handleAnswer(BaseQuizCardScheduler<ReviewQuizCard> scheduler, String answer) {
 
         JournalEntity journal = new JournalEntity();
@@ -61,13 +72,16 @@ class ReviewQuizCard {
 
         switch (answer) {
             case LLearnConstants.REVIEW_ANSWER_GOOD:
+                logCard("handleAnswer GOOD");
                 journal.setAnswer(LLearnConstants.JOURNAL_ANSWER_GOOD);
                 break;
             case LLearnConstants.REVIEW_ANSWER_OK:
+                logCard("handleAnswer OK");
                 journal.setAnswer(LLearnConstants.JOURNAL_ANSWER_OK);
                 break;
             default:
                 journal.setAnswer(LLearnConstants.JOURNAL_ANSWER_BAD);
+                logCard("handleAnswer BAD");
                 break;
         }
 

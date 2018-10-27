@@ -36,6 +36,11 @@ public class ManageCardsAdapter extends RecyclerView.Adapter<ManageCardsAdapter.
     public void onBindViewHolder(@NonNull ManageCardsAdapter.CardViewHolder holder, int position) {
         CardEntity card = manageCardsService.getCardByPosition(position);
         if (card != null) {
+            if (card.getEnabled()) {
+                holder.textViewIdCard.setBackgroundResource(R.color.colorPrimary);
+            } else {
+                holder.textViewIdCard.setBackgroundResource(R.color.colorAccent);
+            }
             holder.textViewIdCard.setText(Long.toString(card.getId()));
             holder.textViewLearnScore.setText(Integer.toString(card.getLearnScore()));
             holder.textViewFront.setText(card.getFront());

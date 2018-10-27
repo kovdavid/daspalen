@@ -18,7 +18,7 @@ public class BootReceiverService extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         ((LLearnApplication) context).getApplicationComponent().inject(this);
         if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
-            WordOfTheDayAlarmService.setAlarm(context, sharedPreferences);
+            WordOfTheDayAlarmService.setNextAlarm(context, sharedPreferences);
         }
 
     }

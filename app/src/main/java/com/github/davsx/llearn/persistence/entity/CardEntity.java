@@ -33,6 +33,10 @@ public class CardEntity {
     public String back = "";
 
     @NonNull
+    @ColumnInfo(name = "enabled")
+    public Boolean enabled = true;
+
+    @NonNull
     @ColumnInfo(name = "type")
     public Integer type = LLearnConstants.CARD_TYPE_INCOMPLETE;
 
@@ -69,15 +73,16 @@ public class CardEntity {
         card.id = Long.valueOf(data[0]);
         card.front = data[1];
         card.back = data[2];
-        card.type = Integer.valueOf(data[3]);
-        card.learnScore = Integer.valueOf(data[4]);
-        card.learnUpdateAt = Long.valueOf(data[5]);
-        card.createdAt = Long.valueOf(data[6]);
-        card.lastReviewAt = Long.valueOf(data[7]);
-        card.nextReviewAt = Long.valueOf(data[8]);
-        card.easinessFactor = Double.valueOf(data[9]);
-        card.badReviewAnswers = Integer.valueOf(data[10]);
-        card.goodReviewAnswers = Integer.valueOf(data[11]);
+        card.enabled = Boolean.valueOf(data[3]);
+        card.type = Integer.valueOf(data[4]);
+        card.learnScore = Integer.valueOf(data[5]);
+        card.learnUpdateAt = Long.valueOf(data[6]);
+        card.createdAt = Long.valueOf(data[7]);
+        card.lastReviewAt = Long.valueOf(data[8]);
+        card.nextReviewAt = Long.valueOf(data[9]);
+        card.easinessFactor = Double.valueOf(data[10]);
+        card.badReviewAnswers = Integer.valueOf(data[11]);
+        card.goodReviewAnswers = Integer.valueOf(data[12]);
 
         return card;
     }
@@ -87,6 +92,7 @@ public class CardEntity {
                 Long.toString(id),
                 front,
                 back,
+                Boolean.toString(enabled),
                 Integer.toString(type),
                 Integer.toString(learnScore),
                 Long.toString(learnUpdateAt),
@@ -165,7 +171,7 @@ public class CardEntity {
 
         if (badReviewAnswers >= LLearnConstants.REVIEW_CARD_MAX_BAD_ANSWERS) {
             this.type = LLearnConstants.CARD_TYPE_LEARN;
-            this.learnScore = 0;
+            this.learnScore = 1; // Higher priority than all the 0 scored (not yet learned) cards
             this.learnUpdateAt = System.currentTimeMillis();
             return;
         }
@@ -264,6 +270,15 @@ public class CardEntity {
     public CardEntity setType(@NonNull Integer type) {
         this.type = type;
         return this;
+    }
+
+    @NonNull
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(@NonNull Boolean enabled) {
+        this.enabled = enabled;
     }
 }
 
