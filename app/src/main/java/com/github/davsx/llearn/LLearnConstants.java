@@ -53,6 +53,5 @@ public class LLearnConstants {
 
     public static final List<Integer> CARD_TYPES_ALL =
             new ArrayList<>(Arrays.asList(CARD_TYPE_INCOMPLETE, CARD_TYPE_LEARN, CARD_TYPE_REVIEW));
-    public static final String WORD_OF_THE_DAY_INTENT = "com.github.davsx.llearn.WordOfTheDay";
     public static final String WORD_OF_THE_DAY_NOTIFICATION_CHANNEL = "LLEARN_WORD_OF_THE_DAY_CHANNEL";
 }
