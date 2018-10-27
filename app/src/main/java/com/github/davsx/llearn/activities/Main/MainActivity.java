@@ -142,7 +142,6 @@ public class MainActivity extends AppCompatActivity {
         btnReviewCards.getBackground().setAlpha(45);
         btnManageCards.getBackground().setAlpha(45);
         btnSettings.getBackground().setAlpha(45);
-
     }
 
     private void showWipeConfirmDialog(final boolean confirmed) {
