@@ -558,10 +558,15 @@ public class CardEditorActivity extends AppCompatActivity {
 
     private void onSaveCard() {
         CardEntity dupCard = findDupCard();
+        boolean isNewCard = card == null;
 
         if (dupCard == null) {
             saveCard();
-            openManageCardsActivity(ManageCardsService.RESULT_CARD_CHANGED);
+            if (isNewCard) {
+                openManageCardsActivity(ManageCardsService.RESULT_CARD_ADDED);
+            } else {
+                openManageCardsActivity(ManageCardsService.RESULT_CARD_CHANGED);
+            }
         } else {
             showDupCardAlert(dupCard);
         }
