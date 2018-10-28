@@ -31,7 +31,6 @@ public class ReviewQuizActivity extends BaseQuizActivity {
         setProgressBar((ProgressBar) findViewById(R.id.progress_bar));
         setSpeakerService(speakerService);
         setCardQuizService(reviewQuizService);
-        setCardImageService(cardImageService);
 
         startQuiz();
     }

@@ -9,12 +9,10 @@ import com.github.davsx.llearn.service.BaseQuiz.AnswerReceiver;
 import com.github.davsx.llearn.service.BaseQuiz.CardQuizService;
 import com.github.davsx.llearn.service.BaseQuiz.QuizData;
 import com.github.davsx.llearn.service.BaseQuiz.QuizTypeEnum;
-import com.github.davsx.llearn.service.CardImage.CardImageService;
 import com.github.davsx.llearn.service.Speaker.SpeakerService;
 
 public abstract class BaseQuizActivity extends FragmentActivity implements AnswerReceiver {
     private CardQuizService cardQuizService;
-    private CardImageService cardImageService;
     private SpeakerService speakerService;
     private ProgressBar progressBar;
 
@@ -25,13 +23,6 @@ public abstract class BaseQuizActivity extends FragmentActivity implements Answe
         } else {
             finish();
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-//        speakerService.setLanguage(new Locale("esp"));
     }
 
     private void showNextFragment() {
@@ -58,8 +49,6 @@ public abstract class BaseQuizActivity extends FragmentActivity implements Answe
             fragment = new FragmentChoice1of4Reverse();
         } else if (quizType.equals(QuizTypeEnum.REVIEW_CARD)) {
             fragment = new FragmentReviewCard();
-        } else {
-            // Not yet implemented
         }
 
         if (fragment == null) {
@@ -86,10 +75,6 @@ public abstract class BaseQuizActivity extends FragmentActivity implements Answe
 
     protected void setCardQuizService(CardQuizService cardQuizService) {
         this.cardQuizService = cardQuizService;
-    }
-
-    protected void setCardImageService(CardImageService cardImageService) {
-        this.cardImageService = cardImageService;
     }
 
     protected void setProgressBar(ProgressBar progressBar) {

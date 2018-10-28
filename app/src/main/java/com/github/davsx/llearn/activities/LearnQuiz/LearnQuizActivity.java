@@ -31,7 +31,6 @@ public class LearnQuizActivity extends BaseQuizActivity {
         setProgressBar((ProgressBar) findViewById(R.id.progress_bar));
         setSpeakerService(speakerService);
         setCardQuizService(learnQuizService);
-        setCardImageService(cardImageService);
 
         startQuiz();
     }
