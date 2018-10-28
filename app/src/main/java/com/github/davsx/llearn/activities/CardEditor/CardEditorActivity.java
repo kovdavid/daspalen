@@ -40,6 +40,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class CardEditorActivity extends AppCompatActivity {
 
@@ -129,10 +130,11 @@ public class CardEditorActivity extends AppCompatActivity {
             textViewCardScore.setVisibility(View.INVISIBLE);
             textViewNextReview.setVisibility(View.VISIBLE);
             Calendar cal = Calendar.getInstance();
+            cal.setTimeZone(TimeZone.getDefault());
             cal.setTimeInMillis(card.getNextReviewAt());
             Date dateTime = cal.getTime();
             SimpleDateFormat format_date = new SimpleDateFormat("yyyy-MM-dd");
-            SimpleDateFormat format_time = new SimpleDateFormat("hh:mm:ss");
+            SimpleDateFormat format_time = new SimpleDateFormat("HH:mm:ss");
             textViewNextReview.setText(
                     String.format("%s\n%s", format_date.format(dateTime), format_time.format(dateTime))
             );
