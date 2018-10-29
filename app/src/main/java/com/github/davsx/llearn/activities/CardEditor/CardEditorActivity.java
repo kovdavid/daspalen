@@ -300,6 +300,7 @@ public class CardEditorActivity extends AppCompatActivity {
                 case "image/jpeg":
                 case "image/png":
                 case "image/gif":
+                case "image/*":
                     Uri imageUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
                     if (imageUri != null) {
                         imagePath = cardImageService.saveTempImage(getContentResolver(), imageUri);
