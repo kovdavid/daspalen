@@ -92,73 +92,62 @@
             android:text=""
             />
 
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+    <Button
+            android:id="@+id/button_load_all"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:text="∀ Load all"
+            android:theme="@style/AppTheme.ButtonGreen"
+            app:layout_constraintBottom_toTopOf="@+id/button_reset"
+            app:layout_constraintLeft_toLeftOf="@id/button_skip"
+            app:layout_constraintRight_toRightOf="@id/button_save"
+            android:layout_marginBottom="8dp"
+            android:textSize="20sp"
+            />
+
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="64dp"
+            android:theme="@style/AppTheme.ButtonDelete"
+            android:text="✗ Skip"
+            android:textAllCaps="false"
+            android:id="@+id/button_skip"
+            android:textStyle="bold"
+            app:layout_constraintRight_toLeftOf="@+id/button_reset"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_margin="16dp"
-            android:id="@+id/layout_buttons"
-            >
+            android:textSize="20sp"
+            android:layout_marginBottom="16dp"
+            />
 
-        <Space
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="64dp"
+            android:theme="@style/AppTheme.ButtonCancel"
+            android:text="↺ Reset"
+            android:textAllCaps="false"
+            android:id="@+id/button_reset"
+            android:textStyle="bold"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textSize="20sp"
+            android:layout_marginBottom="16dp"
+            />
 
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="64dp"
-                android:theme="@style/AppTheme.ButtonDelete"
-                android:text="✗ Skip"
-                android:textAllCaps="false"
-                android:id="@+id/button_skip"
-                android:textStyle="bold"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:textSize="20sp"
-                />
-
-        <Space
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1"/>
-
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="64dp"
-                android:theme="@style/AppTheme.ButtonCancel"
-                android:text="↺ Reset"
-                android:textAllCaps="false"
-                android:id="@+id/button_reset"
-                android:textStyle="bold"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:textSize="20sp"
-                />
-
-        <Space
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1"/>
-
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="64dp"
-                android:theme="@style/AppTheme.ButtonConfirm"
-                android:text="✓ Save"
-                android:textStyle="bold"
-                android:textAllCaps="false"
-                android:id="@+id/button_save"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:textSize="20sp"
-                />
-
-        <Space
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1"/>
-
-    </LinearLayout>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="64dp"
+            android:theme="@style/AppTheme.ButtonConfirm"
+            android:text="✓ Save"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:id="@+id/button_save"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/button_reset"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textSize="20sp"
+            android:layout_marginBottom="16dp"
+            />
 
 </android.support.constraint.ConstraintLayout>

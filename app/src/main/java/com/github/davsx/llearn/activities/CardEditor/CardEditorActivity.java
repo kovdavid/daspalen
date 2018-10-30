@@ -37,10 +37,7 @@ import com.github.davsx.llearn.service.Speaker.SpeakerService;
 
 import javax.inject.Inject;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 
 public class CardEditorActivity extends AppCompatActivity {
 
@@ -119,12 +116,14 @@ public class CardEditorActivity extends AppCompatActivity {
         if (imagePath != null) {
             Bitmap bmImg = BitmapFactory.decodeFile(imagePath);
             imageView.setImageBitmap(bmImg);
+        } else {
+            imageView.setImageResource(android.R.drawable.ic_menu_report_image);
         }
 
         int learnScore = card != null ? card.getLearnScore() : 0;
         if (learnScore < LLearnConstants.MAX_CARD_LEARN_SCORE) {
             textViewCardScore.setVisibility(View.VISIBLE);
-            textViewCardScore.setText(Integer.toString(learnScore));
+            textViewCardScore.setText(String.valueOf(learnScore));
             textViewNextReview.setVisibility(View.INVISIBLE);
         } else {
             textViewCardScore.setVisibility(View.INVISIBLE);
@@ -133,8 +132,8 @@ public class CardEditorActivity extends AppCompatActivity {
             cal.setTimeZone(TimeZone.getDefault());
             cal.setTimeInMillis(card.getNextReviewAt());
             Date dateTime = cal.getTime();
-            SimpleDateFormat format_date = new SimpleDateFormat("yyyy-MM-dd");
-            SimpleDateFormat format_time = new SimpleDateFormat("HH:mm:ss");
+            SimpleDateFormat format_date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            SimpleDateFormat format_time = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
             textViewNextReview.setText(
                     String.format("%s\n%s", format_date.format(dateTime), format_time.format(dateTime))
             );

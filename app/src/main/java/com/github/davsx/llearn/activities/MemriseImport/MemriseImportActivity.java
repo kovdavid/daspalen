@@ -30,6 +30,7 @@ public class MemriseImportActivity extends Activity {
     private Button buttonSkip;
     private Button buttonSave;
     private Button buttonReset;
+    private Button buttonAll;
     private ProgressBar progressBar;
     private ImageView buttonSwap;
 
@@ -44,6 +45,7 @@ public class MemriseImportActivity extends Activity {
         buttonSave = findViewById(R.id.button_save);
         buttonSkip = findViewById(R.id.button_skip);
         buttonReset = findViewById(R.id.button_reset);
+        buttonAll = findViewById(R.id.button_load_all);
         editTextFront = findViewById(R.id.edittext_front);
         editTextBack = findViewById(R.id.edittext_back);
         progressBar = findViewById(R.id.progress_bar);
@@ -97,6 +99,12 @@ public class MemriseImportActivity extends Activity {
                 showNextCard();
             }
         });
+        buttonAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadAllCards();
+            }
+        });
     }
 
     @Override
@@ -140,6 +148,12 @@ public class MemriseImportActivity extends Activity {
                     .show();
         }
         return false;
+    }
+
+    private void loadAllCards() {
+        while (saveCard()) {
+            showNextCard();
+        }
     }
 
     private void showNextCard() {
