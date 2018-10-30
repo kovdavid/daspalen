@@ -14,7 +14,9 @@ public class LLearnDatabaseModule {
     @Singleton
     @Provides
     LLearnDatabase provideDatabase(Context context) {
-        return Room.databaseBuilder(context, LLearnDatabase.class, "llearn").allowMainThreadQueries().build();
+        return Room.databaseBuilder(context, LLearnDatabase.class, "llearn")
+                .allowMainThreadQueries()
+                .build();
     }
 
 }

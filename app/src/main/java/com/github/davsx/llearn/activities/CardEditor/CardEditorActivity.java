@@ -293,7 +293,7 @@ public class CardEditorActivity extends AppCompatActivity {
                 cardPosition = 0;
                 frontText = "";
                 backText = "";
-                imagePath = "";
+                imagePath = null;
             }
         } else if (action.equals(Intent.ACTION_SEND) && type != null) {
             switch (type) {
@@ -672,7 +672,7 @@ public class CardEditorActivity extends AppCompatActivity {
     private void loadDataFromSharedPrefs() {
         cardId = sharedPreferences.getLong("CARD_ID", 0L);
         cardPosition = sharedPreferences.getInt("CARD_POSITION", 0);
-        imagePath = sharedPreferences.getString("IMAGE_PATH", "");
+        imagePath = sharedPreferences.getString("IMAGE_PATH", null);
         frontText = sharedPreferences.getString("FRONT_TEXT", "");
         backText = sharedPreferences.getString("BACK_TEXT", "");
         translateFront = sharedPreferences.getBoolean("TRANSLATE_FRONT", true);
