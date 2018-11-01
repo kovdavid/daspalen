@@ -22,7 +22,7 @@
 
         <activity
                 android:name=".activities.Main.MainActivity"
-                android:launchMode="singleInstance">
+                android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -30,14 +30,18 @@
         </activity>
         <activity
                 android:name=".activities.ManageCards.ManageCardsActivity"
-                android:launchMode="singleInstance">
+                android:launchMode="singleTask"
+                android:parentActivityName=".activities.Main.MainActivity"
+                >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
         <activity
                 android:name=".activities.CardEditor.CardEditorActivity"
-                android:launchMode="singleInstance">
+                android:launchMode="singleTask"
+                android:parentActivityName=".activities.ManageCards.ManageCardsActivity"
+                >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <action android:name="android.intent.action.SEND"/>
@@ -52,35 +56,45 @@
         </activity>
         <activity
                 android:name=".activities.LearnQuiz.LearnQuizActivity"
-                android:launchMode="singleInstance">
+                android:launchMode="singleTask"
+                android:parentActivityName=".activities.Main.MainActivity"
+                >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
         <activity
                 android:name=".activities.ReviewQuiz.ReviewQuizActivity"
-                android:launchMode="singleInstance">
+                android:launchMode="singleTask"
+                android:parentActivityName=".activities.Main.MainActivity"
+                >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
         <activity
                 android:name=".activities.CardExport.CardExportActivity"
-                android:launchMode="singleInstance">
+                android:launchMode="singleTask"
+                android:parentActivityName=".activities.Main.MainActivity"
+                >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
         <activity
                 android:name=".activities.CardImport.CardImportActivity"
-                android:launchMode="singleInstance">
+                android:launchMode="singleTask"
+                android:parentActivityName=".activities.Main.MainActivity"
+                >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
         <activity
                 android:name=".activities.KindleImport.KindleImportActivity"
-                android:launchMode="singleInstance">
+                android:launchMode="singleTask"
+                android:parentActivityName=".activities.ManageCards.ManageCardsActivity"
+                >
             <intent-filter>
                 <action android:name="android.intent.action.SEND_MULTIPLE"/>
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -89,14 +103,18 @@
         </activity>
         <activity
                 android:name=".activities.MemriseImport.MemriseImportActivity"
-                android:launchMode="singleInstance">
+                android:launchMode="singleTask"
+                android:parentActivityName=".activities.ManageCards.ManageCardsActivity"
+                >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
         <activity
                 android:name=".activities.Settings.SettingsActivity"
-                android:launchMode="singleInstance">
+                android:launchMode="singleTask"
+                android:parentActivityName=".activities.Main.MainActivity"
+                >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>

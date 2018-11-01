@@ -18,6 +18,7 @@ public class FragmentReviewCard extends BaseQuizFragment {
     private ViewGroup viewHolder;
     private TextView textViewFront;
     private ImageView imageView;
+    private boolean answered = false;
 
     @Nullable
     @Override
@@ -81,11 +82,14 @@ public class FragmentReviewCard extends BaseQuizFragment {
     }
 
     private void handleAnswer(final String answer) {
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                answerReceiver.onAnswer(answer);
-            }
-        }, 1000);
+        if (!answered) {
+            answered = true;
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    answerReceiver.onAnswer(answer);
+                }
+            }, 1000);
+        }
     }
 }

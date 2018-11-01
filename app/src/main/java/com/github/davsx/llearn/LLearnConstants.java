@@ -18,9 +18,6 @@ public class LLearnConstants {
     public static final Integer REVIEW_SESSION_CANDIDATE_CARDS = 200;
     public static final Integer REVIEW_SESSION_MAX_CARDS = 15;
 
-    public static final Integer INTENT_REQUEST_CODE_CREATE_CARD = 1;
-    public static final Integer INTENT_REQUEST_CODE_EDIT_CARD = 2;
-
     public static final Integer REVIEW_CARD_MAX_BAD_ANSWERS = 5;
     public static final Double REVIEW_CARD_MIN_EASINESS_FACTOR = 1.3;
     public static final Double REVIEW_CARD_MAX_EASINESS_FACTOR = 2.5;
@@ -51,7 +48,7 @@ public class LLearnConstants {
     public static final Integer CARD_TYPE_LEARN = 1;
     public static final Integer CARD_TYPE_REVIEW = 2;
 
-    public static final List<Integer> CARD_TYPES_ALL =
-            new ArrayList<>(Arrays.asList(CARD_TYPE_INCOMPLETE, CARD_TYPE_LEARN, CARD_TYPE_REVIEW));
+    public static final List<Integer> CARD_TYPES_ALL = new ArrayList<>(
+            Arrays.asList(CARD_TYPE_INCOMPLETE, CARD_TYPE_LEARN, CARD_TYPE_REVIEW));
     public static final String WORD_OF_THE_DAY_NOTIFICATION_CHANNEL = "LLEARN_WORD_OF_THE_DAY_CHANNEL";
 }

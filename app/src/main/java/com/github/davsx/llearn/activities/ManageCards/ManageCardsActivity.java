@@ -114,7 +114,7 @@ public class ManageCardsActivity extends AppCompatActivity {
                 break;
         }
 
-        return true;
+        return false;
     }
 
     private void createNewCard() {

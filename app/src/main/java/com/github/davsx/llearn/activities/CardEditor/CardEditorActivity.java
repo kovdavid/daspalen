@@ -1,6 +1,5 @@
 package com.github.davsx.llearn.activities.CardEditor;
 
-import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -416,21 +415,11 @@ public class CardEditorActivity extends AppCompatActivity {
     private void openSpanishDict(Uri uri) {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
-        intent.setPackage("com.spanishdict.spanishdict");
+        intent.setPackage(LLearnConstants.PKG_SPANISHDICT);
         intent.setData(uri);
         intent.addCategory(Intent.CATEGORY_DEFAULT);
         intent.addCategory(Intent.CATEGORY_BROWSABLE);
         startActivity(intent);
-    }
-
-    private void translateBackWithGoogleTranslate() {
-        String backText = editTextBack.getText().toString();
-        if (backText.equals("")) {
-            Toast.makeText(this, "Back text is empty!", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        translateFront = false;
-        translateWithGoogleTranslate(backText);
     }
 
     private void translateFrontWithGoogleTranslate() {
@@ -440,10 +429,22 @@ public class CardEditorActivity extends AppCompatActivity {
             return;
         }
         translateFront = true;
-        translateWithGoogleTranslate(frontText);
+        Uri uri = Uri.parse("http://translate.google.com/m/translate?sl=en&tl=es&q=" + Uri.encode(frontText));
+        translateWithGoogleTranslate(uri);
     }
 
-    private void translateWithGoogleTranslate(String text) {
+    private void translateBackWithGoogleTranslate() {
+        String backText = editTextBack.getText().toString();
+        if (backText.equals("")) {
+            Toast.makeText(this, "Back text is empty!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        translateFront = false;
+        Uri uri = Uri.parse("http://translate.google.com/m/translate?sl=es&tl=en&q=" + Uri.encode(backText));
+        translateWithGoogleTranslate(uri);
+    }
+
+    private void translateWithGoogleTranslate(Uri uri) {
         PackageManager pm = getPackageManager();
         PackageInfo packageInfo = null;
         try {
@@ -453,7 +454,7 @@ public class CardEditorActivity extends AppCompatActivity {
 
         if (packageInfo != null) {
             putDataToSharedPrefs();
-            openGoogleTranslate(text);
+            openGoogleTranslate(uri);
         } else {
             String appName = "Google Translate";
             String pkgName = LLearnConstants.PKG_GOOGLE_TRANSLATE;
@@ -462,17 +463,13 @@ public class CardEditorActivity extends AppCompatActivity {
         }
     }
 
-    private void openGoogleTranslate(String text) {
+    private void openGoogleTranslate(Uri uri) {
         Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_SEND);
-        intent.putExtra(Intent.EXTRA_TEXT, text);
-        intent.putExtra("key_text_input", text);
-        intent.putExtra("key_text_output", "");
-        intent.putExtra("key_suggest_translation", "");
-        intent.putExtra("key_from_floating_window", false);
-        intent.setComponent(new ComponentName(
-                LLearnConstants.PKG_GOOGLE_TRANSLATE,
-                "com.google.android.apps.translate.TranslateActivity"));
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.setPackage(LLearnConstants.PKG_GOOGLE_TRANSLATE);
+        intent.setData(uri);
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        intent.addCategory(Intent.CATEGORY_BROWSABLE);
         startActivity(intent);
     }
 

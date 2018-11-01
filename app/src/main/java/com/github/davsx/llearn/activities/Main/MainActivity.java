@@ -112,13 +112,17 @@ public class MainActivity extends AppCompatActivity {
         Integer reviewableCardCount = cardRepository.reviewableCardCount();
         Integer reviewableOverdueCardCount = cardRepository.reviewableOverdueCardCount();
         btnReviewCards.setText(String.format("Review cards\n(%d/%d)", reviewableOverdueCardCount, reviewableCardCount));
-        btnReviewCards.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, ReviewQuizActivity.class);
-                MainActivity.this.startActivity(i);
-            }
-        });
+        if (reviewableCardCount > 0) {
+            btnReviewCards.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(MainActivity.this, ReviewQuizActivity.class);
+                    MainActivity.this.startActivity(i);
+                }
+            });
+        } else {
+            btnReviewCards.setOnClickListener(null);
+        }
 
         Integer allCardsCount = cardRepository.allCardsCount();
         btnManageCards.setText("Manage cards\n(" + Integer.toString(allCardsCount) + ")");
