@@ -5,7 +5,6 @@ import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.text.Html;
@@ -14,6 +13,7 @@ import com.github.davsx.llearn.LLearnConstants;
 import com.github.davsx.llearn.R;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
 import com.github.davsx.llearn.persistence.repository.CardRepository;
+import com.github.davsx.llearn.service.Settings.SettingsService;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -23,7 +23,7 @@ public class WordOfTheDayNotificationService extends BroadcastReceiver {
     @Inject
     CardRepository cardRepository;
     @Inject
-    SharedPreferences sharedPreferences;
+    SettingsService settingsService;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -67,7 +67,7 @@ public class WordOfTheDayNotificationService extends BroadcastReceiver {
 
         notificationManager.notify(0, builder.build());
 
-        WordOfTheDayAlarmService.resetAlarm(context, sharedPreferences);
+        WordOfTheDayAlarmService.resetAlarm(context, settingsService);
     }
 
 }

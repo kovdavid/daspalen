@@ -23,7 +23,7 @@ public class LLearnApplication extends Application {
                 .contextModule(new ContextModule(this))
                 .build();
 
-        WordOfTheDayAlarmService.setNextAlarm(getApplicationContext(), applicationComponent.getSharedPreferences());
+        WordOfTheDayAlarmService.setNextAlarm(getApplicationContext(), applicationComponent.getSettingsService());
     }
 
     public ApplicationComponent getApplicationComponent() {

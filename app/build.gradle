@@ -6,8 +6,8 @@ android {
         applicationId "com.github.davsx.llearn"
         minSdkVersion 22
         targetSdkVersion 27
-        versionCode 10003
-        versionName "1.3"
+        versionCode 10004
+        versionName "1.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

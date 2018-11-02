@@ -6,6 +6,7 @@ import com.github.davsx.llearn.persistence.entity.JournalEntity;
 import com.github.davsx.llearn.persistence.repository.CardRepository;
 import com.github.davsx.llearn.persistence.repository.JournalRepository;
 import com.github.davsx.llearn.service.CardImage.CardImageService;
+import com.github.davsx.llearn.service.Settings.SettingsService;
 import com.opencsv.CSVWriter;
 
 import java.io.*;
@@ -13,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -25,6 +27,7 @@ public class CardExportService {
     private CardRepository cardRepository;
     private JournalRepository journalRepository;
     private CardImageService cardImageService;
+    private SettingsService settingsService;
 
     private int maxProgress = 0;
     private int currentProgress = 0;
@@ -36,10 +39,11 @@ public class CardExportService {
     private ExportStatus exportStatus = ExportStatus.EXPORT_NOT_RUNNING;
 
     public CardExportService(CardRepository cardRepository, JournalRepository journalRepository,
-                             CardImageService cardImageService) {
+                             CardImageService cardImageService, SettingsService settingsService) {
         this.cardRepository = cardRepository;
         this.journalRepository = journalRepository;
         this.cardImageService = cardImageService;
+        this.settingsService = settingsService;
     }
 
     public void startExport(OutputStream outputStream) {
@@ -58,7 +62,7 @@ public class CardExportService {
                 + 1;
         currentProgress = 0;
 
-        exportStatus = ExportStatus.EXPORTING_CARDS;
+        exportStatus = ExportStatus.EXPORTING_SETTINGS;
     }
 
     public void cancelExport() {
@@ -96,7 +100,11 @@ public class CardExportService {
     }
 
     public boolean doNextChunk() {
-        if (exportStatus.equals(ExportStatus.EXPORTING_CARDS)) {
+        if (exportStatus.equals(ExportStatus.EXPORTING_SETTINGS)) {
+            return doChunkExportSettings();
+        } else if (exportStatus.equals(ExportStatus.SAVE_SETTINGS_TO_ZIP)) {
+            return doChunkSaveSettingsToZip();
+        } else if (exportStatus.equals(ExportStatus.EXPORTING_CARDS)) {
             return doChunkExportCards();
         } else if (exportStatus.equals(ExportStatus.SAVE_CARDS_TO_ZIP)) {
             return doChunkSaveCardsToZip();
@@ -110,6 +118,43 @@ public class CardExportService {
             return doChunkFinished();
         }
         return false;
+    }
+
+    private boolean doChunkExportSettings() {
+        status = "Exporting settings";
+
+        List<String[]> lines = settingsService.toCsvDataV1();
+        for (String[] line : lines) {
+            csvWriter.writeNext(line);
+        }
+
+        exportStatus = ExportStatus.SAVE_SETTINGS_TO_ZIP;
+        csvStringWriter.flush();
+
+        return true;
+    }
+
+    private boolean doChunkSaveSettingsToZip() {
+        status = "Saving settings to ZIP";
+
+        try {
+            String fileName = "settings_V1.csv";
+            byte[] bytes = csvStringWriter.toString().getBytes(StandardCharsets.UTF_8);
+            zipOutputStream.putNextEntry(new ZipEntry(fileName));
+            zipOutputStream.write(bytes);
+            csvStringWriter.close();
+            csvWriter.close();
+
+            csvStringWriter = new StringWriter();
+            csvWriter = new CSVWriter(csvStringWriter);
+            exportStatus = ExportStatus.EXPORTING_CARDS;
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            exportStatus = ExportStatus.ERROR;
+            status = "Could not save settings csv to zip";
+            return false;
+        }
     }
 
     private boolean doChunkExportCards() {
@@ -242,6 +287,8 @@ public class CardExportService {
 
     private enum ExportStatus {
         EXPORT_NOT_RUNNING,
+        EXPORTING_SETTINGS,
+        SAVE_SETTINGS_TO_ZIP,
         EXPORTING_CARDS,
         SAVE_CARDS_TO_ZIP,
         EXPORTING_JOURNAL,
@@ -256,7 +303,7 @@ public class CardExportService {
     }
 
     public String getDefaultFileName() {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         String date = formatter.format(new Date(System.currentTimeMillis()));
         return "LLearn_backup_" + date + ".zip";
     }

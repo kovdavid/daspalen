@@ -1,6 +1,5 @@
 package com.github.davsx.llearn.di.component;
 
-import android.content.SharedPreferences;
 import com.github.davsx.llearn.LLearnApplication;
 import com.github.davsx.llearn.activities.CardEditor.CardEditorActivity;
 import com.github.davsx.llearn.activities.CardExport.CardExportActivity;
@@ -14,6 +13,7 @@ import com.github.davsx.llearn.activities.ReviewQuiz.ReviewQuizActivity;
 import com.github.davsx.llearn.activities.Settings.SettingsActivity;
 import com.github.davsx.llearn.di.module.*;
 import com.github.davsx.llearn.service.BootReceiver.BootReceiverService;
+import com.github.davsx.llearn.service.Settings.SettingsService;
 import com.github.davsx.llearn.service.WordOfTheDay.WordOfTheDayNotificationService;
 import dagger.Component;
 
@@ -28,6 +28,7 @@ import javax.inject.Singleton;
         SpeakerModule.class,
         CardExportModule.class,
         MemriseImportModule.class,
+        SettingsModule.class,
         CardImportModule.class
 })
 public interface ApplicationComponent {
@@ -58,6 +59,6 @@ public interface ApplicationComponent {
 
     void inject(BootReceiverService service);
 
-    SharedPreferences getSharedPreferences();
+    SettingsService getSettingsService();
 
 }
