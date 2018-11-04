@@ -93,6 +93,9 @@ public class CardImportService {
                     case "cards_export_V1.csv":
                         loadCardsFromCsvV1();
                         break;
+                    case "cards_export_V2.csv":
+                        loadCardsFromCsvV2();
+                        break;
                     case "journals_export_V1.csv":
                         loadJournalsFromCsvV1();
                         break;
@@ -137,6 +140,19 @@ public class CardImportService {
         String[] row;
         while ((row = csv.readNext()) != null) {
             cards.add(CardEntity.fromCsvDataV1(row));
+        }
+
+        cardRepository.saveMany(cards);
+    }
+
+    private void loadCardsFromCsvV2() throws IOException {
+        CSVReader csv = new CSVReader(inputStreamReader);
+
+        List<CardEntity> cards = new ArrayList<>();
+
+        String[] row;
+        while ((row = csv.readNext()) != null) {
+            cards.add(CardEntity.fromCsvDataV2(row));
         }
 
         cardRepository.saveMany(cards);

@@ -33,6 +33,10 @@ public class CardEntity {
     public String back = "";
 
     @NonNull
+    @ColumnInfo(name = "image_url")
+    public String imageUrl = "";
+
+    @NonNull
     @ColumnInfo(name = "enabled")
     public Boolean enabled = true;
 
@@ -83,11 +87,18 @@ public class CardEntity {
         card.easinessFactor = Double.valueOf(data[10]);
         card.badReviewAnswers = Integer.valueOf(data[11]);
         card.goodReviewAnswers = Integer.valueOf(data[12]);
+        card.imageUrl = "";
 
         return card;
     }
 
-    public String[] toCsvDataV1() {
+    public static CardEntity fromCsvDataV2(String[] data) {
+        CardEntity card = fromCsvDataV1(data);
+        card.imageUrl = data[13];
+        return card;
+    }
+
+    public String[] toCsvDataV2() {
         return new String[]{
                 Long.toString(id),
                 front,
@@ -101,7 +112,8 @@ public class CardEntity {
                 Long.toString(nextReviewAt),
                 Double.toString(easinessFactor),
                 Integer.toString(badReviewAnswers),
-                Integer.toString(goodReviewAnswers)
+                Integer.toString(goodReviewAnswers),
+                imageUrl
         };
     }
 
@@ -226,6 +238,15 @@ public class CardEntity {
     }
 
     @NonNull
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(@NonNull Boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    @NonNull
     public String getFront() {
         return front;
     }
@@ -270,15 +291,6 @@ public class CardEntity {
     public CardEntity setType(@NonNull Integer type) {
         this.type = type;
         return this;
-    }
-
-    @NonNull
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(@NonNull Boolean enabled) {
-        this.enabled = enabled;
     }
 }
 

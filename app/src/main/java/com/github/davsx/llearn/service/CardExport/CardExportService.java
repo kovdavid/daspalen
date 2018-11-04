@@ -165,7 +165,7 @@ public class CardExportService {
                 LLearnConstants.CARD_TYPES_ALL, chunkSize);
         for (CardEntity card : cards) {
             currentProgress++;
-            csvWriter.writeNext(card.toCsvDataV1());
+            csvWriter.writeNext(card.toCsvDataV2());
             maxCardId = card.getId();
         }
 
@@ -180,7 +180,7 @@ public class CardExportService {
         status = "Saving cards to ZIP";
 
         try {
-            String fileName = "cards_export_V1.csv";
+            String fileName = "cards_export_V2.csv";
             byte[] bytes = csvStringWriter.toString().getBytes(StandardCharsets.UTF_8);
             zipOutputStream.putNextEntry(new ZipEntry(fileName));
             zipOutputStream.write(bytes);

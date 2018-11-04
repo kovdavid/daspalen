@@ -16,6 +16,7 @@ public class LLearnDatabaseModule {
     LLearnDatabase provideDatabase(Context context) {
         return Room.databaseBuilder(context, LLearnDatabase.class, "llearn")
                 .allowMainThreadQueries()
+                .addMigrations(LLearnDatabase.MIGRATION_1_2)
                 .build();
     }
 
