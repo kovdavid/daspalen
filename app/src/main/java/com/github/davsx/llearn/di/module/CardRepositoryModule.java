@@ -12,7 +12,7 @@ public class CardRepositoryModule {
 
     @Singleton
     @Provides
-    CardRepository provideCardRepository(LLearnDatabase database) {
+    CardRepository provide(LLearnDatabase database) {
         return new CardRepository(database.cardDao());
     }
 

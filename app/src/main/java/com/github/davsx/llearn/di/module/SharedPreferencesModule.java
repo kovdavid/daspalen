@@ -13,7 +13,7 @@ public class SharedPreferencesModule {
 
     @Singleton
     @Provides
-    SharedPreferences provideSharedPreferences(Context context) {
+    SharedPreferences provide(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
 

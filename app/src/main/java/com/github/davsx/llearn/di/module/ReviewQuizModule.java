@@ -14,7 +14,7 @@ import dagger.Provides;
 })
 public class ReviewQuizModule {
     @Provides
-    ReviewQuizService provideReviewQuizService(CardRepository cardRepository,
+    ReviewQuizService provide(CardRepository cardRepository,
                                                JournalRepository journalRepository,
                                                CardImageService cardImageService) {
         return new ReviewQuizService(cardRepository, journalRepository, cardImageService);

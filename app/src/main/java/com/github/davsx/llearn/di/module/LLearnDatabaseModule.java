@@ -13,7 +13,7 @@ public class LLearnDatabaseModule {
 
     @Singleton
     @Provides
-    LLearnDatabase provideDatabase(Context context) {
+    LLearnDatabase provide(Context context) {
         return Room.databaseBuilder(context, LLearnDatabase.class, "llearn")
                 .allowMainThreadQueries()
                 .addMigrations(LLearnDatabase.MIGRATION_1_2)

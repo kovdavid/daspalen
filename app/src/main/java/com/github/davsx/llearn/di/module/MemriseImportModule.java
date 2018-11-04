@@ -9,7 +9,7 @@ import dagger.Provides;
 public class MemriseImportModule {
 
     @Provides
-    MemriseImportService provideMemriseImportService(CardRepository cardRepository) {
+    MemriseImportService provide(CardRepository cardRepository) {
         return new MemriseImportService(cardRepository);
     }
 

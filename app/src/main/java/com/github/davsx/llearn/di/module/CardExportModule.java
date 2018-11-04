@@ -16,7 +16,7 @@ import dagger.Provides;
 })
 public class CardExportModule {
     @Provides
-    CardExportService provideCardExportService(CardRepository cardRepository,
+    CardExportService provide(CardRepository cardRepository,
                                                JournalRepository journalRepository,
                                                CardImageService cardImageService,
                                                SettingsService settingsService) {

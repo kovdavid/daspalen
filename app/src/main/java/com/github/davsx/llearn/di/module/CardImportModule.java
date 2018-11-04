@@ -17,7 +17,7 @@ import dagger.Provides;
 public class CardImportModule {
 
     @Provides
-    CardImportService provideCardImportService(CardRepository cardRepository,
+    CardImportService provide(CardRepository cardRepository,
                                                JournalRepository journalRepository,
                                                CardImageService cardImageService,
                                                SettingsService settingsService) {

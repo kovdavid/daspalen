@@ -79,6 +79,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_import_memrise:
                 MainActivity.this.startActivity(new Intent(MainActivity.this, MemriseImportActivity.class));
                 break;
+            case R.id.action_reset_images:
+
+                break;
             case R.id.action_wipe:
                 showWipeConfirmDialog(false);
                 break;

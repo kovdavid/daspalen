@@ -12,7 +12,7 @@ public class JournalRepositoryModule {
 
     @Singleton
     @Provides
-    JournalRepository provideJournalRepository(LLearnDatabase database) {
+    JournalRepository provide(LLearnDatabase database) {
         return new JournalRepository(database.journalDao());
     }
 

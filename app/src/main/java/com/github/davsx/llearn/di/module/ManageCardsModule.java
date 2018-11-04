@@ -8,7 +8,7 @@ import dagger.Provides;
 @Module(includes = CardRepositoryModule.class)
 public class ManageCardsModule {
     @Provides
-    ManageCardsService provideManageCardsService(CardRepository cardRepository) {
+    ManageCardsService provide(CardRepository cardRepository) {
         return new ManageCardsService(cardRepository);
     }
 

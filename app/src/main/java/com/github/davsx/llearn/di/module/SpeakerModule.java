@@ -13,7 +13,7 @@ public class SpeakerModule {
 
     @Singleton
     @Provides
-    SpeakerService provideSpeakerService(Context context) {
+    SpeakerService provide(Context context) {
         return new SpeakerServiceImpl(context);
     }
 

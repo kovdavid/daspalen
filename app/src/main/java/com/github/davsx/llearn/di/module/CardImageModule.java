@@ -14,7 +14,7 @@ public class CardImageModule {
 
     @Singleton
     @Provides
-    CardImageService provideCardImageService(Context context) {
+    CardImageService provide(Context context) {
         File imageDir = new File(context.getExternalFilesDir(null) + File.separator + "images");
         imageDir.mkdir();
         return new CardImageServiceImpl(imageDir);

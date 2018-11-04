@@ -14,7 +14,7 @@ import dagger.Provides;
 })
 public class LearnQuizModule {
     @Provides
-    LearnQuizService provideLearnQuizService(CardRepository cardRepository,
+    LearnQuizService provide(CardRepository cardRepository,
                                              JournalRepository journalRepository,
                                              CardImageService cardImageService) {
         return new LearnQuizService(cardRepository, journalRepository, cardImageService);
