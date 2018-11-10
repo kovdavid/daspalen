@@ -26,9 +26,9 @@ import com.github.davsx.llearn.LLearnApplication;
 import com.github.davsx.llearn.LLearnConstants;
 import com.github.davsx.llearn.R;
 import com.github.davsx.llearn.activities.ManageCards.ManageCardsActivity;
-import com.github.davsx.llearn.persistence.entity.CardEntity;
+import com.github.davsx.llearn.persistence.entity.CardEntityOld;
 import com.github.davsx.llearn.persistence.entity.JournalEntity;
-import com.github.davsx.llearn.persistence.repository.CardRepository;
+import com.github.davsx.llearn.persistence.repository.CardRepositoryOld;
 import com.github.davsx.llearn.persistence.repository.JournalRepository;
 import com.github.davsx.llearn.service.CardImage.CardImageService;
 import com.github.davsx.llearn.service.ManageCards.ManageCardsService;
@@ -43,7 +43,7 @@ public class CardEditorActivity extends AppCompatActivity {
     private static final String TAG = "CardEditorActivity";
 
     @Inject
-    CardRepository cardRepository;
+    CardRepositoryOld cardRepository;
     @Inject
     JournalRepository journalRepository;
     @Inject
@@ -66,7 +66,7 @@ public class CardEditorActivity extends AppCompatActivity {
     private ImageButton imageButtonBack;
     private ImageView buttonSwap;
 
-    private CardEntity card = null;
+    private CardEntityOld card = null;
     private Long cardId = 0L;
     private Integer cardPosition = 0;
     private String imagePath = null;
@@ -575,7 +575,7 @@ public class CardEditorActivity extends AppCompatActivity {
     }
 
     private void onSaveCard() {
-        CardEntity dupCard = findDupCard();
+        CardEntityOld dupCard = findDupCard();
         boolean isNewCard = card == null;
 
         if (dupCard == null) {
@@ -590,13 +590,13 @@ public class CardEditorActivity extends AppCompatActivity {
         }
     }
 
-    private CardEntity findDupCard() {
+    private CardEntityOld findDupCard() {
         String frontText = editTextFront.getText().toString();
         String backText = editTextBack.getText().toString();
 
         // We don't check duplicity for incomplete cards
         if (frontText.length() > 0 && backText.length() > 0) {
-            CardEntity dupCard = cardRepository.findDuplicateCard(frontText, backText);
+            CardEntityOld dupCard = cardRepository.findDuplicateCard(frontText, backText);
             if (dupCard != null && dupCard.getId().equals(cardId)) {
                 return null;
             }
@@ -606,7 +606,7 @@ public class CardEditorActivity extends AppCompatActivity {
         }
     }
 
-    private void showDupCardAlert(@NonNull CardEntity dupCard) {
+    private void showDupCardAlert(@NonNull CardEntityOld dupCard) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         String dialogMessage = String.format(
                 "The current card cannot be saved, because a duplicate card was found:<br /><br />Front<br " +
@@ -624,7 +624,7 @@ public class CardEditorActivity extends AppCompatActivity {
         String newBack = editTextBack.getText().toString();
 
         if (card == null) {
-            card = new CardEntity()
+            card = new CardEntityOld()
                     .setFront(newFront)
                     .setBack(newBack)
                     .setCreatedAt(System.currentTimeMillis())

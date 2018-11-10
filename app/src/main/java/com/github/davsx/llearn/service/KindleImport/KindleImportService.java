@@ -4,8 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
+import com.github.davsx.llearn.model.Card;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
-import com.github.davsx.llearn.persistence.repository.CardRepository;
+import com.github.davsx.llearn.persistence.entity.CardEntityOld;
+import com.github.davsx.llearn.persistence.repository.CardRepositoryOld;
+import com.github.davsx.llearn.persistence.repository.LLearnRepository;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -19,7 +22,15 @@ public class KindleImportService {
 
     private static final String TAG = "KindleImportService";
 
-    public static void doImport(Context context, Intent intent, CardRepository cardRepository) {
+    private Context context;
+    private LLearnRepository repository;
+
+    public KindleImportService(LLearnRepository repository, Context context) {
+        this.repository = repository;
+        this.context = context;
+    }
+
+    public void doImport(Intent intent) {
         ArrayList<Uri> uris = intent.getExtras().getParcelableArrayList(Intent.EXTRA_STREAM);
         if (uris == null || uris.size() != 1) {
             return;
@@ -52,15 +63,12 @@ public class KindleImportService {
         }
 
         if (newBackStrings.size() > 0) {
-            ArrayList<CardEntity> newCards = new ArrayList<>();
+            ArrayList<Card> newCards = new ArrayList<>();
             for (String back : newBackStrings) {
-                Log.i(TAG, "importing Card with text " + back);
-                CardEntity card = new CardEntity()
-                        .setCreatedAt(System.currentTimeMillis())
-                        .setBack(back);
-                newCards.add(card);
+                Log.i(TAG, "importing Card with back text " + back);
+                newCards.add(Card.createFromKindle(back));
             }
-            cardRepository.saveMany(newCards);
+            repository.createNewCards(newCards);
         }
     }
 }

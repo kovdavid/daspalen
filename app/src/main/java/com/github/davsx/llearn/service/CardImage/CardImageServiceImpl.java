@@ -95,7 +95,7 @@ public class CardImageServiceImpl implements CardImageService {
     }
 
     @Override
-    public void deleteAllImages() {
+    public void wipeData() {
         File[] files = imageDir.listFiles(new FileFilter() {
             @Override
             public boolean accept(File pathname) {

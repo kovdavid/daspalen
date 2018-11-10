@@ -1,8 +1,8 @@
 package com.github.davsx.llearn.service.LearnQuiz;
 
 import com.github.davsx.llearn.LLearnConstants;
-import com.github.davsx.llearn.persistence.entity.CardEntity;
-import com.github.davsx.llearn.persistence.repository.CardRepository;
+import com.github.davsx.llearn.persistence.entity.CardEntityOld;
+import com.github.davsx.llearn.persistence.repository.CardRepositoryOld;
 import com.github.davsx.llearn.persistence.repository.JournalRepository;
 import com.github.davsx.llearn.service.BaseQuiz.BaseQuizSchedule;
 import com.github.davsx.llearn.service.BaseQuiz.CardQuizService;
@@ -33,18 +33,18 @@ import java.util.List;
 
 public class LearnQuizService implements CardQuizService {
 
-    private CardRepository cardRepository;
+    private CardRepositoryOld cardRepository;
     private JournalRepository journalRepository;
     private CardImageService cardImageService;
 
     private BaseQuizSchedule<LearnQuizCard> quizSchedule;
     private List<LearnQuizCard> cards;
-    private List<CardEntity> randomCards;
+    private List<CardEntityOld> randomCards;
     private Integer totalRounds;
     private LearnQuizCard currentCard;
     private Boolean isFinished;
 
-    public LearnQuizService(CardRepository cardRepository, JournalRepository journalRepository,
+    public LearnQuizService(CardRepositoryOld cardRepository, JournalRepository journalRepository,
                             CardImageService cardImageService) {
         this.cardRepository = cardRepository;
         this.journalRepository = journalRepository;
@@ -112,7 +112,7 @@ public class LearnQuizService implements CardQuizService {
     }
 
     private List<LearnQuizCard> prepareCards() {
-        List<CardEntity> learnCandidates = cardRepository.getLearnCandidates();
+        List<CardEntityOld> learnCandidates = cardRepository.getLearnCandidates();
         if (learnCandidates.isEmpty()) {
             return null;
         }
@@ -122,7 +122,7 @@ public class LearnQuizService implements CardQuizService {
         List<LearnQuizCard> chosenCards = new ArrayList<>();
 
         int newCardCounter = 0;
-        for (CardEntity card : learnCandidates) {
+        for (CardEntityOld card : learnCandidates) {
             if (card.getLearnScore() == 0) {
                 if (newCardCounter >= LLearnConstants.LEARN_SESSION_MAX_NEW_CARDS) {
                     continue;

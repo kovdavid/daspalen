@@ -24,7 +24,7 @@ import javax.inject.Singleton;
 @Component(modules = {
         LearnQuizModule.class,
         ReviewQuizModule.class,
-        ManageCardsModule.class,
+        ManageCardsServiceModule.class,
         CardImageModule.class,
         SpeakerModule.class,
         CardExportModule.class,

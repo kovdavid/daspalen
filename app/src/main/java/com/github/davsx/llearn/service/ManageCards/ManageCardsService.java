@@ -1,8 +1,8 @@
 package com.github.davsx.llearn.service.ManageCards;
 
 import com.github.davsx.llearn.LLearnConstants;
-import com.github.davsx.llearn.persistence.entity.CardEntity;
-import com.github.davsx.llearn.persistence.repository.CardRepository;
+import com.github.davsx.llearn.model.Card;
+import com.github.davsx.llearn.persistence.repository.LLearnRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +15,8 @@ public class ManageCardsService {
 
     private static int LOAD_CHUNK_SIZE = 30;
 
-    private CardRepository cardRepository;
-    private ArrayList<CardEntity> cards;
+    private LLearnRepository repository;
+    private ArrayList<Card> cards;
     private Long maxLoadedCardId = 0L;
     private boolean hasMoreCards = true;
     private String searchQuery = null;
@@ -25,27 +25,26 @@ public class ManageCardsService {
     private boolean showLearnableCards = true;
     private boolean showReviewableCards = true;
 
-    public ManageCardsService(CardRepository cardRepository) {
-        this.cardRepository = cardRepository;
+    public ManageCardsService(LLearnRepository repository) {
+        this.repository = repository;
         this.cards = new ArrayList<>();
         reset();
         loadMoreCards(LOAD_CHUNK_SIZE * 2);
     }
 
-    public CardEntity getCardByPosition(int position) {
+    public Card getCardByPosition(int position) {
         return cards.get(position);
     }
 
     private boolean loadMoreCards(int limit) {
-        List<CardEntity> moreCards;
+        List<Card> moreCards;
         if (searchQuery == null) {
-            moreCards = cardRepository.getCardsChunked(maxLoadedCardId, getCardTypes(), limit);
+            moreCards = repository.getCardsChunked(maxLoadedCardId, getCardTypes(), limit);
         } else {
-            moreCards = cardRepository.searchCardsChunked(searchQuery, maxLoadedCardId,
-                    getCardTypes(), limit);
+            moreCards = repository.searchCardsChunked(searchQuery, maxLoadedCardId, getCardTypes(), limit);
         }
         if (moreCards.size() > 0) {
-            maxLoadedCardId = moreCards.get(moreCards.size() - 1).getId();
+            maxLoadedCardId = moreCards.get(moreCards.size() - 1).getCardId();
             cards.addAll(moreCards);
             return true;
         } else {
@@ -68,14 +67,14 @@ public class ManageCardsService {
         loadMoreCards(LOAD_CHUNK_SIZE * 2);
     }
 
-    public void enableCard(CardEntity card) {
+    public void enableCard(Card card) {
         card.setEnabled(true);
-        cardRepository.save(card);
+        repository.updateCard(card);
     }
 
-    public void disableCard(CardEntity card) {
+    public void disableCard(Card card) {
         card.setEnabled(false);
-        cardRepository.save(card);
+        repository.updateCard(card);
     }
 
     public void cancelSearch() {
@@ -94,7 +93,7 @@ public class ManageCardsService {
     }
 
     public void cardChanged(long cardId, int cardPosition) {
-        cards.set(cardPosition, cardRepository.getCardWithId(cardId));
+        cards.set(cardPosition, repository.getCardWithId(cardId));
     }
 
     public void cardDeleted(int cardPosition) {
@@ -105,8 +104,8 @@ public class ManageCardsService {
         loadMoreCards(LOAD_CHUNK_SIZE);
     }
 
-    public void deleteCard(CardEntity card, int position) {
-        cardRepository.deleteCard(card);
+    public void deleteCard(Card card, int position) {
+        repository.deleteCard(card);
         cards.remove(position);
     }
 
@@ -147,4 +146,5 @@ public class ManageCardsService {
     public int getItemCount() {
         return cards.size();
     }
+
 }

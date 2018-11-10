@@ -2,7 +2,7 @@ package com.github.davsx.llearn.service.BaseQuiz;
 
 import android.net.Uri;
 import android.util.Pair;
-import com.github.davsx.llearn.persistence.entity.CardEntity;
+import com.github.davsx.llearn.persistence.entity.CardEntityOld;
 import com.github.davsx.llearn.service.CardImage.CardImageService;
 import com.google.common.collect.Lists;
 import info.debatty.java.stringsimilarity.Levenshtein;
@@ -31,8 +31,8 @@ public class QuizData {
     public static QuizData build(
             QuizTypeEnum quizType,
             CardImageService cardImageService,
-            CardEntity card,
-            List<CardEntity> randomCards) {
+            CardEntityOld card,
+            List<CardEntityOld> randomCards) {
         if (quizType.equals(QuizTypeEnum.NONE)) {
             return null;
         }
@@ -56,10 +56,10 @@ public class QuizData {
         return data;
     }
 
-    private static List<String> findChoicesFor(QuizData data, List<CardEntity> randomCards) {
+    private static List<String> findChoicesFor(QuizData data, List<CardEntityOld> randomCards) {
         String original = data.getReversed() ? data.getFrontText() : data.getBackText();
         ArrayList<Pair<Integer, String>> candidates = new ArrayList<>();
-        for (CardEntity card : randomCards) {
+        for (CardEntityOld card : randomCards) {
             String candidate = data.getReversed() ? card.getFront() : card.getBack();
 
             Integer distance = Levenshtein.Distance(original, candidate);

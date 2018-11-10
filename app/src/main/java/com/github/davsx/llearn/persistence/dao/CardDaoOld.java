@@ -1,21 +1,21 @@
 package com.github.davsx.llearn.persistence.dao;
 
 import android.arch.persistence.room.*;
-import com.github.davsx.llearn.persistence.entity.CardEntity;
+import com.github.davsx.llearn.persistence.entity.CardEntityOld;
 
 import java.util.List;
 
 @Dao
-public interface CardDao {
+public interface CardDaoOld {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    long save(CardEntity card);
+    long save(CardEntityOld card);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void saveMany(List<CardEntity> cards);
+    void saveMany(List<CardEntityOld> cards);
 
     @Delete()
-    void delete(CardEntity card);
+    void delete(CardEntityOld card);
 
     @Query("DELETE FROM cards")
     void deleteAllCards();
@@ -34,27 +34,27 @@ public interface CardDao {
 
     @Query("SELECT * FROM cards WHERE id_card > :id AND type IN (:types) AND (front LIKE :query OR back LIKE :query) " +
             "ORDER BY id_card LIMIT :limit")
-    List<CardEntity> searchCardsChunked(String query, Long id, List<Integer> types, int limit);
+    List<CardEntityOld> searchCardsChunked(String query, Long id, List<Integer> types, int limit);
 
     @Query("SELECT * FROM cards WHERE id_card > :id AND type IN (:types) ORDER BY id_card ASC LIMIT :limit")
-    List<CardEntity> getCardsChunked(long id, List<Integer> types, int limit);
+    List<CardEntityOld> getCardsChunked(long id, List<Integer> types, int limit);
 
     @Query("SELECT * FROM cards WHERE type != 0 AND enabled = 1 ORDER BY RANDOM() LIMIT :limit")
-    List<CardEntity> getRandomCards(int limit);
+    List<CardEntityOld> getRandomCards(int limit);
 
     @Query("SELECT * FROM cards WHERE type = 1 AND enabled = 1 ORDER BY learn_score DESC, learn_update_at DESC LIMIT :limit")
-    List<CardEntity> getLearnCandidates(Integer limit);
+    List<CardEntityOld> getLearnCandidates(Integer limit);
 
     @Query("SELECT * FROM cards WHERE type = 2 AND next_review_at < :timestamp AND enabled = 1 ORDER BY next_review_at ASC LIMIT :limit")
-    List<CardEntity> getReviewCandidates(long timestamp, int limit);
+    List<CardEntityOld> getReviewCandidates(long timestamp, int limit);
 
     @Query("SELECT * FROM cards WHERE type = 2 AND next_review_at > :timestamp AND enabled = 1 ORDER BY RANDOM() LIMIT :limit")
-    List<CardEntity> getReviewFillCandidates(long timestamp, int limit);
+    List<CardEntityOld> getReviewFillCandidates(long timestamp, int limit);
 
     @Query("SELECT * FROM cards WHERE id_card = :id_card")
-    CardEntity getCardWithId(Long id_card);
+    CardEntityOld getCardWithId(Long id_card);
 
     @Query("SELECT * FROM cards WHERE front = :front OR back = :back LIMIT 1")
-    CardEntity findDuplicateCard(String front, String back);
+    CardEntityOld findDuplicateCard(String front, String back);
 
 }

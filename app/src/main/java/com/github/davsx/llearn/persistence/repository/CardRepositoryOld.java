@@ -1,34 +1,34 @@
 package com.github.davsx.llearn.persistence.repository;
 
 import com.github.davsx.llearn.LLearnConstants;
-import com.github.davsx.llearn.persistence.dao.CardDao;
-import com.github.davsx.llearn.persistence.entity.CardEntity;
+import com.github.davsx.llearn.persistence.dao.CardDaoOld;
+import com.github.davsx.llearn.persistence.entity.CardEntityOld;
 
 import javax.inject.Inject;
 import java.util.List;
 
-public class CardRepository {
+public class CardRepositoryOld {
 
-    private CardDao cardDao;
+    private CardDaoOld cardDao;
 
     @Inject
-    public CardRepository(CardDao cardDao) {
+    public CardRepositoryOld(CardDaoOld cardDao) {
         this.cardDao = cardDao;
     }
 
-    public CardEntity getCardWithId(Long id_card) {
+    public CardEntityOld getCardWithId(Long id_card) {
         return cardDao.getCardWithId(id_card);
     }
 
-    public CardEntity findDuplicateCard(String front, String back) {
+    public CardEntityOld findDuplicateCard(String front, String back) {
         return cardDao.findDuplicateCard(front, back);
     }
 
-    public Long save(CardEntity card) {
+    public Long save(CardEntityOld card) {
         return cardDao.save(card);
     }
 
-    public void saveMany(List<CardEntity> cards) {
+    public void saveMany(List<CardEntityOld> cards) {
         cardDao.saveMany(cards);
     }
 
@@ -49,7 +49,7 @@ public class CardRepository {
     }
 
 
-    public void deleteCard(CardEntity card) {
+    public void deleteCard(CardEntityOld card) {
         cardDao.delete(card);
     }
 
@@ -57,34 +57,34 @@ public class CardRepository {
         cardDao.deleteAllCards();
     }
 
-    public List<CardEntity> getRandomCards(int limit) {
+    public List<CardEntityOld> getRandomCards(int limit) {
         return cardDao.getRandomCards(limit);
     }
 
-    public List<CardEntity> getCardsChunked(Long id, List<Integer> types, int limit) {
+    public List<CardEntityOld> getCardsChunked(Long id, List<Integer> types, int limit) {
         return cardDao.getCardsChunked(id, types, limit);
     }
 
-    public List<CardEntity> searchCardsChunked(String query,
-                                               Long id,
-                                               List<Integer> types,
-                                               int limit) {
+    public List<CardEntityOld> searchCardsChunked(String query,
+                                                  Long id,
+                                                  List<Integer> types,
+                                                  int limit) {
         String queryStr = "%" + query + "%";
         return cardDao.searchCardsChunked(queryStr, id, types, limit);
     }
 
-    public List<CardEntity> getLearnCandidates() {
+    public List<CardEntityOld> getLearnCandidates() {
         return cardDao.getLearnCandidates(LLearnConstants.LEARN_SESSION_CANDIDATE_CARDS);
     }
 
-    public List<CardEntity> getReviewCandidates() {
+    public List<CardEntityOld> getReviewCandidates() {
         return cardDao.getReviewCandidates(
                 System.currentTimeMillis(),
                 LLearnConstants.REVIEW_SESSION_CANDIDATE_CARDS
         );
     }
 
-    public List<CardEntity> getReviewFillCandidates() {
+    public List<CardEntityOld> getReviewFillCandidates() {
         return cardDao.getReviewFillCandidates(
                 System.currentTimeMillis(),
                 LLearnConstants.REVIEW_SESSION_CANDIDATE_CARDS

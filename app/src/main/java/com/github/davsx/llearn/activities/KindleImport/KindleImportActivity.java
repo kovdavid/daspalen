@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import com.github.davsx.llearn.LLearnApplication;
 import com.github.davsx.llearn.activities.ManageCards.ManageCardsActivity;
-import com.github.davsx.llearn.persistence.repository.CardRepository;
+import com.github.davsx.llearn.persistence.repository.CardRepositoryOld;
 import com.github.davsx.llearn.service.KindleImport.KindleImportService;
 
 import javax.inject.Inject;
@@ -13,7 +13,7 @@ import javax.inject.Inject;
 public class KindleImportActivity extends Activity {
 
     @Inject
-    CardRepository cardRepository;
+    KindleImportService kindleImportService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +26,7 @@ public class KindleImportActivity extends Activity {
         String type = intent.getType();
 
         if (action.equals(Intent.ACTION_SEND_MULTIPLE) && type.equals("message/rfc822")) {
-            KindleImportService.doImport(this, intent, cardRepository);
+            kindleImportService.doImport(intent);
         }
 
         Intent i = new Intent(this, ManageCardsActivity.class);

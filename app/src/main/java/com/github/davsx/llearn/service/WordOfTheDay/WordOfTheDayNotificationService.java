@@ -11,8 +11,8 @@ import android.text.Html;
 import com.github.davsx.llearn.LLearnApplication;
 import com.github.davsx.llearn.LLearnConstants;
 import com.github.davsx.llearn.R;
-import com.github.davsx.llearn.persistence.entity.CardEntity;
-import com.github.davsx.llearn.persistence.repository.CardRepository;
+import com.github.davsx.llearn.persistence.entity.CardEntityOld;
+import com.github.davsx.llearn.persistence.repository.CardRepositoryOld;
 import com.github.davsx.llearn.service.Settings.SettingsService;
 
 import javax.inject.Inject;
@@ -21,7 +21,7 @@ import java.util.List;
 public class WordOfTheDayNotificationService extends BroadcastReceiver {
 
     @Inject
-    CardRepository cardRepository;
+    CardRepositoryOld cardRepository;
     @Inject
     SettingsService settingsService;
 
@@ -32,12 +32,12 @@ public class WordOfTheDayNotificationService extends BroadcastReceiver {
     }
 
     private void showNotification(Context context) {
-        List<CardEntity> cards = cardRepository.getRandomCards(1);
+        List<CardEntityOld> cards = cardRepository.getRandomCards(1);
         if (cards.size() == 0) {
             return;
         }
 
-        CardEntity card = cards.get(0);
+        CardEntityOld card = cards.get(0);
         String message = String.format("<b>Front:</b> %s<br /><b>Back:</b> %s", card.getFront(), card.getBack());
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context,

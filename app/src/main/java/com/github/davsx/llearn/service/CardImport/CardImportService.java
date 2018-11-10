@@ -1,8 +1,8 @@
 package com.github.davsx.llearn.service.CardImport;
 
-import com.github.davsx.llearn.persistence.entity.CardEntity;
+import com.github.davsx.llearn.persistence.entity.CardEntityOld;
 import com.github.davsx.llearn.persistence.entity.JournalEntity;
-import com.github.davsx.llearn.persistence.repository.CardRepository;
+import com.github.davsx.llearn.persistence.repository.CardRepositoryOld;
 import com.github.davsx.llearn.persistence.repository.JournalRepository;
 import com.github.davsx.llearn.service.CardImage.CardImageService;
 import com.github.davsx.llearn.service.Settings.SettingsService;
@@ -18,7 +18,7 @@ import java.util.zip.ZipInputStream;
 
 public class CardImportService {
 
-    private CardRepository cardRepository;
+    private CardRepositoryOld cardRepository;
     private JournalRepository journalRepository;
     private CardImageService cardImageService;
     private SettingsService settingsService;
@@ -30,7 +30,7 @@ public class CardImportService {
     private String status;
     private ImportStatus importStatus = ImportStatus.IMPORT_NOT_RUNNING;
 
-    public CardImportService(CardRepository cardRepository, JournalRepository journalRepository,
+    public CardImportService(CardRepositoryOld cardRepository, JournalRepository journalRepository,
                              CardImageService cardImageService, SettingsService settingsService) {
         this.cardRepository = cardRepository;
         this.journalRepository = journalRepository;
@@ -76,7 +76,7 @@ public class CardImportService {
 
             cardRepository.deleteAllCards();
             journalRepository.deleteAllJournals();
-            cardImageService.deleteAllImages();
+            cardImageService.wipeData();
             importStatus = ImportStatus.LOADING_DATA;
 
             return true;
@@ -135,11 +135,11 @@ public class CardImportService {
     private void loadCardsFromCsvV1() throws IOException {
         CSVReader csv = new CSVReader(inputStreamReader);
 
-        List<CardEntity> cards = new ArrayList<>();
+        List<CardEntityOld> cards = new ArrayList<>();
 
         String[] row;
         while ((row = csv.readNext()) != null) {
-            cards.add(CardEntity.fromCsvDataV1(row));
+            cards.add(CardEntityOld.fromCsvDataV1(row));
         }
 
         cardRepository.saveMany(cards);
@@ -148,11 +148,11 @@ public class CardImportService {
     private void loadCardsFromCsvV2() throws IOException {
         CSVReader csv = new CSVReader(inputStreamReader);
 
-        List<CardEntity> cards = new ArrayList<>();
+        List<CardEntityOld> cards = new ArrayList<>();
 
         String[] row;
         while ((row = csv.readNext()) != null) {
-            cards.add(CardEntity.fromCsvDataV2(row));
+            cards.add(CardEntityOld.fromCsvDataV2(row));
         }
 
         cardRepository.saveMany(cards);

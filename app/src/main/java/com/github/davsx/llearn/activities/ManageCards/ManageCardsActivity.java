@@ -130,8 +130,7 @@ public class ManageCardsActivity extends AppCompatActivity {
 
         long cardId = intent.getLongExtra("ID_CARD", 0L);
         int cardPosition = intent.getIntExtra("CARD_POSITION", 0);
-        int result = intent.getIntExtra("RESULT", ManageCardsService.RESULT_CARD_CHANGED); //
-        // Reload card just to be sure
+        int result = intent.getIntExtra("RESULT", ManageCardsService.RESULT_CARD_CHANGED);
 
         if (result == ManageCardsService.RESULT_CARD_CHANGED) {
             manageCardsService.cardChanged(cardId, cardPosition);

@@ -2,9 +2,9 @@ package com.github.davsx.llearn.service.LearnQuiz;
 
 import android.util.Log;
 import com.github.davsx.llearn.LLearnConstants;
-import com.github.davsx.llearn.persistence.entity.CardEntity;
+import com.github.davsx.llearn.persistence.entity.CardEntityOld;
 import com.github.davsx.llearn.persistence.entity.JournalEntity;
-import com.github.davsx.llearn.persistence.repository.CardRepository;
+import com.github.davsx.llearn.persistence.repository.CardRepositoryOld;
 import com.github.davsx.llearn.persistence.repository.JournalRepository;
 import com.github.davsx.llearn.service.BaseQuiz.BaseQuizCardScheduler;
 import com.github.davsx.llearn.service.BaseQuiz.QuizData;
@@ -26,20 +26,20 @@ class LearnQuizCard {
             QuizTypeEnum.KEYBOARD_INPUT
     );
 
-    private CardRepository cardRepository;
+    private CardRepositoryOld cardRepository;
     private JournalRepository journalRepository;
     private CardImageService cardImageService;
-    private CardEntity cardEntity;
+    private CardEntityOld cardEntity;
     private Boolean doShowCard;
     private Integer completedRounds;
     private Integer plannedRounds;
     private Random rng;
     private Boolean gotBadAnswer = false;
 
-    LearnQuizCard(CardRepository cardRepository,
+    LearnQuizCard(CardRepositoryOld cardRepository,
                   JournalRepository journalRepository,
                   CardImageService cardImageService,
-                  CardEntity cardEntity) {
+                  CardEntityOld cardEntity) {
         this.cardRepository = cardRepository;
         this.journalRepository = journalRepository;
         this.cardImageService = cardImageService;
@@ -159,7 +159,7 @@ class LearnQuizCard {
         return false;
     }
 
-    QuizData buildQuizData(List<CardEntity> randomCards) {
+    QuizData buildQuizData(List<CardEntityOld> randomCards) {
         QuizTypeEnum quizType = getQuizType();
         logCard("buildQuizData quizType:" + quizType);
         return QuizData.build(quizType, cardImageService, cardEntity, randomCards);

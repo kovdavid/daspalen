@@ -12,7 +12,7 @@ import java.util.zip.ZipInputStream;
 public interface CardImageService {
     void removeCardImages(Long cardId);
 
-    void deleteAllImages();
+    void wipeData();
 
     void saveImageFromStream(String name, ZipInputStream zipInputStream) throws IOException;
 

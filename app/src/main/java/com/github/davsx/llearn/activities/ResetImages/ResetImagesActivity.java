@@ -8,7 +8,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.github.davsx.llearn.LLearnApplication;
 import com.github.davsx.llearn.R;
-import com.github.davsx.llearn.persistence.repository.CardRepository;
+import com.github.davsx.llearn.persistence.repository.CardRepositoryOld;
 import com.squareup.okhttp.OkHttpClient;
 
 import javax.inject.Inject;
@@ -18,7 +18,7 @@ public class ResetImagesActivity extends AppCompatActivity {
     @Inject
     OkHttpClient okHttpClient;
     @Inject
-    CardRepository cardRepository;
+    CardRepositoryOld cardRepository;
 
     private Button buttonResetImages;
     private ProgressBar progressBar;

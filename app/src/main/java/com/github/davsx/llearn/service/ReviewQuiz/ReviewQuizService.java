@@ -1,8 +1,8 @@
 package com.github.davsx.llearn.service.ReviewQuiz;
 
 import com.github.davsx.llearn.LLearnConstants;
-import com.github.davsx.llearn.persistence.entity.CardEntity;
-import com.github.davsx.llearn.persistence.repository.CardRepository;
+import com.github.davsx.llearn.persistence.entity.CardEntityOld;
+import com.github.davsx.llearn.persistence.repository.CardRepositoryOld;
 import com.github.davsx.llearn.persistence.repository.JournalRepository;
 import com.github.davsx.llearn.service.BaseQuiz.BaseQuizSchedule;
 import com.github.davsx.llearn.service.BaseQuiz.CardQuizService;
@@ -13,7 +13,7 @@ import java.util.*;
 
 public class ReviewQuizService implements CardQuizService {
 
-    private CardRepository cardRepository;
+    private CardRepositoryOld cardRepository;
     private JournalRepository journalRepository;
     private CardImageService cardImageService;
 
@@ -22,7 +22,7 @@ public class ReviewQuizService implements CardQuizService {
     private ReviewQuizCard currentCard;
     private boolean isFinished;
 
-    public ReviewQuizService(CardRepository cardRepository, JournalRepository journalRepository,
+    public ReviewQuizService(CardRepositoryOld cardRepository, JournalRepository journalRepository,
                              CardImageService cardImageService) {
         this.cardRepository = cardRepository;
         this.journalRepository = journalRepository;
@@ -55,33 +55,33 @@ public class ReviewQuizService implements CardQuizService {
 
     private List<ReviewQuizCard> prepareCards() {
         List<ReviewQuizCard> cards = new ArrayList<>();
-        List<CardEntity> candidateCards = cardRepository.getReviewCandidates();
+        List<CardEntityOld> candidateCards = cardRepository.getReviewCandidates();
 
         Collections.sort(candidateCards, new ReviewQuizCard.ReviewQuizCardComparator());
 
         while (cards.size() < LLearnConstants.REVIEW_SESSION_MAX_CARDS && candidateCards.size() > 0) {
-            CardEntity card = candidateCards.remove(0);
+            CardEntityOld card = candidateCards.remove(0);
             cards.add(ReviewQuizCard.createUpdatableCard(cardRepository, journalRepository, cardImageService, card));
         }
 
         Random rng = new Random(System.currentTimeMillis());
 
         if (candidateCards.size() < LLearnConstants.REVIEW_SESSION_MAX_CARDS) {
-            List<CardEntity> fillCandidates = cardRepository.getReviewFillCandidates();
+            List<CardEntityOld> fillCandidates = cardRepository.getReviewFillCandidates();
             int fillCount = LLearnConstants.REVIEW_SESSION_MAX_CARDS - candidateCards.size();
 
             if (fillCandidates.size() > fillCount) {
-                Set<CardEntity> fillCards = new HashSet<>();
+                Set<CardEntityOld> fillCards = new HashSet<>();
                 while (fillCards.size() < fillCount) {
                     int index = rng.nextInt(fillCandidates.size());
                     fillCards.add(fillCandidates.get(index));
                 }
-                for (CardEntity card : fillCards) {
+                for (CardEntityOld card : fillCards) {
                     cards.add(ReviewQuizCard.createNonUpdatableCard(cardRepository, journalRepository,
                             cardImageService, card));
                 }
             } else {
-                for (CardEntity card : fillCandidates) {
+                for (CardEntityOld card : fillCandidates) {
                     cards.add(ReviewQuizCard.createNonUpdatableCard(cardRepository, journalRepository,
                             cardImageService, card));
                 }

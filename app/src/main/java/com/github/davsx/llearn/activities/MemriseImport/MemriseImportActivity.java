@@ -12,7 +12,7 @@ import android.widget.*;
 import com.github.davsx.llearn.LLearnApplication;
 import com.github.davsx.llearn.LLearnConstants;
 import com.github.davsx.llearn.R;
-import com.github.davsx.llearn.persistence.entity.CardEntity;
+import com.github.davsx.llearn.persistence.entity.CardEntityOld;
 import com.github.davsx.llearn.service.MemriseImport.MemriseImportService;
 
 import javax.inject.Inject;
@@ -131,7 +131,7 @@ public class MemriseImportActivity extends Activity {
             return false;
         }
 
-        CardEntity duplicateCard = memriseImportService.findDuplicateCard(frontText, backText);
+        CardEntityOld duplicateCard = memriseImportService.findDuplicateCard(frontText, backText);
         if (duplicateCard == null) {
             memriseImportService.saveCard(frontText, backText);
             return true;

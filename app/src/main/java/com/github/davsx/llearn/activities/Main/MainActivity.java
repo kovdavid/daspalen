@@ -22,21 +22,14 @@ import com.github.davsx.llearn.activities.MemriseImport.MemriseImportActivity;
 import com.github.davsx.llearn.activities.ResetImages.ResetImagesActivity;
 import com.github.davsx.llearn.activities.ReviewQuiz.ReviewQuizActivity;
 import com.github.davsx.llearn.activities.Settings.SettingsActivity;
-import com.github.davsx.llearn.persistence.repository.CardRepository;
-import com.github.davsx.llearn.persistence.repository.JournalRepository;
-import com.github.davsx.llearn.service.CardImage.CardImageService;
-import info.debatty.java.stringsimilarity.Main;
+import com.github.davsx.llearn.service.MainActivity.MainActivityService;
 
 import javax.inject.Inject;
 
 public class MainActivity extends AppCompatActivity {
 
     @Inject
-    CardRepository cardRepository;
-    @Inject
-    JournalRepository journalRepository;
-    @Inject
-    CardImageService cardImageService;
+    MainActivityService mainActivityService;
 
     private Button btnLearnCards;
     private Button btnReviewCards;
@@ -100,9 +93,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateButtons() {
-        Integer learnableCardCount = cardRepository.learnableCardCount();
-        btnLearnCards.setText("Learn cards\n(" + Integer.toString(learnableCardCount) + ")");
-        if (learnableCardCount > 0) {
+        btnLearnCards.setText(mainActivityService.getLearnButtonString());
+        if (mainActivityService.canLearnCards()) {
             btnLearnCards.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -114,10 +106,8 @@ public class MainActivity extends AppCompatActivity {
             btnLearnCards.setOnClickListener(null);
         }
 
-        Integer reviewableCardCount = cardRepository.reviewableCardCount();
-        Integer reviewableOverdueCardCount = cardRepository.reviewableOverdueCardCount();
-        btnReviewCards.setText(String.format("Review cards\n(%d/%d)", reviewableOverdueCardCount, reviewableCardCount));
-        if (reviewableCardCount > 0) {
+        btnReviewCards.setText(mainActivityService.getReviewButtonString());
+        if (mainActivityService.canReviewCards()) {
             btnReviewCards.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -129,8 +119,7 @@ public class MainActivity extends AppCompatActivity {
             btnReviewCards.setOnClickListener(null);
         }
 
-        Integer allCardsCount = cardRepository.allCardsCount();
-        btnManageCards.setText("Manage cards\n(" + Integer.toString(allCardsCount) + ")");
+        btnManageCards.setText(mainActivityService.getManageButtonString());
         btnManageCards.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -179,9 +168,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void wipeData() {
-        cardRepository.deleteAllCards();
-        cardImageService.deleteAllImages();
-        journalRepository.deleteAllJournals();
+        mainActivityService.wipeData();
         updateButtons();
     }
 

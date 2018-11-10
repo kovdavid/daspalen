@@ -2,9 +2,9 @@ package com.github.davsx.llearn.service.ReviewQuiz;
 
 import android.util.Log;
 import com.github.davsx.llearn.LLearnConstants;
-import com.github.davsx.llearn.persistence.entity.CardEntity;
+import com.github.davsx.llearn.persistence.entity.CardEntityOld;
 import com.github.davsx.llearn.persistence.entity.JournalEntity;
-import com.github.davsx.llearn.persistence.repository.CardRepository;
+import com.github.davsx.llearn.persistence.repository.CardRepositoryOld;
 import com.github.davsx.llearn.persistence.repository.JournalRepository;
 import com.github.davsx.llearn.service.BaseQuiz.BaseQuizCardScheduler;
 import com.github.davsx.llearn.service.BaseQuiz.QuizData;
@@ -17,17 +17,17 @@ class ReviewQuizCard {
 
     private static final String TAG = "ReviewQuizCard";
 
-    private CardRepository cardRepository;
+    private CardRepositoryOld cardRepository;
     private JournalRepository journalRepository;
     private CardImageService cardImageService;
 
-    private CardEntity cardEntity;
+    private CardEntityOld cardEntity;
     private boolean updateCardOnAnswer;
     private boolean answered = false;
     private boolean answeredCorrectly = false;
 
-    private ReviewQuizCard(CardRepository cardRepository, JournalRepository journalRepository,
-                           CardImageService cardImageService, CardEntity cardEntity, boolean updateCardOnAnswer) {
+    private ReviewQuizCard(CardRepositoryOld cardRepository, JournalRepository journalRepository,
+                           CardImageService cardImageService, CardEntityOld cardEntity, boolean updateCardOnAnswer) {
         this.cardRepository = cardRepository;
         this.journalRepository = journalRepository;
         this.cardImageService = cardImageService;
@@ -37,21 +37,21 @@ class ReviewQuizCard {
         logCard("init");
     }
 
-    static ReviewQuizCard createUpdatableCard(CardRepository cardRepository,
+    static ReviewQuizCard createUpdatableCard(CardRepositoryOld cardRepository,
                                               JournalRepository journalRepository,
                                               CardImageService cardImageService,
-                                              CardEntity cardEntity) {
+                                              CardEntityOld cardEntity) {
         return new ReviewQuizCard(cardRepository, journalRepository, cardImageService, cardEntity, true);
     }
 
-    static ReviewQuizCard createNonUpdatableCard(CardRepository cardRepository,
+    static ReviewQuizCard createNonUpdatableCard(CardRepositoryOld cardRepository,
                                                  JournalRepository journalRepository,
                                                  CardImageService cardImageService,
-                                                 CardEntity cardEntity) {
+                                                 CardEntityOld cardEntity) {
         return new ReviewQuizCard(cardRepository, journalRepository, cardImageService, cardEntity, false);
     }
 
-    private static Double cardReviewDueFactor(CardEntity card) {
+    private static Double cardReviewDueFactor(CardEntityOld card) {
         long reviewInterval = card.getNextReviewAt() - card.getLastReviewAt();
         long overdueInterval = System.currentTimeMillis() - card.getNextReviewAt();
         return (double) (overdueInterval / reviewInterval);
@@ -115,9 +115,9 @@ class ReviewQuizCard {
         return this.answeredCorrectly;
     }
 
-    public static class ReviewQuizCardComparator implements Comparator<CardEntity> {
+    public static class ReviewQuizCardComparator implements Comparator<CardEntityOld> {
         @Override
-        public int compare(CardEntity c1, CardEntity c2) {
+        public int compare(CardEntityOld c1, CardEntityOld c2) {
             return cardReviewDueFactor(c2).compareTo(cardReviewDueFactor(c1));
         }
     }

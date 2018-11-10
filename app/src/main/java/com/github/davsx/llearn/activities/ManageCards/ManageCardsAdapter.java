@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.github.davsx.llearn.LLearnConstants;
 import com.github.davsx.llearn.R;
 import com.github.davsx.llearn.activities.CardEditor.CardEditorActivity;
-import com.github.davsx.llearn.persistence.entity.CardEntity;
+import com.github.davsx.llearn.model.Card;
 import com.github.davsx.llearn.service.ManageCards.ManageCardsService;
 
 public class ManageCardsAdapter extends RecyclerView.Adapter<ManageCardsAdapter.CardViewHolder> {
@@ -37,21 +37,21 @@ public class ManageCardsAdapter extends RecyclerView.Adapter<ManageCardsAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ManageCardsAdapter.CardViewHolder holder, int position) {
-        CardEntity card = manageCardsService.getCardByPosition(position);
+        Card card = manageCardsService.getCardByPosition(position);
         if (card != null) {
             if (card.getEnabled()) {
                 holder.textViewIdCard.setBackgroundResource(R.color.colorPrimary);
             } else {
                 holder.textViewIdCard.setBackgroundResource(R.color.colorAccent);
             }
-            holder.textViewIdCard.setText(Long.toString(card.getId()));
+            holder.textViewIdCard.setText(Long.toString(card.getCardId()));
             if (card.getLearnScore() < LLearnConstants.MAX_CARD_LEARN_SCORE) {
                 holder.textViewLearnScore.setText(Integer.toString(card.getLearnScore()));
             } else {
                 holder.textViewLearnScore.setText("R");
             }
-            holder.textViewFront.setText(card.getFront());
-            holder.textViewBack.setText(card.getBack());
+            holder.textViewFront.setText(card.getFrontText());
+            holder.textViewBack.setText(card.getBackText());
             holder.card = card;
             holder.position = position;
         }
@@ -97,7 +97,7 @@ public class ManageCardsAdapter extends RecyclerView.Adapter<ManageCardsAdapter.
         private TextView textViewLearnScore;
         private TextView textViewFront;
         private TextView textViewBack;
-        private CardEntity card;
+        private Card card;
         private int position;
 
         CardViewHolder(View itemView) {
@@ -122,7 +122,7 @@ public class ManageCardsAdapter extends RecyclerView.Adapter<ManageCardsAdapter.
         @Override
         public void onClick(View view) {
             Intent i = new Intent(context, CardEditorActivity.class);
-            i.putExtra("ID_CARD", card.getId());
+            i.putExtra("ID_CARD", card.getCardId());
             i.putExtra("CARD_POSITION", position);
             context.startActivity(i);
         }

@@ -1,9 +1,9 @@
 package com.github.davsx.llearn.service.CardExport;
 
 import com.github.davsx.llearn.LLearnConstants;
-import com.github.davsx.llearn.persistence.entity.CardEntity;
+import com.github.davsx.llearn.persistence.entity.CardEntityOld;
 import com.github.davsx.llearn.persistence.entity.JournalEntity;
-import com.github.davsx.llearn.persistence.repository.CardRepository;
+import com.github.davsx.llearn.persistence.repository.CardRepositoryOld;
 import com.github.davsx.llearn.persistence.repository.JournalRepository;
 import com.github.davsx.llearn.service.CardImage.CardImageService;
 import com.github.davsx.llearn.service.Settings.SettingsService;
@@ -24,7 +24,7 @@ public class CardExportService {
     private CSVWriter csvWriter;
     private ZipOutputStream zipOutputStream;
 
-    private CardRepository cardRepository;
+    private CardRepositoryOld cardRepository;
     private JournalRepository journalRepository;
     private CardImageService cardImageService;
     private SettingsService settingsService;
@@ -38,7 +38,7 @@ public class CardExportService {
 
     private ExportStatus exportStatus = ExportStatus.EXPORT_NOT_RUNNING;
 
-    public CardExportService(CardRepository cardRepository, JournalRepository journalRepository,
+    public CardExportService(CardRepositoryOld cardRepository, JournalRepository journalRepository,
                              CardImageService cardImageService, SettingsService settingsService) {
         this.cardRepository = cardRepository;
         this.journalRepository = journalRepository;
@@ -161,9 +161,9 @@ public class CardExportService {
         status = "Exporting cards";
 
         int chunkSize = 100;
-        List<CardEntity> cards = cardRepository.getCardsChunked(maxCardId,
+        List<CardEntityOld> cards = cardRepository.getCardsChunked(maxCardId,
                 LLearnConstants.CARD_TYPES_ALL, chunkSize);
-        for (CardEntity card : cards) {
+        for (CardEntityOld card : cards) {
             currentProgress++;
             csvWriter.writeNext(card.toCsvDataV2());
             maxCardId = card.getId();

@@ -8,14 +8,12 @@ import android.support.annotation.NonNull;
 import com.opencsv.bean.CsvBindByPosition;
 
 @Entity(
-        tableName = "card",
+        tableName = "card_notification",
         indices = {
-                @Index(value = {"front_text"}),
-                @Index(value = {"back_text"}),
-                @Index(value = {"enabled"}),
+                @Index(value = {"last_notification_at", "enabled"}),
         }
 )
-public class CardEntity {
+public class CardNotificationEntity {
 
     @PrimaryKey
     @ColumnInfo(name = "id_card")
@@ -23,82 +21,54 @@ public class CardEntity {
     public Long cardId;
 
     @NonNull
-    @ColumnInfo(name = "front_text")
+    @ColumnInfo(name = "last_notification_at")
     @CsvBindByPosition(position = 1)
-    public String frontText = "";
-
-    @NonNull
-    @ColumnInfo(name = "back_text")
-    @CsvBindByPosition(position = 2)
-    public String backText = "";
-
-    @ColumnInfo(name = "image_hash")
-    @CsvBindByPosition(position = 3)
-    public String imageHash = null;
+    public Long lastNotificationAt = System.currentTimeMillis();
 
     @NonNull
     @ColumnInfo(name = "enabled")
-    @CsvBindByPosition(position = 4)
+    @CsvBindByPosition(position = 2)
     public Boolean enabled = true;
 
     @NonNull
     @ColumnInfo(name = "local_version")
-    @CsvBindByPosition(position = 5)
+    @CsvBindByPosition(position = 3)
     public Integer localVersion = 0;
 
     @NonNull
     @ColumnInfo(name = "synced_version")
-    @CsvBindByPosition(position = 6)
+    @CsvBindByPosition(position = 4)
     public Integer syncedVersion = 0;
 
     @NonNull
     @ColumnInfo(name = "created_at")
-    @CsvBindByPosition(position = 7)
+    @CsvBindByPosition(position = 5)
     public Long createdAt = System.currentTimeMillis();
 
     @NonNull
     @ColumnInfo(name = "updated_at")
-    @CsvBindByPosition(position = 8)
+    @CsvBindByPosition(position = 6)
     public Long updatedAt = System.currentTimeMillis();
 
-    public CardEntity() {
+    public CardNotificationEntity() {
     }
 
     public Long getCardId() {
         return cardId;
     }
 
-    public CardEntity setCardId(Long cardId) {
+    public CardNotificationEntity setCardId(Long cardId) {
         this.cardId = cardId;
         return this;
     }
 
     @NonNull
-    public String getFrontText() {
-        return frontText;
+    public Long getLastNotificationAt() {
+        return lastNotificationAt;
     }
 
-    public CardEntity setFrontText(@NonNull String frontText) {
-        this.frontText = frontText;
-        return this;
-    }
-
-    @NonNull
-    public String getBackText() {
-        return backText;
-    }
-
-    public CardEntity setBackText(@NonNull String backText) {
-        this.backText = backText;
-        return this;
-    }
-
-    public String getImageHash() {
-        return imageHash;
-    }
-
-    public CardEntity setImageHash(String imageHash) {
-        this.imageHash = imageHash;
+    public CardNotificationEntity setLastNotificationAt(@NonNull Long lastNotificationAt) {
+        this.lastNotificationAt = lastNotificationAt;
         return this;
     }
 
@@ -107,7 +77,7 @@ public class CardEntity {
         return enabled;
     }
 
-    public CardEntity setEnabled(@NonNull Boolean enabled) {
+    public CardNotificationEntity setEnabled(@NonNull Boolean enabled) {
         this.enabled = enabled;
         return this;
     }
@@ -117,7 +87,7 @@ public class CardEntity {
         return localVersion;
     }
 
-    public CardEntity setLocalVersion(@NonNull Integer localVersion) {
+    public CardNotificationEntity setLocalVersion(@NonNull Integer localVersion) {
         this.localVersion = localVersion;
         return this;
     }
@@ -127,7 +97,7 @@ public class CardEntity {
         return syncedVersion;
     }
 
-    public CardEntity setSyncedVersion(@NonNull Integer syncedVersion) {
+    public CardNotificationEntity setSyncedVersion(@NonNull Integer syncedVersion) {
         this.syncedVersion = syncedVersion;
         return this;
     }
@@ -137,7 +107,7 @@ public class CardEntity {
         return createdAt;
     }
 
-    public CardEntity setCreatedAt(@NonNull Long createdAt) {
+    public CardNotificationEntity setCreatedAt(@NonNull Long createdAt) {
         this.createdAt = createdAt;
         return this;
     }
@@ -147,10 +117,9 @@ public class CardEntity {
         return updatedAt;
     }
 
-    public CardEntity setUpdatedAt(@NonNull Long updatedAt) {
+    public CardNotificationEntity setUpdatedAt(@NonNull Long updatedAt) {
         this.updatedAt = updatedAt;
         return this;
     }
-
 }
 

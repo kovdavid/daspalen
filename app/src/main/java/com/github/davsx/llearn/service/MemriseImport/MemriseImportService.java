@@ -1,8 +1,8 @@
 package com.github.davsx.llearn.service.MemriseImport;
 
 import android.support.v4.util.Pair;
-import com.github.davsx.llearn.persistence.entity.CardEntity;
-import com.github.davsx.llearn.persistence.repository.CardRepository;
+import com.github.davsx.llearn.persistence.entity.CardEntityOld;
+import com.github.davsx.llearn.persistence.repository.CardRepositoryOld;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -12,11 +12,11 @@ import java.util.List;
 
 public class MemriseImportService {
 
-    private CardRepository cardRepository;
+    private CardRepositoryOld cardRepository;
     private Integer currentCard = 0;
     private List<Pair<String, String>> cards = new ArrayList<>();
 
-    public MemriseImportService(CardRepository cardRepository) {
+    public MemriseImportService(CardRepositoryOld cardRepository) {
         this.cardRepository = cardRepository;
     }
 
@@ -52,12 +52,12 @@ public class MemriseImportService {
         currentCard++;
     }
 
-    public CardEntity findDuplicateCard(String front, String back) {
+    public CardEntityOld findDuplicateCard(String front, String back) {
         return cardRepository.findDuplicateCard(front, back);
     }
 
     public void saveCard(String front, String back) {
-        CardEntity card = new CardEntity()
+        CardEntityOld card = new CardEntityOld()
                 .setFront(front)
                 .setBack(back)
                 .setCreatedAt(System.currentTimeMillis())
