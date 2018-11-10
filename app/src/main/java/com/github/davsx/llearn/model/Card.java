@@ -7,9 +7,9 @@ import com.github.davsx.llearn.persistence.entity.CardQuizEntity;
 
 public class Card {
 
-    boolean cardEntityChanged = false;
-    boolean cardQuizEntityChanged = false;
-    boolean cardNotificationEntityChanged = false;
+    private boolean cardEntityChanged = false;
+    private boolean cardQuizEntityChanged = false;
+    private boolean cardNotificationEntityChanged = false;
     private CardEntity cardEntity;
     private CardQuizEntity cardQuizEntity;
     private CardNotificationEntity cardNotificationEntity;
@@ -28,6 +28,33 @@ public class Card {
                 .setSyncedVersion(0);
         CardQuizEntity cardQuizEntity = new CardQuizEntity()
                 .setQuizType(LLearnConstants.CARD_TYPE_INCOMPLETE)
+                .setCreatedAt(System.currentTimeMillis())
+                .setLocalVersion(1)
+                .setSyncedVersion(0);
+        CardNotificationEntity cardNotificationEntity = new CardNotificationEntity()
+                .setCreatedAt(System.currentTimeMillis())
+                .setLocalVersion(1)
+                .setSyncedVersion(0);
+
+        Card c = new Card(cardEntity, cardQuizEntity, cardNotificationEntity);
+
+        c.cardEntityChanged = true;
+        c.cardQuizEntityChanged = true;
+        c.cardNotificationEntityChanged = true;
+
+        return c;
+    }
+
+    public static Card createFromMemrise(String frontText, String backText) {
+        CardEntity cardEntity = new CardEntity()
+                .setFrontText(frontText)
+                .setBackText(backText)
+                .setCreatedAt(System.currentTimeMillis())
+                .setLocalVersion(1)
+                .setSyncedVersion(0);
+        CardQuizEntity cardQuizEntity = new CardQuizEntity()
+                .setQuizType(LLearnConstants.CARD_TYPE_LEARN)
+                .setLearnScore(0)
                 .setCreatedAt(System.currentTimeMillis())
                 .setLocalVersion(1)
                 .setSyncedVersion(0);
@@ -96,11 +123,11 @@ public class Card {
         return cardEntityChanged;
     }
 
-    public boolean isCardQuizEntityChanged() {
-        return cardQuizEntityChanged;
-    }
-
     public boolean isCardNotificationEntityChanged() {
         return cardNotificationEntityChanged;
+    }
+
+    public boolean isCardQuizEntityChanged() {
+        return cardQuizEntityChanged;
     }
 }

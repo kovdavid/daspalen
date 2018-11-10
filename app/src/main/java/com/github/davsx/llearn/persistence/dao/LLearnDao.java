@@ -1,10 +1,12 @@
 package com.github.davsx.llearn.persistence.dao;
 
 import android.arch.persistence.room.*;
+import com.github.davsx.llearn.model.Card;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
 import com.github.davsx.llearn.persistence.entity.CardNotificationEntity;
 import com.github.davsx.llearn.persistence.entity.CardQuizEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Dao
@@ -20,13 +22,22 @@ public abstract class LLearnDao {
     public abstract CardNotificationEntity getCardNotificationEntity(long cardId);
 
     @Insert
-    public abstract long[] insertManyCardEntities(List<CardEntity> cardEntities);
+    abstract long[] insertManyCardEntities(List<CardEntity> cardEntities);
 
     @Insert
-    public abstract void insertManyCardQuizEntities(List<CardQuizEntity> cardQuizEntities);
+    abstract void insertManyCardQuizEntities(List<CardQuizEntity> cardQuizEntities);
 
     @Insert
-    public abstract void insertManyCardNotificationEntities(List<CardNotificationEntity> cardNotificationEntities);
+    abstract void insertManyCardNotificationEntities(List<CardNotificationEntity> cardNotificationEntities);
+
+    @Insert
+    abstract long insertCardEntity(CardEntity cardEntity);
+
+    @Insert
+    abstract void insertCardQuizEntity(CardQuizEntity cardQuizEntity);
+
+    @Insert
+    abstract void insertCardNotificationEntity(CardNotificationEntity cardNotificationEntity);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract void updateCardEntity(CardEntity cardEntity);
@@ -101,6 +112,43 @@ public abstract class LLearnDao {
         if (cardEntity != null) deleteCardEntity(cardEntity);
         if (cardQuizEntity != null) deleteCardQuizEntity(cardQuizEntity);
         if (cardNotificationEntity != null) deleteCardNotificationEntity(cardNotificationEntity);
+    }
+
+    @Query("SELECT * FROM card WHERE front_text = :frontText OR back_text = :backText")
+    public abstract CardEntity findDuplicateCardEntity(String frontText, String backText);
+
+    @Transaction
+    public void createNewCard(Card card) {
+        CardEntity cardEntity = card.getCardEntity();
+        CardQuizEntity cardQuizEntity = card.getCardQuizEntity();
+        CardNotificationEntity cardNotificationEntity = card.getCardNotificationEntity();
+
+        long id = insertCardEntity(cardEntity);
+        insertCardQuizEntity(cardQuizEntity.setCardId(id));
+        insertCardNotificationEntity(cardNotificationEntity.setCardId(id));
+    };
+
+    @Transaction
+    public void createNewCards(ArrayList<Card> newCards) {
+        List<CardEntity> cardEntities = new ArrayList<>();
+        List<CardQuizEntity> cardQuizEntities = new ArrayList<>();
+        List<CardNotificationEntity> cardNotificationEntities = new ArrayList<>();
+        for (Card card : newCards) {
+            cardEntities.add(card.getCardEntity());
+            cardQuizEntities.add(card.getCardQuizEntity());
+            cardNotificationEntities.add(card.getCardNotificationEntity());
+        }
+
+        long[] ids = insertManyCardEntities(cardEntities);
+        for (int i = 0; i < ids.length; i++) {
+            long id = ids[i];
+            cardEntities.get(i).setCardId(id);
+            cardQuizEntities.get(i).setCardId(id);
+            cardNotificationEntities.get(i).setCardId(id);
+        }
+
+        insertManyCardQuizEntities(cardQuizEntities);
+        insertManyCardNotificationEntities(cardNotificationEntities);
     }
 
     @Query("SELECT count(*) FROM card")

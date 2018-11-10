@@ -1,8 +1,9 @@
 package com.github.davsx.llearn.service.MemriseImport;
 
 import android.support.v4.util.Pair;
-import com.github.davsx.llearn.persistence.entity.CardEntityOld;
-import com.github.davsx.llearn.persistence.repository.CardRepositoryOld;
+import com.github.davsx.llearn.model.Card;
+import com.github.davsx.llearn.persistence.entity.CardEntity;
+import com.github.davsx.llearn.persistence.repository.LLearnRepository;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -12,12 +13,12 @@ import java.util.List;
 
 public class MemriseImportService {
 
-    private CardRepositoryOld cardRepository;
+    private LLearnRepository repository;
     private Integer currentCard = 0;
     private List<Pair<String, String>> cards = new ArrayList<>();
 
-    public MemriseImportService(CardRepositoryOld cardRepository) {
-        this.cardRepository = cardRepository;
+    public MemriseImportService(LLearnRepository repository) {
+        this.repository = repository;
     }
 
     public void startImport(InputStream inputStream) {
@@ -52,17 +53,13 @@ public class MemriseImportService {
         currentCard++;
     }
 
-    public CardEntityOld findDuplicateCard(String front, String back) {
-        return cardRepository.findDuplicateCard(front, back);
+    public CardEntity findDuplicateCardEntity(String frontText, String backText) {
+        return repository.findDuplicateCardEntity(frontText, backText);
     }
 
-    public void saveCard(String front, String back) {
-        CardEntityOld card = new CardEntityOld()
-                .setFront(front)
-                .setBack(back)
-                .setCreatedAt(System.currentTimeMillis())
-                .setLearnScore(0);
-        cardRepository.save(card);
+    public void createCard(String frontText, String backText) {
+        Card card = Card.createFromMemrise(frontText, backText);
+        repository.createNewCard(card);
 
         currentCard++;
     }

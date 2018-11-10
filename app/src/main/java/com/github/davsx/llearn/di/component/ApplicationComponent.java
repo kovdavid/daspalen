@@ -28,7 +28,7 @@ import javax.inject.Singleton;
         CardImageModule.class,
         SpeakerModule.class,
         CardExportModule.class,
-        MemriseImportModule.class,
+        MemriseImportServiceModule.class,
         SettingsModule.class,
         CardImportModule.class
 })

@@ -12,7 +12,7 @@ import android.widget.*;
 import com.github.davsx.llearn.LLearnApplication;
 import com.github.davsx.llearn.LLearnConstants;
 import com.github.davsx.llearn.R;
-import com.github.davsx.llearn.persistence.entity.CardEntityOld;
+import com.github.davsx.llearn.persistence.entity.CardEntity;
 import com.github.davsx.llearn.service.MemriseImport.MemriseImportService;
 
 import javax.inject.Inject;
@@ -78,7 +78,7 @@ public class MemriseImportActivity extends Activity {
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (saveCard()) {
+                if (createCard()) {
                     showNextCard();
                 }
             }
@@ -123,7 +123,7 @@ public class MemriseImportActivity extends Activity {
         }
     }
 
-    private boolean saveCard() {
+    private boolean createCard() {
         String frontText = editTextFront.getText().toString();
         String backText = editTextBack.getText().toString();
 
@@ -131,17 +131,17 @@ public class MemriseImportActivity extends Activity {
             return false;
         }
 
-        CardEntityOld duplicateCard = memriseImportService.findDuplicateCard(frontText, backText);
+        CardEntity duplicateCard = memriseImportService.findDuplicateCardEntity(frontText, backText);
         if (duplicateCard == null) {
-            memriseImportService.saveCard(frontText, backText);
+            memriseImportService.createCard(frontText, backText);
             return true;
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             String dialogMessage = String.format(
                     "The current card cannot be saved, because a duplicate card was found:<br /><br />Front<br " +
                             "/><b>%s</b><br />Back<br /><b>%s</b>",
-                    duplicateCard.getFront(),
-                    duplicateCard.getBack());
+                    duplicateCard.getFrontText(),
+                    duplicateCard.getBackText());
             builder.setTitle("Error")
                     .setMessage(Html.fromHtml(dialogMessage))
                     .setPositiveButton("Ok", null)
@@ -151,7 +151,7 @@ public class MemriseImportActivity extends Activity {
     }
 
     private void loadAllCards() {
-        while (saveCard()) {
+        while (createCard()) {
             showNextCard();
         }
     }

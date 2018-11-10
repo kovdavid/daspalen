@@ -9,9 +9,7 @@ import com.github.davsx.llearn.persistence.entity.CardNotificationEntity;
 import com.github.davsx.llearn.persistence.entity.CardQuizEntity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class LLearnRepository {
 
@@ -26,31 +24,18 @@ public class LLearnRepository {
     }
 
     public void createNewCards(ArrayList<Card> newCards) {
-        List<CardEntity> cardEntities = new ArrayList<>();
-        List<CardQuizEntity> cardQuizEntities = new ArrayList<>();
-        List<CardNotificationEntity> cardNotificationEntities = new ArrayList<>();
-        for (Card card : newCards) {
-            cardEntities.add(card.getCardEntity());
-            cardQuizEntities.add(card.getCardQuizEntity());
-            cardNotificationEntities.add(card.getCardNotificationEntity());
-        }
+        dao.createNewCards(newCards);
+    }
 
-        long[] ids = dao.insertManyCardEntities(cardEntities);
-        for (int i = 0; i < ids.length; i++) {
-            long id = ids[i];
-            cardEntities.get(i).setCardId(id);
-            cardQuizEntities.get(i).setCardId(id);
-            cardNotificationEntities.get(i).setCardId(id);
-        }
-
-        dao.insertManyCardQuizEntities(cardQuizEntities);
-        dao.insertManyCardNotificationEntities(cardNotificationEntities);
+    public void createNewCard(Card card) {
+        dao.createNewCard(card);
     }
 
     public void updateCard(Card card) {
         CardEntity cardEntity = card.isCardEntityChanged() ? card.getCardEntity() : null;
         CardQuizEntity cardQuizEntity = card.isCardQuizEntityChanged() ? card.getCardQuizEntity() : null;
-        CardNotificationEntity cardNotificationEntity = card.isCardNotificationEntityChanged() ? card.getCardNotificationEntity() : null;
+        CardNotificationEntity cardNotificationEntity = card.isCardNotificationEntityChanged() ?
+                card.getCardNotificationEntity() : null;
         dao.updateCard(cardEntity, cardQuizEntity, cardNotificationEntity);
     }
 
@@ -110,6 +95,10 @@ public class LLearnRepository {
         }
 
         return cards;
+    }
+
+    public CardEntity findDuplicateCardEntity(String frontText, String backText) {
+        return dao.findDuplicateCardEntity(frontText, backText);
     }
 
     public int getAllCardCount() {
