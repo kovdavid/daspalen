@@ -1,4 +1,4 @@
-package com.github.davsx.llearn.activities.CardExport;
+package com.github.davsx.llearn.activities.BackupCreate;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,39 +14,39 @@ import android.widget.Toast;
 import com.github.davsx.llearn.LLearnApplication;
 import com.github.davsx.llearn.LLearnConstants;
 import com.github.davsx.llearn.R;
-import com.github.davsx.llearn.service.CardExport.CardExportService;
+import com.github.davsx.llearn.service.BackupCreate.BackupCreateService;
 import com.github.lzyzsd.circleprogress.CircleProgress;
 
 import javax.inject.Inject;
 import java.io.FileNotFoundException;
 import java.io.OutputStream;
 
-public class CardExportActivity extends AppCompatActivity implements View.OnClickListener {
+public class BackupCreateActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Inject
-    CardExportService cardExportService;
+    BackupCreateService backupCreateService;
 
     private CircleProgress progressBar;
     private TextView textViewInfo;
-    private Button buttonExport;
+    private Button buttonCreate;
 
-    private ExportStatus exportStatus;
+    private BackupStatus backupStatus;
 
-    private AsyncTask<OutputStream, AsyncProgress, Boolean> exportTask;
+    private AsyncTask<OutputStream, AsyncProgress, Boolean> backupTask;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_card_export);
+        setContentView(R.layout.activity_backup_create);
 
         ((LLearnApplication) getApplication()).getApplicationComponent().inject(this);
 
         progressBar = findViewById(R.id.progress_bar);
         textViewInfo = findViewById(R.id.textview_info);
-        buttonExport = findViewById(R.id.button_export);
-        buttonExport.setOnClickListener(this);
+        buttonCreate = findViewById(R.id.button_export);
+        buttonCreate.setOnClickListener(this);
 
-        exportStatus = ExportStatus.EXPORT_NOT_STARTED;
+        backupStatus = BackupStatus.BACKUP_NOT_STARTED;
 
         updateViews();
     }
@@ -55,39 +55,39 @@ public class CardExportActivity extends AppCompatActivity implements View.OnClic
     protected void onDestroy() {
         super.onDestroy();
 
-        if (exportTask != null) {
-            exportTask.cancel(true);
+        if (backupTask != null) {
+            backupTask.cancel(true);
         }
     }
 
     private void updateViews() {
-        if (exportStatus.equals(ExportStatus.EXPORT_NOT_STARTED)) {
-            textViewInfo.setText("Export cards");
-            buttonExport.setText("Export cards");
-        } else if (exportStatus.equals(ExportStatus.EXPORT_RUNNING)) {
-            buttonExport.setText("Cancel export");
-        } else if (exportStatus.equals(ExportStatus.EXPORT_CANCELLED)) {
-            textViewInfo.setText("Export cancelled");
-            buttonExport.setText("Export cards");
-        } else if (exportStatus.equals(ExportStatus.EXPORT_FINISHED)) {
-            textViewInfo.setText("Export finished");
-            buttonExport.setText("Export cards");
+        if (backupStatus.equals(BackupStatus.BACKUP_NOT_STARTED)) {
+            textViewInfo.setText("Create backup");
+            buttonCreate.setText("Create backup");
+        } else if (backupStatus.equals(BackupStatus.BACKUP_RUNNING)) {
+            buttonCreate.setText("Cancel backup");
+        } else if (backupStatus.equals(BackupStatus.BACKUP_CANCELLED)) {
+            textViewInfo.setText("Backup cancelled");
+            buttonCreate.setText("Create backup");
+        } else if (backupStatus.equals(BackupStatus.BACKUP_CREATED)) {
+            textViewInfo.setText("Backup created");
+            buttonCreate.setText("Create backup");
         }
     }
 
     @Override
     public void onClick(View v) {
-        if (exportStatus.equals(ExportStatus.EXPORT_RUNNING)) {
-            if (exportTask != null) {
-                exportTask.cancel(true);
+        if (backupStatus.equals(BackupStatus.BACKUP_RUNNING)) {
+            if (backupTask != null) {
+                backupTask.cancel(true);
             }
-            exportStatus = ExportStatus.EXPORT_CANCELLED;
+            backupStatus = BackupStatus.BACKUP_CANCELLED;
             updateViews();
         } else {
             Intent i = new Intent(Intent.ACTION_CREATE_DOCUMENT);
             i.addCategory(Intent.CATEGORY_OPENABLE);
             i.setType("application/zip");
-            i.putExtra(Intent.EXTRA_TITLE, cardExportService.getDefaultFileName());
+            i.putExtra(Intent.EXTRA_TITLE, backupCreateService.getDefaultFileName());
             startActivityForResult(i, LLearnConstants.REQUEST_CODE_CREATE_DOCUMENT);
         }
     }
@@ -101,33 +101,33 @@ public class CardExportActivity extends AppCompatActivity implements View.OnClic
                 if (data != null) {
                     Uri uri = data.getData();
                     if (uri != null) {
-                        doExport(uri);
+                        createBackup(uri);
                     }
                 }
             }
         }
     }
 
-    private void doExport(Uri uri) {
+    private void createBackup(Uri uri) {
         OutputStream outputStream;
         try {
             outputStream = getContentResolver().openOutputStream(uri);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             Toast.makeText(this, "Could not create file", Toast.LENGTH_SHORT).show();
-            exportStatus = ExportStatus.EXPORT_CANCELLED;
+            backupStatus = BackupStatus.BACKUP_CANCELLED;
             updateViews();
             return;
         }
 
-        exportTask = new ExportTask().execute(outputStream);
+        backupTask = new BackupCreateTask().execute(outputStream);
     }
 
-    private enum ExportStatus {
-        EXPORT_NOT_STARTED,
-        EXPORT_RUNNING,
-        EXPORT_CANCELLED,
-        EXPORT_FINISHED
+    private enum BackupStatus {
+        BACKUP_NOT_STARTED,
+        BACKUP_RUNNING,
+        BACKUP_CANCELLED,
+        BACKUP_CREATED
     }
 
     private class AsyncProgress {
@@ -140,25 +140,26 @@ public class CardExportActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private class ExportTask extends AsyncTask<OutputStream, AsyncProgress, Boolean> {
+    private class BackupCreateTask extends AsyncTask<OutputStream, AsyncProgress, Boolean> {
         @Override
         protected Boolean doInBackground(OutputStream... outputStreams) {
-            cardExportService.startExport(outputStreams[0]);
+            backupCreateService.startBackup(outputStreams[0]);
 
             boolean run;
             do {
-                run = cardExportService.doNextChunk();
-                publishProgress(new AsyncProgress(cardExportService.getCurrentProgress(), cardExportService.getStatus()));
+                run = backupCreateService.doNextChunk();
+                publishProgress(new AsyncProgress(backupCreateService.getCurrentProgress(),
+                        backupCreateService.getStatus()));
             } while (run);
 
-            return cardExportService.getFinished();
+            return backupCreateService.getFinished();
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
 
-            exportStatus = ExportStatus.EXPORT_RUNNING;
+            backupStatus = BackupStatus.BACKUP_RUNNING;
             progressBar.setMax(100);
 
             updateViews();
@@ -168,7 +169,7 @@ public class CardExportActivity extends AppCompatActivity implements View.OnClic
         protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
 
-            exportStatus = result ? ExportStatus.EXPORT_FINISHED : ExportStatus.EXPORT_CANCELLED;
+            backupStatus = result ? BackupStatus.BACKUP_CREATED : BackupStatus.BACKUP_CANCELLED;
             updateViews();
         }
 
@@ -183,7 +184,7 @@ public class CardExportActivity extends AppCompatActivity implements View.OnClic
         @Override
         protected void onCancelled() {
             super.onCancelled();
-            cardExportService.cancelExport();
+            backupCreateService.cancelBackup();
         }
     }
 }

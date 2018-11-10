@@ -10,7 +10,7 @@ import dagger.Provides;
 @Module(includes = {
         LLearnRepositoryModule.class,
         JournalRepositoryModule.class,
-        CardImageModule.class
+        CardImageServiceModule.class
 })
 public class ReviewQuizModule {
     @Provides

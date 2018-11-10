@@ -14,7 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import com.github.davsx.llearn.LLearnApplication;
 import com.github.davsx.llearn.R;
-import com.github.davsx.llearn.activities.CardExport.CardExportActivity;
+import com.github.davsx.llearn.activities.BackupCreate.BackupCreateActivity;
 import com.github.davsx.llearn.activities.CardImport.CardImportActivity;
 import com.github.davsx.llearn.activities.LearnQuiz.LearnQuizActivity;
 import com.github.davsx.llearn.activities.ManageCards.ManageCardsActivity;
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_export_data:
-                MainActivity.this.startActivity(new Intent(MainActivity.this, CardExportActivity.class));
+                MainActivity.this.startActivity(new Intent(MainActivity.this, BackupCreateActivity.class));
                 break;
             case R.id.action_import_data:
                 MainActivity.this.startActivity(new Intent(MainActivity.this, CardImportActivity.class));

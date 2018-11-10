@@ -5,7 +5,6 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
-import com.opencsv.bean.CsvBindByPosition;
 
 @Entity(
         tableName = "card",
@@ -19,49 +18,50 @@ public class CardEntity {
 
     @PrimaryKey
     @ColumnInfo(name = "id_card")
-    @CsvBindByPosition(position = 0)
     public Long cardId;
 
     @NonNull
     @ColumnInfo(name = "front_text")
-    @CsvBindByPosition(position = 1)
     public String frontText = "";
 
     @NonNull
     @ColumnInfo(name = "back_text")
-    @CsvBindByPosition(position = 2)
     public String backText = "";
 
     @ColumnInfo(name = "image_hash")
-    @CsvBindByPosition(position = 3)
     public String imageHash = null;
 
     @NonNull
     @ColumnInfo(name = "enabled")
-    @CsvBindByPosition(position = 4)
     public Boolean enabled = true;
 
     @NonNull
     @ColumnInfo(name = "local_version")
-    @CsvBindByPosition(position = 5)
     public Integer localVersion = 0;
 
     @NonNull
     @ColumnInfo(name = "synced_version")
-    @CsvBindByPosition(position = 6)
     public Integer syncedVersion = 0;
 
     @NonNull
     @ColumnInfo(name = "created_at")
-    @CsvBindByPosition(position = 7)
     public Long createdAt = System.currentTimeMillis();
 
     @NonNull
     @ColumnInfo(name = "updated_at")
-    @CsvBindByPosition(position = 8)
     public Long updatedAt = System.currentTimeMillis();
 
     public CardEntity() {
+    }
+
+    @NonNull
+    public String getBackText() {
+        return backText;
+    }
+
+    public CardEntity setBackText(@NonNull String backText) {
+        this.backText = backText;
+        return this;
     }
 
     public Long getCardId() {
@@ -70,6 +70,26 @@ public class CardEntity {
 
     public CardEntity setCardId(Long cardId) {
         this.cardId = cardId;
+        return this;
+    }
+
+    @NonNull
+    public Long getCreatedAt() {
+        return createdAt;
+    }
+
+    public CardEntity setCreatedAt(@NonNull Long createdAt) {
+        this.createdAt = createdAt;
+        return this;
+    }
+
+    @NonNull
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public CardEntity setEnabled(@NonNull Boolean enabled) {
+        this.enabled = enabled;
         return this;
     }
 
@@ -83,32 +103,12 @@ public class CardEntity {
         return this;
     }
 
-    @NonNull
-    public String getBackText() {
-        return backText;
-    }
-
-    public CardEntity setBackText(@NonNull String backText) {
-        this.backText = backText;
-        return this;
-    }
-
     public String getImageHash() {
         return imageHash;
     }
 
     public CardEntity setImageHash(String imageHash) {
         this.imageHash = imageHash;
-        return this;
-    }
-
-    @NonNull
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public CardEntity setEnabled(@NonNull Boolean enabled) {
-        this.enabled = enabled;
         return this;
     }
 
@@ -129,16 +129,6 @@ public class CardEntity {
 
     public CardEntity setSyncedVersion(@NonNull Integer syncedVersion) {
         this.syncedVersion = syncedVersion;
-        return this;
-    }
-
-    @NonNull
-    public Long getCreatedAt() {
-        return createdAt;
-    }
-
-    public CardEntity setCreatedAt(@NonNull Long createdAt) {
-        this.createdAt = createdAt;
         return this;
     }
 

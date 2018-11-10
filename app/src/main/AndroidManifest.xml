@@ -73,7 +73,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".activities.CardExport.CardExportActivity"
+                android:name=".activities.BackupCreate.BackupCreateActivity"
                 android:launchMode="singleTask"
                 android:parentActivityName=".activities.Main.MainActivity"
                 >

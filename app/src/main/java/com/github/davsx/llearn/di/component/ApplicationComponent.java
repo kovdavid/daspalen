@@ -1,8 +1,8 @@
 package com.github.davsx.llearn.di.component;
 
 import com.github.davsx.llearn.LLearnApplication;
+import com.github.davsx.llearn.activities.BackupCreate.BackupCreateActivity;
 import com.github.davsx.llearn.activities.CardEditor.CardEditorActivity;
-import com.github.davsx.llearn.activities.CardExport.CardExportActivity;
 import com.github.davsx.llearn.activities.CardImport.CardImportActivity;
 import com.github.davsx.llearn.activities.KindleImport.KindleImportActivity;
 import com.github.davsx.llearn.activities.LearnQuiz.LearnQuizActivity;
@@ -25,9 +25,9 @@ import javax.inject.Singleton;
         LearnQuizModule.class,
         ReviewQuizModule.class,
         ManageCardsServiceModule.class,
-        CardImageModule.class,
+        CardImageServiceModule.class,
         SpeakerModule.class,
-        CardExportModule.class,
+        BackupCreateServiceModule.class,
         MemriseImportServiceModule.class,
         SettingsModule.class,
         CardImportModule.class
@@ -48,7 +48,7 @@ public interface ApplicationComponent {
 
     void inject(CardEditorActivity activity);
 
-    void inject(CardExportActivity activity);
+    void inject(BackupCreateActivity activity);
 
     void inject(CardImportActivity activity);
 

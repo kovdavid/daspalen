@@ -23,7 +23,7 @@
             android:textSize="24sp"
             android:gravity="center"
             android:textStyle="bold"
-            android:text="Exporting cards"
+            android:text="Create backup"
             />
 
     <Button
@@ -38,7 +38,7 @@
             android:textSize="20sp"
             android:padding="16dp"
             android:textAllCaps="false"
-            android:text="Export cards"
+            android:text="Create backup"
             />
 
 </android.support.constraint.ConstraintLayout>

@@ -30,7 +30,7 @@ public class WordOfTheDayAlarmService {
 
     public static void setNextAlarm(Context context, SettingsService settingsService) {
 
-        Boolean notificationEnabled = settingsService.getNotificationEnabled();
+        Boolean notificationEnabled = settingsService.getCardNotificationEnabled();
 
         PendingIntent pi = getPendingIntent(context);
         if (pi != null) {
@@ -55,10 +55,10 @@ public class WordOfTheDayAlarmService {
     }
 
     private static boolean validateSettings(SettingsService settingsService) {
-        Integer fromHour = settingsService.getNotificationFromHour();
-        Integer fromMinute = settingsService.getNotificationFromMinute();
-        Integer toHour = settingsService.getNotificationToHour();
-        Integer toMinute = settingsService.getNotificationToMinute();
+        Integer fromHour = settingsService.getCardNotificationFromHour();
+        Integer fromMinute = settingsService.getCardNotificationFromMinute();
+        Integer toHour = settingsService.getCardNotificationToHour();
+        Integer toMinute = settingsService.getCardNotificationToMinute();
 
         return fromHour < toHour || (fromHour.equals(toHour) && toMinute - fromMinute > 10);
     }
@@ -67,13 +67,13 @@ public class WordOfTheDayAlarmService {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
 
-        calendar.add(Calendar.HOUR, settingsService.getNotificationIntervalHour());
-        calendar.add(Calendar.MINUTE, settingsService.getNotificationIntervalMinute());
+        calendar.add(Calendar.HOUR, settingsService.getCardNotificationIntervalHour());
+        calendar.add(Calendar.MINUTE, settingsService.getCardNotificationIntervalMinute());
 
-        Integer fromHour = settingsService.getNotificationFromHour();
-        Integer fromMinute = settingsService.getNotificationFromMinute();
-        Integer toHour = settingsService.getNotificationToHour();
-        Integer toMinute = settingsService.getNotificationToMinute();
+        Integer fromHour = settingsService.getCardNotificationFromHour();
+        Integer fromMinute = settingsService.getCardNotificationFromMinute();
+        Integer toHour = settingsService.getCardNotificationToHour();
+        Integer toMinute = settingsService.getCardNotificationToMinute();
 
         while (!isWithinLimits(calendar, fromHour, fromMinute, toHour, toMinute)) {
             calendar.add(Calendar.MINUTE, 10);

@@ -72,6 +72,9 @@ public abstract class LLearnDao {
     @Query("SELECT * FROM card_notification WHERE id_card IN (:cardIds)")
     public abstract List<CardNotificationEntity> getCardNotificationEntitiesById(List<Long> cardIds);
 
+    @Query("SELECT count(*) FROM card")
+    public abstract int getAllCardCount();
+
     @Query("SELECT count(*) FROM card c JOIN card_quiz cq USING(id_card)"
             + " WHERE cq.quiz_type = :quizType AND c.enabled = 1")
     public abstract int getCardCountByQuizType(int quizType);
@@ -150,8 +153,5 @@ public abstract class LLearnDao {
         insertManyCardQuizEntities(cardQuizEntities);
         insertManyCardNotificationEntities(cardNotificationEntities);
     }
-
-    @Query("SELECT count(*) FROM card")
-    public abstract int getAllCardCount();
 
 }

@@ -6,7 +6,6 @@ import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 import com.github.davsx.llearn.LLearnConstants;
-import com.opencsv.bean.CsvBindByPosition;
 
 @Entity(
         tableName = "card_quiz",
@@ -20,72 +19,58 @@ public class CardQuizEntity {
 
     @PrimaryKey
     @ColumnInfo(name = "id_card")
-    @CsvBindByPosition(position = 0)
     public Long cardId;
 
     @NonNull
     @ColumnInfo(name = "quiz_type")
-    @CsvBindByPosition(position = 1)
     public Integer quizType = LLearnConstants.CARD_TYPE_INCOMPLETE;
 
     @NonNull
     @ColumnInfo(name = "quiz_type_changes")
-    @CsvBindByPosition(position = 2)
     public Integer quizTypeChanges = 0;
 
     @NonNull
     @ColumnInfo(name = "learn_score")
-    @CsvBindByPosition(position = 3)
     public Integer learnScore = 0;
 
     @NonNull
     @ColumnInfo(name = "last_learn_quiz_at")
-    @CsvBindByPosition(position = 4)
     public Long lastLearnQuizAt = System.currentTimeMillis();
 
     @NonNull
     @ColumnInfo(name = "last_review_at")
-    @CsvBindByPosition(position = 5)
     public Long lastReviewAt = System.currentTimeMillis();
 
     @NonNull
     @ColumnInfo(name = "next_review_at")
-    @CsvBindByPosition(position = 6)
     public Long nextReviewAt = System.currentTimeMillis();
 
     @NonNull
     @ColumnInfo(name = "review_interval_multiplier")
-    @CsvBindByPosition(position = 7)
     public Double reviewIntervalMultiplier = 0.0;
 
     @NonNull
     @ColumnInfo(name = "bad_reviews")
-    @CsvBindByPosition(position = 8)
     public Integer badReviews = 0;
 
     @NonNull
     @ColumnInfo(name = "good_reviews")
-    @CsvBindByPosition(position = 9)
     public Integer goodReviews = 0;
 
     @NonNull
     @ColumnInfo(name = "local_version")
-    @CsvBindByPosition(position = 10)
     public Integer localVersion = 0;
 
     @NonNull
     @ColumnInfo(name = "synced_version")
-    @CsvBindByPosition(position = 11)
     public Integer syncedVersion = 0;
 
     @NonNull
     @ColumnInfo(name = "created_at")
-    @CsvBindByPosition(position = 12)
     public Long createdAt = System.currentTimeMillis();
 
     @NonNull
     @ColumnInfo(name = "updated_at")
-    @CsvBindByPosition(position = 13)
     public Long updatedAt = System.currentTimeMillis();
 
     public CardQuizEntity() {

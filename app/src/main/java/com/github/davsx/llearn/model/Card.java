@@ -4,14 +4,19 @@ import com.github.davsx.llearn.LLearnConstants;
 import com.github.davsx.llearn.persistence.entity.CardEntity;
 import com.github.davsx.llearn.persistence.entity.CardNotificationEntity;
 import com.github.davsx.llearn.persistence.entity.CardQuizEntity;
+import com.google.gson.annotations.Expose;
 
 public class Card {
 
     private boolean cardEntityChanged = false;
     private boolean cardQuizEntityChanged = false;
     private boolean cardNotificationEntityChanged = false;
+
+    @Expose
     private CardEntity cardEntity;
+    @Expose
     private CardQuizEntity cardQuizEntity;
+    @Expose
     private CardNotificationEntity cardNotificationEntity;
 
     public Card(CardEntity cardEntity, CardQuizEntity cardQuizEntity, CardNotificationEntity cardNotificationEntity) {

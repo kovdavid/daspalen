@@ -8,7 +8,7 @@ import dagger.Provides;
 
 @Module(includes = {
         LLearnRepositoryModule.class,
-        CardImageModule.class
+        CardImageServiceModule.class
 })
 public class MainActivityServiceModule {
 

@@ -64,7 +64,7 @@ public class SettingsActivity extends AppCompatActivity {
         checkBoxWordOfTheDayEnable.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                settingsService.setNotificationEnabled(isChecked);
+                settingsService.setCardNotificationEnabled(isChecked);
             }
         });
 
@@ -90,7 +90,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 setNotificationInterval(hourOfDay, minute);
             }
-        }, settingsService.getNotificationIntervalHour(), settingsService.getNotificationIntervalMinute(), true);
+        }, settingsService.getCardNotificationIntervalHour(), settingsService.getCardNotificationIntervalMinute(), true);
         dialog.show();
     }
 
@@ -100,7 +100,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 setNotificationTo(hourOfDay, minute);
             }
-        }, settingsService.getNotificationToHour(), settingsService.getNotificationToMinute(), true);
+        }, settingsService.getCardNotificationToHour(), settingsService.getCardNotificationToMinute(), true);
         dialog.show();
     }
 
@@ -110,23 +110,23 @@ public class SettingsActivity extends AppCompatActivity {
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 setNotificationFrom(hourOfDay, minute);
             }
-        }, settingsService.getNotificationFromHour(), settingsService.getNotificationFromMinute(), true);
+        }, settingsService.getCardNotificationFromHour(), settingsService.getCardNotificationFromMinute(), true);
         dialog.show();
     }
 
     private void setNotificationInterval(int hour, int minute) {
-        settingsService.setNotificationInterval(hour, minute);
+        settingsService.setCardNotificationInterval(hour, minute);
         updateViews();
     }
 
     private void setNotificationFrom(int hour, int minute) {
-        Integer notificationToHour = settingsService.getNotificationToHour();
-        Integer notificationToMinute = settingsService.getNotificationToMinute();
+        Integer notificationToHour = settingsService.getCardNotificationToHour();
+        Integer notificationToMinute = settingsService.getCardNotificationToMinute();
         String notificationToString = String.format(Locale.getDefault(), "%02d:%02d", notificationToHour,
                 notificationToMinute);
 
         if (hour < notificationToHour || (hour == notificationToHour && minute < notificationToMinute)) {
-            settingsService.setNotificationFrom(hour, minute);
+            settingsService.setCardNotificationFrom(hour, minute);
         } else {
             Toast.makeText(this, "Notification start hour must be smaller than " + notificationToString,
                     Toast.LENGTH_SHORT).show();
@@ -136,13 +136,13 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void setNotificationTo(int hour, int minute) {
-        int notificationFromHour = settingsService.getNotificationFromHour();
-        int notificationFromMinute = settingsService.getNotificationFromMinute();
+        int notificationFromHour = settingsService.getCardNotificationFromHour();
+        int notificationFromMinute = settingsService.getCardNotificationFromMinute();
         String notificationFromString = String.format(Locale.getDefault(), "%02d:%02d", notificationFromHour,
                 notificationFromMinute);
 
         if (hour > notificationFromHour || (hour == notificationFromHour && minute > notificationFromMinute)) {
-            settingsService.setNotificationTo(hour, minute);
+            settingsService.setCardNotificationTo(hour, minute);
         } else {
             Toast.makeText(this, "Notification end hour must be bigger than " + notificationFromString,
                     Toast.LENGTH_SHORT).show();
@@ -153,18 +153,18 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void updateViews() {
         buttonNotificationFrom.setText(String.format(Locale.getDefault(), "%02d:%02d",
-                settingsService.getNotificationFromHour(),
-                settingsService.getNotificationFromMinute()));
+                settingsService.getCardNotificationFromHour(),
+                settingsService.getCardNotificationFromMinute()));
 
         buttonNotificationTo.setText(String.format(Locale.getDefault(), "%02d:%02d",
-                settingsService.getNotificationToHour(),
-                settingsService.getNotificationToMinute()));
+                settingsService.getCardNotificationToHour(),
+                settingsService.getCardNotificationToMinute()));
 
         buttonNotificationInterval.setText(String.format(Locale.getDefault(), "%02d:%02d",
-                settingsService.getNotificationIntervalHour(),
-                settingsService.getNotificationIntervalMinute()));
+                settingsService.getCardNotificationIntervalHour(),
+                settingsService.getCardNotificationIntervalMinute()));
 
-        checkBoxWordOfTheDayEnable.setChecked(settingsService.getNotificationEnabled());
+        checkBoxWordOfTheDayEnable.setChecked(settingsService.getCardNotificationEnabled());
     }
 
 }
