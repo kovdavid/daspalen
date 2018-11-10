@@ -9,6 +9,7 @@ import com.github.davsx.llearn.activities.LearnQuiz.LearnQuizActivity;
 import com.github.davsx.llearn.activities.Main.MainActivity;
 import com.github.davsx.llearn.activities.ManageCards.ManageCardsActivity;
 import com.github.davsx.llearn.activities.MemriseImport.MemriseImportActivity;
+import com.github.davsx.llearn.activities.ResetImages.ResetImagesActivity;
 import com.github.davsx.llearn.activities.ReviewQuiz.ReviewQuizActivity;
 import com.github.davsx.llearn.activities.Settings.SettingsActivity;
 import com.github.davsx.llearn.di.module.*;
@@ -54,6 +55,8 @@ public interface ApplicationComponent {
     void inject(ReviewQuizActivity activity);
 
     void inject(SettingsActivity activity);
+
+    void inject(ResetImagesActivity activity);
 
     void inject(WordOfTheDayNotificationService service);
 

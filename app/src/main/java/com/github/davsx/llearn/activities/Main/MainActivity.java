@@ -19,11 +19,13 @@ import com.github.davsx.llearn.activities.CardImport.CardImportActivity;
 import com.github.davsx.llearn.activities.LearnQuiz.LearnQuizActivity;
 import com.github.davsx.llearn.activities.ManageCards.ManageCardsActivity;
 import com.github.davsx.llearn.activities.MemriseImport.MemriseImportActivity;
+import com.github.davsx.llearn.activities.ResetImages.ResetImagesActivity;
 import com.github.davsx.llearn.activities.ReviewQuiz.ReviewQuizActivity;
 import com.github.davsx.llearn.activities.Settings.SettingsActivity;
 import com.github.davsx.llearn.persistence.repository.CardRepository;
 import com.github.davsx.llearn.persistence.repository.JournalRepository;
 import com.github.davsx.llearn.service.CardImage.CardImageService;
+import info.debatty.java.stringsimilarity.Main;
 
 import javax.inject.Inject;
 
@@ -80,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.startActivity(new Intent(MainActivity.this, MemriseImportActivity.class));
                 break;
             case R.id.action_reset_images:
-
+                MainActivity.this.startActivity(new Intent(MainActivity.this, ResetImagesActivity.class));
                 break;
             case R.id.action_wipe:
                 showWipeConfirmDialog(false);
