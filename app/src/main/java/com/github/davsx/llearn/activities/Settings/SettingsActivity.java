@@ -10,8 +10,8 @@ import android.view.View;
 import android.widget.*;
 import com.github.davsx.llearn.LLearnApplication;
 import com.github.davsx.llearn.R;
+import com.github.davsx.llearn.service.CardNotification.CardNotificationAlarmService;
 import com.github.davsx.llearn.service.Settings.SettingsService;
-import com.github.davsx.llearn.service.WordOfTheDay.WordOfTheDayAlarmService;
 
 import javax.inject.Inject;
 import java.util.Locale;
@@ -71,7 +71,7 @@ public class SettingsActivity extends AppCompatActivity {
         findViewById(R.id.button_reset_alarm).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WordOfTheDayAlarmService.resetAlarm(SettingsActivity.this, settingsService);
+                CardNotificationAlarmService.resetAlarm(SettingsActivity.this, settingsService);
             }
         });
 
@@ -81,7 +81,7 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        WordOfTheDayAlarmService.setNextAlarm(this, settingsService);
+        CardNotificationAlarmService.setNextAlarm(this, settingsService);
     }
 
     private void showNotificationIntervalTimePickerDialog() {

@@ -1,4 +1,4 @@
-package com.github.davsx.llearn.service.WordOfTheDay;
+package com.github.davsx.llearn.service.CardNotification;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -11,17 +11,17 @@ import android.text.Html;
 import com.github.davsx.llearn.LLearnApplication;
 import com.github.davsx.llearn.LLearnConstants;
 import com.github.davsx.llearn.R;
-import com.github.davsx.llearn.persistence.entity.CardEntityOld;
-import com.github.davsx.llearn.persistence.repository.CardRepositoryOld;
+import com.github.davsx.llearn.persistence.entity.CardEntity;
+import com.github.davsx.llearn.persistence.repository.LLearnRepository;
 import com.github.davsx.llearn.service.Settings.SettingsService;
 
 import javax.inject.Inject;
 import java.util.List;
 
-public class WordOfTheDayNotificationService extends BroadcastReceiver {
+public class CardNotificationService extends BroadcastReceiver {
 
     @Inject
-    CardRepositoryOld cardRepository;
+    LLearnRepository repository;
     @Inject
     SettingsService settingsService;
 
@@ -32,13 +32,14 @@ public class WordOfTheDayNotificationService extends BroadcastReceiver {
     }
 
     private void showNotification(Context context) {
-        List<CardEntityOld> cards = cardRepository.getRandomCards(1);
+        List<CardEntity> cards = repository.getRandomCardEntities(1);
         if (cards.size() == 0) {
             return;
         }
 
-        CardEntityOld card = cards.get(0);
-        String message = String.format("<b>Front:</b> %s<br /><b>Back:</b> %s", card.getFront(), card.getBack());
+        CardEntity card = cards.get(0);
+        String message = String.format("<b>Front:</b> %s<br /><b>Back:</b> %s",
+                card.getFrontText(), card.getBackText());
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context,
                 LLearnConstants.WORD_OF_THE_DAY_NOTIFICATION_CHANNEL);
@@ -67,7 +68,7 @@ public class WordOfTheDayNotificationService extends BroadcastReceiver {
 
         notificationManager.notify(0, builder.build());
 
-        WordOfTheDayAlarmService.resetAlarm(context, settingsService);
+        CardNotificationAlarmService.resetAlarm(context, settingsService);
     }
 
 }

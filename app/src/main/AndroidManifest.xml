@@ -125,7 +125,7 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
-        <receiver android:name=".service.WordOfTheDay.WordOfTheDayNotificationService">
+        <receiver android:name=".service.CardNotification.CardNotificationService">
             <intent-filter>
                 <action android:name="com.github.davsx.llearn.WordOfTheDay"/>
             </intent-filter>

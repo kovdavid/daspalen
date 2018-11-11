@@ -2,10 +2,8 @@ package com.github.davsx.llearn.service.ReviewQuiz;
 
 import android.util.Log;
 import com.github.davsx.llearn.LLearnConstants;
-import com.github.davsx.llearn.persistence.entity.CardEntityOld;
-import com.github.davsx.llearn.persistence.entity.JournalEntity;
-import com.github.davsx.llearn.persistence.repository.CardRepositoryOld;
-import com.github.davsx.llearn.persistence.repository.JournalRepository;
+import com.github.davsx.llearn.model.Card;
+import com.github.davsx.llearn.persistence.repository.LLearnRepository;
 import com.github.davsx.llearn.service.BaseQuiz.BaseQuizCardScheduler;
 import com.github.davsx.llearn.service.BaseQuiz.QuizData;
 import com.github.davsx.llearn.service.BaseQuiz.QuizTypeEnum;
@@ -17,41 +15,39 @@ class ReviewQuizCard {
 
     private static final String TAG = "ReviewQuizCard";
 
-    private CardRepositoryOld cardRepository;
-    private JournalRepository journalRepository;
+    private LLearnRepository repository;
     private CardImageService cardImageService;
 
-    private CardEntityOld cardEntity;
+    private Card card;
     private boolean updateCardOnAnswer;
     private boolean answered = false;
     private boolean answeredCorrectly = false;
 
-    private ReviewQuizCard(CardRepositoryOld cardRepository, JournalRepository journalRepository,
-                           CardImageService cardImageService, CardEntityOld cardEntity, boolean updateCardOnAnswer) {
-        this.cardRepository = cardRepository;
-        this.journalRepository = journalRepository;
+    private ReviewQuizCard(LLearnRepository repository,
+                           CardImageService cardImageService,
+                           Card card,
+                           boolean updateCardOnAnswer) {
+        this.repository = repository;
         this.cardImageService = cardImageService;
-        this.cardEntity = cardEntity;
+        this.card = card;
         this.updateCardOnAnswer = updateCardOnAnswer;
 
         logCard("init");
     }
 
-    static ReviewQuizCard createUpdatableCard(CardRepositoryOld cardRepository,
-                                              JournalRepository journalRepository,
+    static ReviewQuizCard createUpdatableCard(LLearnRepository repository,
                                               CardImageService cardImageService,
-                                              CardEntityOld cardEntity) {
-        return new ReviewQuizCard(cardRepository, journalRepository, cardImageService, cardEntity, true);
+                                              Card card) {
+        return new ReviewQuizCard(repository, cardImageService, card, true);
     }
 
-    static ReviewQuizCard createNonUpdatableCard(CardRepositoryOld cardRepository,
-                                                 JournalRepository journalRepository,
+    static ReviewQuizCard createNonUpdatableCard(LLearnRepository repository,
                                                  CardImageService cardImageService,
-                                                 CardEntityOld cardEntity) {
-        return new ReviewQuizCard(cardRepository, journalRepository, cardImageService, cardEntity, false);
+                                                 Card cardEntity) {
+        return new ReviewQuizCard(repository, cardImageService, cardEntity, false);
     }
 
-    private static Double cardReviewDueFactor(CardEntityOld card) {
+    private static Double cardReviewDueFactor(Card card) {
         long reviewInterval = card.getNextReviewAt() - card.getLastReviewAt();
         long overdueInterval = System.currentTimeMillis() - card.getNextReviewAt();
         return (double) (overdueInterval / reviewInterval);
@@ -59,65 +55,55 @@ class ReviewQuizCard {
 
     private void logCard(String prefix) {
         Log.d(TAG, String.format("%s cardId:%d front:%s back:%s answered:%s answeredCorrectly:%s updateCardOnAnswer:%s",
-                prefix, cardEntity.getId(), cardEntity.getFront(), cardEntity.getBack(), answered, answeredCorrectly,
+                prefix, card.getCardId(), card.getFrontText(), card.getBackText(), answered, answeredCorrectly,
                 updateCardOnAnswer));
     }
 
     void handleAnswer(BaseQuizCardScheduler<ReviewQuizCard> scheduler, String answer) {
-
-        JournalEntity journal = new JournalEntity();
-        journal.setTimestamp(System.currentTimeMillis());
-        journal.setCardType(LLearnConstants.CARD_TYPE_REVIEW);
-        journal.setCardId(cardEntity.getId());
-
         switch (answer) {
             case LLearnConstants.REVIEW_ANSWER_GOOD:
                 logCard("handleAnswer GOOD");
-                journal.setAnswer(LLearnConstants.JOURNAL_ANSWER_GOOD);
                 break;
             case LLearnConstants.REVIEW_ANSWER_OK:
                 logCard("handleAnswer OK");
-                journal.setAnswer(LLearnConstants.JOURNAL_ANSWER_OK);
                 break;
             default:
-                journal.setAnswer(LLearnConstants.JOURNAL_ANSWER_BAD);
                 logCard("handleAnswer BAD");
                 break;
         }
 
         if (answer.equals(LLearnConstants.REVIEW_ANSWER_GOOD)) {
             if (updateCardOnAnswer && !answered) {
-                cardEntity.processGoodReviewAnswer();
-                cardRepository.save(cardEntity);
+                card.processGoodReviewAnswer();
+                repository.updateCard(card);
             }
             answeredCorrectly = true;
         } else {
             if (updateCardOnAnswer && !answered) {
                 if (answer.equals(LLearnConstants.REVIEW_ANSWER_OK)) {
-                    cardEntity.processOkReviewAnswer();
+                    card.processOkReviewAnswer();
                 } else {
-                    cardEntity.processBadReviewAnswer();
+                    card.processBadReviewAnswer();
                 }
-                cardRepository.save(cardEntity);
+                repository.updateCard(card);
             }
             scheduler.scheduleToEnd(this);
         }
 
         answered = true;
-        journalRepository.save(journal);
     }
 
     QuizData buildQuizData() {
-        return QuizData.build(QuizTypeEnum.REVIEW_CARD, cardImageService, cardEntity, null);
+        return QuizData.build(QuizTypeEnum.REVIEW_CARD, cardImageService, card, null);
     }
 
     boolean isAnsweredCorrectly() {
         return this.answeredCorrectly;
     }
 
-    public static class ReviewQuizCardComparator implements Comparator<CardEntityOld> {
+    public static class ReviewQuizCardComparator implements Comparator<Card> {
         @Override
-        public int compare(CardEntityOld c1, CardEntityOld c2) {
+        public int compare(Card c1, Card c2) {
             return cardReviewDueFactor(c2).compareTo(cardReviewDueFactor(c1));
         }
     }

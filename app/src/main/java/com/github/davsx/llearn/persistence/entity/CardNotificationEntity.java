@@ -9,7 +9,7 @@ import android.support.annotation.NonNull;
 @Entity(
         tableName = "card_notification",
         indices = {
-                @Index(value = {"last_notification_at", "enabled"}),
+                @Index(value = {"enabled", "last_notification_at"}),
         }
 )
 public class CardNotificationEntity {

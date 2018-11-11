@@ -10,9 +10,8 @@ import com.github.davsx.llearn.LLearnConstants;
 @Entity(
         tableName = "card_quiz",
         indices = {
-                @Index(value = {"front_text"}),
-                @Index(value = {"back_text"}),
-                @Index(value = {"enabled"}),
+                @Index(value = {"quiz_type"}),
+                @Index(value = {"next_review_at"}),
         }
 )
 public class CardQuizEntity {
@@ -74,6 +73,31 @@ public class CardQuizEntity {
     public Long updatedAt = System.currentTimeMillis();
 
     public CardQuizEntity() {
+    }
+
+    public CardQuizEntity incrementGoodReviews() {
+        goodReviews++;
+        return this;
+    }
+
+    public CardQuizEntity incrementBadReviews() {
+        badReviews++;
+        return this;
+    }
+
+    public CardQuizEntity incrementLocalVersion() {
+        localVersion++;
+        return this;
+    }
+
+    public CardQuizEntity incrementLearnScore() {
+        learnScore++;
+        return this;
+    }
+
+    public CardQuizEntity incrementQuizTypeChanges() {
+        quizTypeChanges++;
+        return this;
     }
 
     @NonNull

@@ -114,6 +114,18 @@ public class LLearnRepository {
         return loadCards(cardEntities);
     }
 
+    public List<Card> getReviewCandidateCards(Integer count) {
+        List<CardEntity> cardEntities = dao.getReviewCandidateCardEntities(LLearnConstants.CARD_TYPE_REVIEW,
+                System.currentTimeMillis(), count);
+        return loadCards(cardEntities);
+    }
+
+    public List<Card> getReviewFillCandidates(Integer count, List<Long> cardIdBlacklist) {
+        List<CardEntity> cardEntities = dao.getReviewFillCardEntities(
+                LLearnConstants.CARD_TYPE_REVIEW, cardIdBlacklist, count);
+        return loadCards(cardEntities);
+    }
+
     public int getAllCardCount() {
         return dao.getAllCardCount();
     }

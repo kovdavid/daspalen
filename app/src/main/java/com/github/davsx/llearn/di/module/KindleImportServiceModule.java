@@ -8,7 +8,7 @@ import dagger.Provides;
 
 @Module(includes = {
         LLearnRepositoryModule.class,
-        Context.class
+        ContextModule.class
 })
 public class KindleImportServiceModule {
 

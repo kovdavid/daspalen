@@ -24,13 +24,6 @@
             />
 
     <item
-            android:id="@+id/action_reset_images"
-            android:icon="@drawable/baseline_add_circle_outline_24"
-            android:title="Reset images"
-            app:showAsAction="never"
-            />
-
-    <item
             android:id="@+id/action_wipe"
             android:icon="@drawable/baseline_add_circle_outline_24"
             android:title="Wipe data"

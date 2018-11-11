@@ -6,7 +6,6 @@ import android.widget.ProgressBar;
 import com.github.davsx.llearn.LLearnApplication;
 import com.github.davsx.llearn.R;
 import com.github.davsx.llearn.activities.BaseQuiz.BaseQuizActivity;
-import com.github.davsx.llearn.service.CardImage.CardImageService;
 import com.github.davsx.llearn.service.ReviewQuiz.ReviewQuizService;
 import com.github.davsx.llearn.service.Speaker.SpeakerService;
 
@@ -16,8 +15,6 @@ public class ReviewQuizActivity extends BaseQuizActivity {
 
     @Inject
     ReviewQuizService reviewQuizService;
-    @Inject
-    CardImageService cardImageService;
     @Inject
     SpeakerService speakerService;
 

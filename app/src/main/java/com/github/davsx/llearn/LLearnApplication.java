@@ -5,7 +5,7 @@ import android.app.Application;
 import com.github.davsx.llearn.di.component.ApplicationComponent;
 import com.github.davsx.llearn.di.component.DaggerApplicationComponent;
 import com.github.davsx.llearn.di.module.ContextModule;
-import com.github.davsx.llearn.service.WordOfTheDay.WordOfTheDayAlarmService;
+import com.github.davsx.llearn.service.CardNotification.CardNotificationAlarmService;
 
 public class LLearnApplication extends Application {
 
@@ -23,7 +23,7 @@ public class LLearnApplication extends Application {
                 .contextModule(new ContextModule(this))
                 .build();
 
-        WordOfTheDayAlarmService.setNextAlarm(getApplicationContext(), applicationComponent.getSettingsService());
+        CardNotificationAlarmService.setNextAlarm(getApplicationContext(), applicationComponent.getSettingsService());
     }
 
     public ApplicationComponent getApplicationComponent() {

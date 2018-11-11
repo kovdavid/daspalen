@@ -7,8 +7,10 @@ import dagger.Provides;
 
 @Module(includes = {SharedPreferencesModule.class})
 public class SettingsModule {
+
     @Provides
     SettingsService provide(SharedPreferences sharedPreferences) {
         return new SettingsService(sharedPreferences);
     }
+
 }

@@ -9,19 +9,20 @@ import com.github.davsx.llearn.activities.LearnQuiz.LearnQuizActivity;
 import com.github.davsx.llearn.activities.Main.MainActivity;
 import com.github.davsx.llearn.activities.ManageCards.ManageCardsActivity;
 import com.github.davsx.llearn.activities.MemriseImport.MemriseImportActivity;
-import com.github.davsx.llearn.activities.ResetImages.ResetImagesActivity;
 import com.github.davsx.llearn.activities.ReviewQuiz.ReviewQuizActivity;
 import com.github.davsx.llearn.activities.Settings.SettingsActivity;
 import com.github.davsx.llearn.di.module.*;
 import com.github.davsx.llearn.service.BootReceiver.BootReceiverService;
+import com.github.davsx.llearn.service.CardNotification.CardNotificationService;
 import com.github.davsx.llearn.service.Settings.SettingsService;
-import com.github.davsx.llearn.service.WordOfTheDay.WordOfTheDayNotificationService;
 import dagger.Component;
 
 import javax.inject.Singleton;
 
 @Singleton
 @Component(modules = {
+        MainActivityServiceModule.class,
+        KindleImportServiceModule.class,
         LearnQuizServiceModule.class,
         ReviewQuizServiceModule.class,
         ManageCardsServiceModule.class,
@@ -56,9 +57,7 @@ public interface ApplicationComponent {
 
     void inject(SettingsActivity activity);
 
-    void inject(ResetImagesActivity activity);
-
-    void inject(WordOfTheDayNotificationService service);
+    void inject(CardNotificationService service);
 
     void inject(BootReceiverService service);
 

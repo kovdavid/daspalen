@@ -19,7 +19,6 @@ import com.github.davsx.llearn.activities.BackupImport.BackupImportActivity;
 import com.github.davsx.llearn.activities.LearnQuiz.LearnQuizActivity;
 import com.github.davsx.llearn.activities.ManageCards.ManageCardsActivity;
 import com.github.davsx.llearn.activities.MemriseImport.MemriseImportActivity;
-import com.github.davsx.llearn.activities.ResetImages.ResetImagesActivity;
 import com.github.davsx.llearn.activities.ReviewQuiz.ReviewQuizActivity;
 import com.github.davsx.llearn.activities.Settings.SettingsActivity;
 import com.github.davsx.llearn.service.MainActivity.MainActivityService;
@@ -73,9 +72,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.action_import_memrise:
                 MainActivity.this.startActivity(new Intent(MainActivity.this, MemriseImportActivity.class));
-                break;
-            case R.id.action_reset_images:
-                MainActivity.this.startActivity(new Intent(MainActivity.this, ResetImagesActivity.class));
                 break;
             case R.id.action_wipe:
                 showWipeConfirmDialog(false);

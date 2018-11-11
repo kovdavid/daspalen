@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import com.github.davsx.llearn.LLearnApplication;
 import com.github.davsx.llearn.activities.ManageCards.ManageCardsActivity;
-import com.github.davsx.llearn.persistence.repository.CardRepositoryOld;
 import com.github.davsx.llearn.service.KindleImport.KindleImportService;
 
 import javax.inject.Inject;

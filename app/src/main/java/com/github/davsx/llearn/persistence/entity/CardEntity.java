@@ -54,6 +54,11 @@ public class CardEntity {
     public CardEntity() {
     }
 
+    public CardEntity incrementLocalVersion() {
+        localVersion++;
+        return this;
+    }
+
     @NonNull
     public String getBackText() {
         return backText;

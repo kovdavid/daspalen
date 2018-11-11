@@ -6,6 +6,8 @@ import com.github.davsx.llearn.persistence.entity.CardNotificationEntity;
 import com.github.davsx.llearn.persistence.entity.CardQuizEntity;
 import com.google.gson.annotations.Expose;
 
+import java.util.Random;
+
 public class Card {
 
     private boolean cardEntityChanged = false;
@@ -56,10 +58,10 @@ public class Card {
     }
 
     public void updateTexts(String newFrontText, String newBackText) {
-        cardEntity.setFrontText(newFrontText);
-        cardEntity.setBackText(newBackText);
-        cardEntity.setLocalVersion(cardEntity.getLocalVersion() + 1);
-        cardEntity.setUpdatedAt(System.currentTimeMillis());
+        cardEntity.setFrontText(newFrontText)
+                .setBackText(newBackText)
+                .incrementLocalVersion()
+                .setUpdatedAt(System.currentTimeMillis());
         cardEntityChanged = true;
 
         if (newFrontText.equals("") || newBackText.equals("")) {
@@ -73,9 +75,9 @@ public class Card {
                 }
                 cardQuizEntity.setQuizType(LLearnConstants.CARD_TYPE_LEARN);
             }
-            cardQuizEntity.setQuizTypeChanges(cardQuizEntity.getQuizTypeChanges() + 1);
-            cardQuizEntity.setLocalVersion(cardQuizEntity.getLocalVersion() + 1);
-            cardQuizEntity.setUpdatedAt(System.currentTimeMillis());
+            cardQuizEntity.incrementQuizTypeChanges()
+                    .incrementLocalVersion()
+                    .setUpdatedAt(System.currentTimeMillis());
             cardQuizEntityChanged = true;
         }
     }
@@ -84,9 +86,9 @@ public class Card {
         if ((imageHash == null && cardEntity.getImageHash() != null)
                 || (imageHash != null && cardEntity.getImageHash() == null)
                 || (imageHash != null && !imageHash.equals(cardEntity.getImageHash()))) {
-            cardEntity.setImageHash(imageHash);
-            cardEntity.setLocalVersion(cardEntity.getLocalVersion() + 1);
-            cardEntity.setUpdatedAt(System.currentTimeMillis());
+            cardEntity.setImageHash(imageHash)
+                    .incrementLocalVersion()
+                    .setUpdatedAt(System.currentTimeMillis());
             cardEntityChanged = true;
         }
     }
@@ -94,10 +96,10 @@ public class Card {
     public void processCorrectLearnAnswer() {
         if (!cardQuizEntity.getQuizType().equals(LLearnConstants.CARD_TYPE_LEARN)) return;
 
-        cardQuizEntity.setLearnScore(cardQuizEntity.getLearnScore() + 1);
-        cardQuizEntity.setLastLearnQuizAt(System.currentTimeMillis());
-        cardQuizEntity.setLocalVersion(cardEntity.getLocalVersion() + 1);
-        cardQuizEntity.setUpdatedAt(System.currentTimeMillis());
+        cardQuizEntity.incrementLearnScore()
+                .setLastLearnQuizAt(System.currentTimeMillis())
+                .incrementLocalVersion()
+                .setUpdatedAt(System.currentTimeMillis());
 
         if (cardQuizEntity.getLearnScore() >= LLearnConstants.MAX_CARD_LEARN_SCORE) {
             setQuizTypeReview();
@@ -107,13 +109,117 @@ public class Card {
     }
 
     private void setQuizTypeReview() {
-        cardQuizEntity.setQuizType(LLearnConstants.CARD_TYPE_REVIEW);
-        cardQuizEntity.setQuizTypeChanges(cardQuizEntity.getQuizTypeChanges() + 1);
-        cardQuizEntity.setReviewIntervalMultiplier(LLearnConstants.REVIEW_CARD_MIN_EASINESS_FACTOR);
-        cardQuizEntity.setBadReviews(0);
-        cardQuizEntity.setGoodReviews(0);
-        cardQuizEntity.setLastLearnQuizAt(System.currentTimeMillis());
-        cardQuizEntity.setNextReviewAt(System.currentTimeMillis() + LLearnConstants.ONE_DAY_MILLIS);
+        cardQuizEntity.setQuizType(LLearnConstants.CARD_TYPE_REVIEW)
+                .incrementQuizTypeChanges()
+                .setReviewIntervalMultiplier(LLearnConstants.REVIEW_CARD_MIN_EASINESS_FACTOR)
+                .setBadReviews(0)
+                .setGoodReviews(0)
+                .setLastReviewAt(System.currentTimeMillis())
+                .setNextReviewAt(System.currentTimeMillis() + LLearnConstants.ONE_DAY_MILLIS);
+    }
+
+    public void processGoodReviewAnswer() {
+        double multiplier = changeReviewIntervalMultiplierBy(0.10);
+
+        long nextInterval = getNextInterval(multiplier);
+
+        int goodReviews = cardQuizEntity.getGoodReviews();
+
+        if (goodReviews < 10) {
+            while (nextInterval > (goodReviews + 1) * LLearnConstants.ONE_DAY_MILLIS) {
+                nextInterval -= LLearnConstants.ONE_DAY_MILLIS;
+            }
+        }
+
+        nextInterval = limitReviewInterval(nextInterval);
+
+        cardQuizEntity.incrementGoodReviews()
+                .setReviewIntervalMultiplier(multiplier)
+                .setLastReviewAt(System.currentTimeMillis())
+                .setNextReviewAt(System.currentTimeMillis() + nextInterval)
+                .incrementLocalVersion()
+                .setUpdatedAt(System.currentTimeMillis());
+
+        cardQuizEntityChanged = true;
+    }
+
+    public void processOkReviewAnswer() {
+        double multiplier = changeReviewIntervalMultiplierBy(-0.07);
+
+        long nextInterval = getNextInterval(multiplier);
+
+        while (nextInterval > 7 * LLearnConstants.ONE_DAY_MILLIS) {
+            nextInterval -= LLearnConstants.ONE_DAY_MILLIS;
+        }
+
+        nextInterval = limitReviewInterval(nextInterval);
+
+        cardQuizEntity.setReviewIntervalMultiplier(multiplier)
+                .setLastReviewAt(System.currentTimeMillis())
+                .setNextReviewAt(System.currentTimeMillis() + nextInterval)
+                .incrementLocalVersion()
+                .setUpdatedAt(System.currentTimeMillis());
+
+        cardQuizEntityChanged = true;
+    }
+
+    public void processBadReviewAnswer() {
+        double multiplier = changeReviewIntervalMultiplierBy(-0.20);
+
+        long nextInterval = getNextInterval(multiplier);
+
+        int badReviews = cardQuizEntity.getBadReviews();
+        if (badReviews + 1 >= LLearnConstants.REVIEW_CARD_MAX_BAD_ANSWERS) {
+            cardQuizEntity.incrementBadReviews()
+                    .incrementQuizTypeChanges()
+                    .setQuizType(LLearnConstants.CARD_TYPE_LEARN)
+                    .setLearnScore(1)
+                    .incrementLocalVersion()
+                    .setUpdatedAt(System.currentTimeMillis());
+            cardQuizEntityChanged = true;
+            return;
+        }
+
+        nextInterval = limitReviewInterval(nextInterval);
+
+        cardQuizEntity.incrementBadReviews()
+                .setReviewIntervalMultiplier(multiplier)
+                .setLastReviewAt(System.currentTimeMillis())
+                .setNextReviewAt(System.currentTimeMillis() + nextInterval)
+                .incrementLocalVersion()
+                .setUpdatedAt(System.currentTimeMillis());
+
+        cardQuizEntityChanged = true;
+    }
+
+    private long getNextInterval(Double multiplier) {
+        Random rng = new Random(System.currentTimeMillis());
+
+        return (long) (
+                (getCurrentReviewInterval() * multiplier) * (0.95 + rng.nextDouble() / 10) // ±5%
+        );
+    }
+
+    private long limitReviewInterval(long interval) {
+        if (interval < LLearnConstants.ONE_DAY_MILLIS) {
+            return LLearnConstants.ONE_DAY_MILLIS;
+        }
+        if (interval > 60 * LLearnConstants.ONE_DAY_MILLIS) {
+            return 60 * LLearnConstants.ONE_DAY_MILLIS;
+        }
+        return interval;
+    }
+
+    private double changeReviewIntervalMultiplierBy(double change) {
+        double multiplier = Math.min(
+                LLearnConstants.REVIEW_CARD_MAX_EASINESS_FACTOR,
+                Math.max(
+                        LLearnConstants.REVIEW_CARD_MIN_EASINESS_FACTOR,
+                        cardQuizEntity.getReviewIntervalMultiplier() + change
+                )
+        );
+        cardQuizEntity.setReviewIntervalMultiplier(multiplier);
+        return multiplier;
     }
 
     public String getBackText() {
@@ -146,6 +252,10 @@ public class Card {
         return cardQuizEntity;
     }
 
+    private long getCurrentReviewInterval() {
+        return cardQuizEntity.getNextReviewAt() - cardQuizEntity.getLastReviewAt();
+    }
+
     public boolean getEnabled() {
         return cardEntity.getEnabled();
     }
@@ -157,6 +267,10 @@ public class Card {
 
     public String getFrontText() {
         return cardEntity.getFrontText();
+    }
+
+    public long getLastReviewAt() {
+        return cardQuizEntity.getLastReviewAt();
     }
 
     public int getLearnScore() {

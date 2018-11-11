@@ -85,9 +85,19 @@ public abstract class LLearnDao {
     public abstract int getOverdueReviewCardCount(Integer quizType, long now);
 
     @Query("SELECT c.* FROM card c JOIN card_quiz cq USING(id_card)"
-            +" WHERE cq.quiz_type = :quizType AND c.enabled = 1"
-            +" ORDER BY cq.learn_score DESC, cq.last_learn_quiz_at DESC LIMIT :count")
+            + " WHERE cq.quiz_type = :quizType AND c.enabled = 1"
+            + " ORDER BY cq.learn_score DESC, cq.last_learn_quiz_at DESC LIMIT :count")
     public abstract List<CardEntity> getLearnCandidateCardEntities(Integer quizType, Integer count);
+
+    @Query("SELECT c.* FROM card c JOIN card_quiz cq USING(id_card)"
+            + " WHERE cq.quiz_type = :quizType AND c.enabled = 1 AND cq.next_review_at < :now"
+            + " ORDER BY cq.next_review_at ASC LIMIT :count")
+    public abstract List<CardEntity> getReviewCandidateCardEntities(Integer quizType, long now, Integer count);
+
+    @Query("SELECT c.* FROM card c JOIN card_quiz cq USING(id_card)"
+            + " WHERE cq.quiz_type = :quizType AND c.enabled = 1 AND c.id_card NOT IN (:cardIdBlackList)"
+            + " ORDER BY RANDOM() LIMIT :count")
+    public abstract List<CardEntity> getReviewFillCardEntities(Integer quizType, List<Long> cardIdBlackList, Integer count);
 
     @Query("DELETE FROM card")
     abstract void deleteAllCards();

@@ -1,4 +1,4 @@
-package com.github.davsx.llearn.service.WordOfTheDay;
+package com.github.davsx.llearn.service.CardNotification;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -8,15 +8,15 @@ import com.github.davsx.llearn.service.Settings.SettingsService;
 
 import java.util.Calendar;
 
-public class WordOfTheDayAlarmService {
+public class CardNotificationAlarmService {
 
     private static PendingIntent createPendingIntent(Context context) {
-        Intent intent = new Intent(context, WordOfTheDayNotificationService.class);
+        Intent intent = new Intent(context, CardNotificationService.class);
         return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     private static PendingIntent getPendingIntent(Context context) {
-        Intent intent = new Intent(context, WordOfTheDayNotificationService.class);
+        Intent intent = new Intent(context, CardNotificationService.class);
         return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_NO_CREATE);
     }
 
@@ -52,6 +52,7 @@ public class WordOfTheDayAlarmService {
             Calendar cal = getNextAlarm(settingsService);
             alarmManager.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), createPendingIntent(context));
         }
+
     }
 
     private static boolean validateSettings(SettingsService settingsService) {
