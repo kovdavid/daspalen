@@ -27,7 +27,7 @@
             android:textSize="24sp"
             android:gravity="center"
             android:textStyle="bold"
-            android:text="Import cards"
+            android:text="Import backup"
             />
 
     <TextView
@@ -55,7 +55,7 @@
             android:textSize="20sp"
             android:padding="16dp"
             android:textAllCaps="false"
-            android:text="Import cards"
+            android:text="Import backup"
             />
 
 </android.support.constraint.ConstraintLayout>

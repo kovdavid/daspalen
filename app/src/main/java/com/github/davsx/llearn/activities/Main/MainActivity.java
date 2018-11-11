@@ -15,7 +15,7 @@ import android.widget.Button;
 import com.github.davsx.llearn.LLearnApplication;
 import com.github.davsx.llearn.R;
 import com.github.davsx.llearn.activities.BackupCreate.BackupCreateActivity;
-import com.github.davsx.llearn.activities.CardImport.CardImportActivity;
+import com.github.davsx.llearn.activities.BackupImport.BackupImportActivity;
 import com.github.davsx.llearn.activities.LearnQuiz.LearnQuizActivity;
 import com.github.davsx.llearn.activities.ManageCards.ManageCardsActivity;
 import com.github.davsx.llearn.activities.MemriseImport.MemriseImportActivity;
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.startActivity(new Intent(MainActivity.this, BackupCreateActivity.class));
                 break;
             case R.id.action_import_data:
-                MainActivity.this.startActivity(new Intent(MainActivity.this, CardImportActivity.class));
+                MainActivity.this.startActivity(new Intent(MainActivity.this, BackupImportActivity.class));
                 break;
             case R.id.action_import_memrise:
                 MainActivity.this.startActivity(new Intent(MainActivity.this, MemriseImportActivity.class));

@@ -1,9 +1,9 @@
 package com.github.davsx.llearn.service.LearnQuiz;
 
 import com.github.davsx.llearn.LLearnConstants;
-import com.github.davsx.llearn.persistence.entity.CardEntityOld;
-import com.github.davsx.llearn.persistence.repository.CardRepositoryOld;
-import com.github.davsx.llearn.persistence.repository.JournalRepository;
+import com.github.davsx.llearn.model.Card;
+import com.github.davsx.llearn.persistence.entity.CardEntity;
+import com.github.davsx.llearn.persistence.repository.LLearnRepository;
 import com.github.davsx.llearn.service.BaseQuiz.BaseQuizSchedule;
 import com.github.davsx.llearn.service.BaseQuiz.CardQuizService;
 import com.github.davsx.llearn.service.BaseQuiz.QuizData;
@@ -33,21 +33,18 @@ import java.util.List;
 
 public class LearnQuizService implements CardQuizService {
 
-    private CardRepositoryOld cardRepository;
-    private JournalRepository journalRepository;
+    private LLearnRepository repository;
     private CardImageService cardImageService;
 
     private BaseQuizSchedule<LearnQuizCard> quizSchedule;
     private List<LearnQuizCard> cards;
-    private List<CardEntityOld> randomCards;
+    private List<CardEntity> randomCards;
     private Integer totalRounds;
     private LearnQuizCard currentCard;
     private Boolean isFinished;
 
-    public LearnQuizService(CardRepositoryOld cardRepository, JournalRepository journalRepository,
-                            CardImageService cardImageService) {
-        this.cardRepository = cardRepository;
-        this.journalRepository = journalRepository;
+    public LearnQuizService(LLearnRepository repository, CardImageService cardImageService) {
+        this.repository = repository;
         this.cardImageService = cardImageService;
         this.totalRounds = 0;
         this.isFinished = false;
@@ -64,7 +61,7 @@ public class LearnQuizService implements CardQuizService {
         ArrayList<LearnQuizCard> cardQueue = new ArrayList<>(this.cards);
         this.quizSchedule = new BaseQuizSchedule<>(cardQueue);
 
-        this.randomCards = cardRepository.getRandomCards(LLearnConstants.LEARN_SESSION_RANDOM_CARDS_COUNT);
+        this.randomCards = repository.getRandomCardEntities(LLearnConstants.LEARN_SESSION_RANDOM_CARDS_COUNT);
 
         prepareNextCard();
 
@@ -112,7 +109,7 @@ public class LearnQuizService implements CardQuizService {
     }
 
     private List<LearnQuizCard> prepareCards() {
-        List<CardEntityOld> learnCandidates = cardRepository.getLearnCandidates();
+        List<Card> learnCandidates = repository.getLearnCandidateCards(LLearnConstants.LEARN_SESSION_CANDIDATE_CARDS);
         if (learnCandidates.isEmpty()) {
             return null;
         }
@@ -122,7 +119,7 @@ public class LearnQuizService implements CardQuizService {
         List<LearnQuizCard> chosenCards = new ArrayList<>();
 
         int newCardCounter = 0;
-        for (CardEntityOld card : learnCandidates) {
+        for (Card card : learnCandidates) {
             if (card.getLearnScore() == 0) {
                 if (newCardCounter >= LLearnConstants.LEARN_SESSION_MAX_NEW_CARDS) {
                     continue;
@@ -130,8 +127,7 @@ public class LearnQuizService implements CardQuizService {
                 newCardCounter++;
             }
 
-            LearnQuizCard learnQuizCard = new LearnQuizCard(
-                    cardRepository, journalRepository, cardImageService, card);
+            LearnQuizCard learnQuizCard = new LearnQuizCard(repository, cardImageService, card);
             chosenCards.add(learnQuizCard);
             totalRounds += learnQuizCard.getPlannedRounds();
 

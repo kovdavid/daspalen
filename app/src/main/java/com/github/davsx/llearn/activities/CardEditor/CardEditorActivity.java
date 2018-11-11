@@ -13,12 +13,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
@@ -26,26 +22,26 @@ import com.github.davsx.llearn.LLearnApplication;
 import com.github.davsx.llearn.LLearnConstants;
 import com.github.davsx.llearn.R;
 import com.github.davsx.llearn.activities.ManageCards.ManageCardsActivity;
-import com.github.davsx.llearn.persistence.entity.CardEntityOld;
-import com.github.davsx.llearn.persistence.entity.JournalEntity;
-import com.github.davsx.llearn.persistence.repository.CardRepositoryOld;
-import com.github.davsx.llearn.persistence.repository.JournalRepository;
+import com.github.davsx.llearn.model.Card;
+import com.github.davsx.llearn.persistence.entity.CardEntity;
+import com.github.davsx.llearn.persistence.repository.LLearnRepository;
 import com.github.davsx.llearn.service.CardImage.CardImageService;
 import com.github.davsx.llearn.service.ManageCards.ManageCardsService;
 import com.github.davsx.llearn.service.Speaker.SpeakerService;
 
 import javax.inject.Inject;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class CardEditorActivity extends AppCompatActivity {
 
     private static final String TAG = "CardEditorActivity";
 
     @Inject
-    CardRepositoryOld cardRepository;
-    @Inject
-    JournalRepository journalRepository;
+    LLearnRepository repository;
     @Inject
     CardImageService cardImageService;
     @Inject
@@ -59,17 +55,17 @@ public class CardEditorActivity extends AppCompatActivity {
     private Button buttonCancel;
     private Button buttonEnable;
     private Button buttonDisable;
-    private Button buttonShowJournal;
     private TextView textViewCardScore;
     private TextView textViewNextReview;
     private ImageButton imageButtonFront;
     private ImageButton imageButtonBack;
     private ImageView buttonSwap;
 
-    private CardEntityOld card = null;
+    private Card card = null;
     private Long cardId = 0L;
     private Integer cardPosition = 0;
     private String imagePath = null;
+    private String imageHash = null;
     private String frontText = "";
     private String backText = "";
     private boolean translateFront = true;
@@ -111,8 +107,10 @@ public class CardEditorActivity extends AppCompatActivity {
         // We do this twice, because imagePath can be set to tempImage
         if (imagePath == null && cardId != null) {
             imagePath = cardImageService.getCardImagePath(cardId);
+            imageHash = cardImageService.getImageHash(imagePath);
         }
         if (imagePath != null) {
+            imageHash = cardImageService.getImageHash(imagePath);
             Bitmap bmImg = BitmapFactory.decodeFile(imagePath);
             imageView.setImageBitmap(bmImg);
         } else {
@@ -247,19 +245,6 @@ public class CardEditorActivity extends AppCompatActivity {
                 editTextBack.setText(frontText);
             }
         });
-
-        if (card != null) {
-            final List<JournalEntity> journals = journalRepository.getJournalsForCard(card);
-            if (journals.size() > 0) {
-                buttonShowJournal.setVisibility(View.VISIBLE);
-                buttonShowJournal.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showJournalsDialog(journals);
-                    }
-                });
-            }
-        }
     }
 
     private void redrawEnableButton() {
@@ -281,17 +266,19 @@ public class CardEditorActivity extends AppCompatActivity {
         if (action == null) {
             cardId = intent.getLongExtra("ID_CARD", 0L);
             if (cardId > 0L) {
-                card = cardRepository.getCardWithId(cardId);
+                card = repository.getCardWithId(cardId);
 
                 cardPosition = intent.getIntExtra("CARD_POSITION", 0);
-                frontText = card.getFront();
-                backText = card.getBack();
+                frontText = card.getFrontText();
+                backText = card.getBackText();
                 imagePath = cardImageService.getCardImagePath(cardId);
+                imageHash = cardImageService.getImageHash(imagePath);
             } else {
                 cardPosition = 0;
                 frontText = "";
                 backText = "";
                 imagePath = null;
+                imageHash = null;
             }
         } else if (action.equals(Intent.ACTION_SEND) && type != null) {
             switch (type) {
@@ -302,6 +289,7 @@ public class CardEditorActivity extends AppCompatActivity {
                     Uri imageUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
                     if (imageUri != null) {
                         imagePath = cardImageService.saveTempImage(getContentResolver(), imageUri);
+                        imageHash = cardImageService.getImageHash(imagePath);
                     }
                     break;
                 case "text/plain":
@@ -523,6 +511,7 @@ public class CardEditorActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         cardImageService.removeCardImages(cardId);
                         imagePath = null;
+                        imageHash = null;
                         imageView.setImageResource(android.R.drawable.ic_menu_report_image);
                     }
                 })
@@ -557,28 +546,11 @@ public class CardEditorActivity extends AppCompatActivity {
         startActivity(i);
     }
 
-    private void showJournalsDialog(List<JournalEntity> journals) {
-        View view = LayoutInflater.from(this).inflate(R.layout.activity_card_editor_journal_dialog, null);
-        JournalDialogAdapter adapter = new JournalDialogAdapter(this, journals);
-        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-
-        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        recyclerView.setAdapter(adapter);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setView(view);
-        builder.setCancelable(true);
-
-        builder.show();
-    }
-
     private void onSaveCard() {
-        CardEntityOld dupCard = findDupCard();
+        CardEntity duplicateCardEntity = findDuplicateCardEntity();
         boolean isNewCard = card == null;
 
-        if (dupCard == null) {
+        if (duplicateCardEntity == null) {
             saveCard();
             if (isNewCard) {
                 openManageCardsActivity(ManageCardsService.RESULT_CARD_ADDED);
@@ -586,18 +558,18 @@ public class CardEditorActivity extends AppCompatActivity {
                 openManageCardsActivity(ManageCardsService.RESULT_CARD_CHANGED);
             }
         } else {
-            showDupCardAlert(dupCard);
+            showDuplicateCardAlert(duplicateCardEntity);
         }
     }
 
-    private CardEntityOld findDupCard() {
+    private CardEntity findDuplicateCardEntity() {
         String frontText = editTextFront.getText().toString();
         String backText = editTextBack.getText().toString();
 
         // We don't check duplicity for incomplete cards
         if (frontText.length() > 0 && backText.length() > 0) {
-            CardEntityOld dupCard = cardRepository.findDuplicateCard(frontText, backText);
-            if (dupCard != null && dupCard.getId().equals(cardId)) {
+            CardEntity dupCard = repository.findDuplicateCardEntity(frontText, backText);
+            if (dupCard != null && dupCard.getCardId().equals(cardId)) {
                 return null;
             }
             return dupCard;
@@ -606,13 +578,13 @@ public class CardEditorActivity extends AppCompatActivity {
         }
     }
 
-    private void showDupCardAlert(@NonNull CardEntityOld dupCard) {
+    private void showDuplicateCardAlert(@NonNull CardEntity duplicateCard) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         String dialogMessage = String.format(
                 "The current card cannot be saved, because a duplicate card was found:<br /><br />Front<br " +
                         "/><b>%s</b><br />Back<br /><b>%s</b>",
-                dupCard.getFront(),
-                dupCard.getBack());
+                duplicateCard.getFrontText(),
+                duplicateCard.getBackText());
         builder.setTitle("Error")
                 .setMessage(Html.fromHtml(dialogMessage))
                 .setPositiveButton("Ok", null)
@@ -624,21 +596,16 @@ public class CardEditorActivity extends AppCompatActivity {
         String newBack = editTextBack.getText().toString();
 
         if (card == null) {
-            card = new CardEntityOld()
-                    .setFront(newFront)
-                    .setBack(newBack)
-                    .setCreatedAt(System.currentTimeMillis())
-                    .setLearnScore(0);
+            card = Card.createNew(frontText, backText);
+            card.updateImageHash(imageHash);
+            cardId = repository.createNewCard(card);
         } else {
-            if (!newFront.equals(card.getFront()) || !newBack.equals(card.getBack())) {
-                card.setType(LLearnConstants.CARD_TYPE_INCOMPLETE)
-                        .setLearnScore(0)
-                        .setFront(newFront)
-                        .setBack(newBack);
+            if (!newFront.equals(card.getFrontText()) || !newBack.equals(card.getBackText())) {
+                card.updateTexts(newFront, newBack);
             }
+            card.updateImageHash(imageHash);
+            repository.updateCard(card);
         }
-
-        cardId = cardRepository.save(card);
 
         if (cardImageService.isTempImage(imagePath)) {
             cardImageService.removeCardImages(cardId);
@@ -659,6 +626,7 @@ public class CardEditorActivity extends AppCompatActivity {
         editor.putLong("CARD_ID", cardId);
         editor.putInt("CARD_POSITION", cardPosition);
         editor.putString("IMAGE_PATH", imagePath);
+        editor.putString("IMAGE_HASH", imageHash);
         editor.putString("FRONT_TEXT", editTextFront.getText().toString());
         editor.putString("BACK_TEXT", editTextBack.getText().toString());
         editor.putBoolean("TRANSLATE_FRONT", translateFront);
@@ -670,12 +638,13 @@ public class CardEditorActivity extends AppCompatActivity {
         cardId = sharedPreferences.getLong("CARD_ID", 0L);
         cardPosition = sharedPreferences.getInt("CARD_POSITION", 0);
         imagePath = sharedPreferences.getString("IMAGE_PATH", null);
+        imageHash = sharedPreferences.getString("IMAGE_HASH", null);
         frontText = sharedPreferences.getString("FRONT_TEXT", "");
         backText = sharedPreferences.getString("BACK_TEXT", "");
         translateFront = sharedPreferences.getBoolean("TRANSLATE_FRONT", true);
 
         if (cardId > 0L) {
-            card = cardRepository.getCardWithId(cardId);
+            card = repository.getCardWithId(cardId);
         }
     }
 
@@ -688,7 +657,6 @@ public class CardEditorActivity extends AppCompatActivity {
         buttonCancel = findViewById(R.id.button_cancel);
         buttonEnable = findViewById(R.id.button_enable);
         buttonDisable = findViewById(R.id.button_disable);
-        buttonShowJournal = findViewById(R.id.button_show_journal);
         textViewCardScore = findViewById(R.id.textview_card_score);
         textViewNextReview = findViewById(R.id.textview_next_review);
         imageButtonFront = findViewById(R.id.imagebutton_front_text);

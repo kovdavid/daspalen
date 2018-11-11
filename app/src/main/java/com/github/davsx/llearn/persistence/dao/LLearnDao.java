@@ -57,14 +57,18 @@ public abstract class LLearnDao {
     @Delete
     abstract void deleteCardNotificationEntity(CardNotificationEntity cardNotificationEntity);
 
-    @Query("SELECT * FROM card c JOIN card_quiz cq USING(id_card)"
+    @Query("SELECT c.* FROM card c JOIN card_quiz cq USING(id_card)"
             + "WHERE c.id_card > :cardId AND cq.quiz_type IN (:types) ORDER BY c.id_card ASC LIMIT :limit")
     public abstract List<CardEntity> getNextCardEntities(long cardId, List<Integer> types, int limit);
 
-    @Query("SELECT * FROM card c JOIN card_quiz cq USING(id_card)"
+    @Query("SELECT c.* FROM card c JOIN card_quiz cq USING(id_card)"
             + " WHERE c.id_card > :cardId AND (c.front_text LIKE :query OR c.back_text LIKE :query)"
             + " AND cq.quiz_type IN (:types) ORDER BY c.id_card ASC LIMIT :limit")
     public abstract List<CardEntity> searchNextCardEntities(String query, Long cardId, List<Integer> types, int limit);
+
+    @Query("SELECT c.* FROM card c JOIN card_quiz cq USING(id_card)"
+            + " WHERE c.enabled = 1 AND cq.quiz_type IN (:types) ORDER BY RANDOM() LIMIT :count")
+    public abstract List<CardEntity> getRandomCardEntities(List<Integer> types, Integer count);
 
     @Query("SELECT * FROM card_quiz WHERE id_card IN (:cardIds)")
     public abstract List<CardQuizEntity> getCardQuizEntitiesById(List<Long> cardIds);
@@ -72,16 +76,18 @@ public abstract class LLearnDao {
     @Query("SELECT * FROM card_notification WHERE id_card IN (:cardIds)")
     public abstract List<CardNotificationEntity> getCardNotificationEntitiesById(List<Long> cardIds);
 
-    @Query("SELECT count(*) FROM card")
-    public abstract int getAllCardCount();
-
     @Query("SELECT count(*) FROM card c JOIN card_quiz cq USING(id_card)"
             + " WHERE cq.quiz_type = :quizType AND c.enabled = 1")
     public abstract int getCardCountByQuizType(int quizType);
 
     @Query("SELECT count(*) FROM card c JOIN card_quiz cq USING(id_card)"
-            + " WHERE cq.quiz_type = :quizType AND c.enabled = 1 AND c.next_review_at < :now")
+            + " WHERE cq.quiz_type = :quizType AND c.enabled = 1 AND cq.next_review_at < :now")
     public abstract int getOverdueReviewCardCount(Integer quizType, long now);
+
+    @Query("SELECT c.* FROM card c JOIN card_quiz cq USING(id_card)"
+            +" WHERE cq.quiz_type = :quizType AND c.enabled = 1"
+            +" ORDER BY cq.learn_score DESC, cq.last_learn_quiz_at DESC LIMIT :count")
+    public abstract List<CardEntity> getLearnCandidateCardEntities(Integer quizType, Integer count);
 
     @Query("DELETE FROM card")
     abstract void deleteAllCards();
@@ -121,7 +127,7 @@ public abstract class LLearnDao {
     public abstract CardEntity findDuplicateCardEntity(String frontText, String backText);
 
     @Transaction
-    public void createNewCard(Card card) {
+    public long createNewCard(Card card) {
         CardEntity cardEntity = card.getCardEntity();
         CardQuizEntity cardQuizEntity = card.getCardQuizEntity();
         CardNotificationEntity cardNotificationEntity = card.getCardNotificationEntity();
@@ -129,10 +135,12 @@ public abstract class LLearnDao {
         long id = insertCardEntity(cardEntity);
         insertCardQuizEntity(cardQuizEntity.setCardId(id));
         insertCardNotificationEntity(cardNotificationEntity.setCardId(id));
-    };
+
+        return id;
+    }
 
     @Transaction
-    public void createNewCards(ArrayList<Card> newCards) {
+    public void createNewCards(List<Card> newCards) {
         List<CardEntity> cardEntities = new ArrayList<>();
         List<CardQuizEntity> cardQuizEntities = new ArrayList<>();
         List<CardNotificationEntity> cardNotificationEntities = new ArrayList<>();
@@ -153,5 +161,8 @@ public abstract class LLearnDao {
         insertManyCardQuizEntities(cardQuizEntities);
         insertManyCardNotificationEntities(cardNotificationEntities);
     }
+
+    @Query("SELECT count(*) FROM card")
+    public abstract int getAllCardCount();
 
 }

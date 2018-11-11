@@ -82,7 +82,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".activities.CardImport.CardImportActivity"
+                android:name=".activities.BackupImport.BackupImportActivity"
                 android:launchMode="singleTask"
                 android:parentActivityName=".activities.Main.MainActivity"
                 >

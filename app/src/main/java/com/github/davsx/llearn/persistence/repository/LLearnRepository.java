@@ -9,6 +9,7 @@ import com.github.davsx.llearn.persistence.entity.CardNotificationEntity;
 import com.github.davsx.llearn.persistence.entity.CardQuizEntity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class LLearnRepository {
@@ -23,12 +24,12 @@ public class LLearnRepository {
         dao.wipeData();
     }
 
-    public void createNewCards(ArrayList<Card> newCards) {
+    public void createNewCards(List<Card> newCards) {
         dao.createNewCards(newCards);
     }
 
-    public void createNewCard(Card card) {
-        dao.createNewCard(card);
+    public long createNewCard(Card card) {
+        return dao.createNewCard(card);
     }
 
     public void updateCard(Card card) {
@@ -99,6 +100,18 @@ public class LLearnRepository {
 
     public CardEntity findDuplicateCardEntity(String frontText, String backText) {
         return dao.findDuplicateCardEntity(frontText, backText);
+    }
+
+    public List<CardEntity> getRandomCardEntities(Integer count) {
+        List<Integer> types = new ArrayList<>(
+                Arrays.asList(LLearnConstants.CARD_TYPE_LEARN, LLearnConstants.CARD_TYPE_REVIEW));
+
+        return dao.getRandomCardEntities(types, count);
+    }
+
+    public List<Card> getLearnCandidateCards(Integer count) {
+        List<CardEntity> cardEntities = dao.getLearnCandidateCardEntities(LLearnConstants.CARD_TYPE_LEARN, count);
+        return loadCards(cardEntities);
     }
 
     public int getAllCardCount() {

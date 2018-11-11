@@ -2,16 +2,14 @@ package com.github.davsx.llearn.service.LearnQuiz;
 
 import android.util.Log;
 import com.github.davsx.llearn.LLearnConstants;
-import com.github.davsx.llearn.persistence.entity.CardEntityOld;
-import com.github.davsx.llearn.persistence.entity.JournalEntity;
-import com.github.davsx.llearn.persistence.repository.CardRepositoryOld;
-import com.github.davsx.llearn.persistence.repository.JournalRepository;
+import com.github.davsx.llearn.model.Card;
+import com.github.davsx.llearn.persistence.entity.CardEntity;
+import com.github.davsx.llearn.persistence.repository.LLearnRepository;
 import com.github.davsx.llearn.service.BaseQuiz.BaseQuizCardScheduler;
 import com.github.davsx.llearn.service.BaseQuiz.QuizData;
 import com.github.davsx.llearn.service.BaseQuiz.QuizTypeEnum;
 import com.github.davsx.llearn.service.CardImage.CardImageService;
 
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
@@ -20,31 +18,20 @@ class LearnQuizCard {
 
     private static final String TAG = "LearnQuizCard";
 
-    private final List<QuizTypeEnum> learnQuizTypes = Arrays.asList(
-            QuizTypeEnum.CHOICE_1of4,
-            QuizTypeEnum.CHOICE_1of4_REVERSE,
-            QuizTypeEnum.KEYBOARD_INPUT
-    );
-
-    private CardRepositoryOld cardRepository;
-    private JournalRepository journalRepository;
+    private LLearnRepository repository;
     private CardImageService cardImageService;
-    private CardEntityOld cardEntity;
+    private Card card;
     private Boolean doShowCard;
     private Integer completedRounds;
     private Integer plannedRounds;
     private Random rng;
     private Boolean gotBadAnswer = false;
 
-    LearnQuizCard(CardRepositoryOld cardRepository,
-                  JournalRepository journalRepository,
-                  CardImageService cardImageService,
-                  CardEntityOld cardEntity) {
-        this.cardRepository = cardRepository;
-        this.journalRepository = journalRepository;
+    LearnQuizCard(LLearnRepository repository, CardImageService cardImageService, Card card) {
+        this.repository = repository;
         this.cardImageService = cardImageService;
-        this.cardEntity = cardEntity;
-        this.doShowCard = cardEntity.getLearnScore() == 0;
+        this.card = card;
+        this.doShowCard = card.getLearnScore() == 0;
         this.completedRounds = 0;
         this.plannedRounds = calculatePlannedRounds();
         this.rng = new Random(System.currentTimeMillis());
@@ -54,31 +41,24 @@ class LearnQuizCard {
 
     private void logCard(String prefix) {
         Log.d(TAG, String.format("%s cardId:%d learnScore:%d completedRounds: %d plannedRounds:%d front:%s back:%s",
-                prefix, cardEntity.getId(), cardEntity.getLearnScore(), completedRounds, plannedRounds,
-                cardEntity.getFront(), cardEntity.getBack()));
+                prefix, card.getCardId(), card.getLearnScore(), completedRounds, plannedRounds,
+                card.getFrontText(), card.getBackText()));
     }
 
     void handleAnswer(BaseQuizCardScheduler<LearnQuizCard> scheduler, String answer) {
         boolean isCorrectAnswer = evaluateAnswer(answer);
-        boolean saveJournal = !doShowCard;
-
-        JournalEntity journal = new JournalEntity();
-        journal.setTimestamp(System.currentTimeMillis());
-        journal.setCardType(LLearnConstants.CARD_TYPE_LEARN);
-        journal.setCardId(cardEntity.getId());
 
         logCard("handleAnswer");
 
         if (isCorrectAnswer) {
-            journal.setAnswer(LLearnConstants.JOURNAL_ANSWER_GOOD);
             Log.d(TAG, String.format("isCorrectAnswer:true gotBadAnswer:%s doShowCard:%s", gotBadAnswer, doShowCard));
             if (!gotBadAnswer) {
                 if (doShowCard) {
                     doShowCard = false;
                 } else {
                     completedRounds++;
-                    cardEntity.processCorrectLearnAnswer();
-                    cardRepository.save(cardEntity);
+                    card.processCorrectLearnAnswer();
+                    repository.updateCard(card);
                 }
                 Integer scheduleOffset = calculateScheduleOffset();
                 if (scheduleOffset > 0) {
@@ -96,15 +76,10 @@ class LearnQuizCard {
                 }
             }
         } else {
-            journal.setAnswer(LLearnConstants.JOURNAL_ANSWER_BAD);
             gotBadAnswer = true;
             doShowCard = true;
             scheduler.scheduleToExactOffset(1, this);
             Log.d(TAG, "isCorrectAnswer:false answer:" + answer);
-        }
-
-        if (saveJournal) {
-            journalRepository.save(journal);
         }
     }
 
@@ -132,14 +107,14 @@ class LearnQuizCard {
         Random rng = new Random(System.currentTimeMillis());
         double rand = rng.nextDouble();
 
-        if (cardEntity.getLearnScore() < limit1) {
+        if (card.getLearnScore() < limit1) {
             if (rand > 0.5) {
                 return 3;
             } else {
                 return 2;
             }
         }
-        if (cardEntity.getLearnScore() < limit2) {
+        if (card.getLearnScore() < limit2) {
             return 2;
         }
         return 1;
@@ -151,18 +126,18 @@ class LearnQuizCard {
             return true;
         }
         if (type.equals(QuizTypeEnum.CHOICE_1of4) || type.equals(QuizTypeEnum.KEYBOARD_INPUT)) {
-            return answer.equals(cardEntity.getBack());
+            return answer.equals(card.getBackText());
         }
         if (type.equals(QuizTypeEnum.CHOICE_1of4_REVERSE)) {
-            return answer.equals(cardEntity.getFront());
+            return answer.equals(card.getFrontText());
         }
         return false;
     }
 
-    QuizData buildQuizData(List<CardEntityOld> randomCards) {
+    QuizData buildQuizData(List<CardEntity> randomCards) {
         QuizTypeEnum quizType = getQuizType();
         logCard("buildQuizData quizType:" + quizType);
-        return QuizData.build(quizType, cardImageService, cardEntity, randomCards);
+        return QuizData.build(quizType, cardImageService, card, randomCards);
     }
 
     Integer getCompletedRounds() {
@@ -176,7 +151,7 @@ class LearnQuizCard {
     private QuizTypeEnum getQuizType() {
         if (doShowCard) return QuizTypeEnum.SHOW_CARD;
 
-        Integer learnScore = cardEntity.getLearnScore();
+        int learnScore = card.getLearnScore();
 
         if (gotBadAnswer || learnScore == 0) {
             return QuizTypeEnum.CHOICE_1of4;

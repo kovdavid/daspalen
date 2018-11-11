@@ -58,7 +58,7 @@ public class MemriseImportService {
     }
 
     public void createCard(String frontText, String backText) {
-        Card card = Card.createFromMemrise(frontText, backText);
+        Card card = Card.createNew(frontText, backText);
         repository.createNewCard(card);
 
         currentCard++;

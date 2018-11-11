@@ -1,4 +1,4 @@
-package com.github.davsx.llearn.activities.CardImport;
+package com.github.davsx.llearn.activities.BackupImport;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,16 +15,16 @@ import android.widget.Toast;
 import com.github.davsx.llearn.LLearnApplication;
 import com.github.davsx.llearn.LLearnConstants;
 import com.github.davsx.llearn.R;
-import com.github.davsx.llearn.service.CardImport.CardImportService;
+import com.github.davsx.llearn.service.BackupImport.BackupImportService;
 
 import javax.inject.Inject;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-public class CardImportActivity extends AppCompatActivity implements View.OnClickListener {
+public class BackupImportActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Inject
-    CardImportService cardImportService;
+    BackupImportService backupImportService;
 
     private Button buttonImport;
     private ProgressBar progressBar;
@@ -37,7 +37,7 @@ public class CardImportActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_card_import);
+        setContentView(R.layout.activity_backup_import);
 
         ((LLearnApplication) getApplication()).getApplicationComponent().inject(this);
 
@@ -63,9 +63,9 @@ public class CardImportActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void updateViews() {
-        buttonImport.setText("Import cards");
+        buttonImport.setText("Import backup");
         if (importStatus.equals(ImportStatus.IMPORT_NOT_STARTED)) {
-            textViewInfo.setText("Import cards");
+            textViewInfo.setText("Import backup");
             progressBar.setVisibility(View.INVISIBLE);
         } else if (importStatus.equals(ImportStatus.IMPORT_RUNNING)) {
             buttonImport.setText("Cancel import");
@@ -134,15 +134,15 @@ public class CardImportActivity extends AppCompatActivity implements View.OnClic
     private class ImportTask extends AsyncTask<InputStream, String, Boolean> {
         @Override
         protected Boolean doInBackground(InputStream... inputStreams) {
-            cardImportService.startImport(inputStreams[0]);
+            backupImportService.startImport(inputStreams[0]);
 
             boolean run;
             do {
-                run = cardImportService.doNextChunk();
-                publishProgress(cardImportService.getStatus());
+                run = backupImportService.doNextChunk();
+                publishProgress(backupImportService.getStatus());
             } while (run);
 
-            return cardImportService.getFinished();
+            return backupImportService.getFinished();
         }
 
         @Override
@@ -172,7 +172,7 @@ public class CardImportActivity extends AppCompatActivity implements View.OnClic
         @Override
         protected void onCancelled() {
             super.onCancelled();
-            cardImportService.cancelImport();
+            backupImportService.cancelImport();
         }
     }
 }

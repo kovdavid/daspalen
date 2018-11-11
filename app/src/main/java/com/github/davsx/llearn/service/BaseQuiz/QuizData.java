@@ -2,7 +2,8 @@ package com.github.davsx.llearn.service.BaseQuiz;
 
 import android.net.Uri;
 import android.util.Pair;
-import com.github.davsx.llearn.persistence.entity.CardEntityOld;
+import com.github.davsx.llearn.model.Card;
+import com.github.davsx.llearn.persistence.entity.CardEntity;
 import com.github.davsx.llearn.service.CardImage.CardImageService;
 import com.google.common.collect.Lists;
 import info.debatty.java.stringsimilarity.Levenshtein;
@@ -13,6 +14,7 @@ import static com.github.davsx.llearn.LLearnConstants.LEARN_CARD_KEYBOARD_COLUMN
 import static com.github.davsx.llearn.LLearnConstants.SPANISH_LOWERCASE_LETTERS;
 
 public class QuizData {
+    
     private QuizTypeEnum quizType;
     private String frontText;
     private String backText;
@@ -28,20 +30,17 @@ public class QuizData {
         return data;
     }
 
-    public static QuizData build(
-            QuizTypeEnum quizType,
-            CardImageService cardImageService,
-            CardEntityOld card,
-            List<CardEntityOld> randomCards) {
+    public static QuizData build(QuizTypeEnum quizType, CardImageService cardImageService, Card card,
+                                 List<CardEntity> randomCards) {
         if (quizType.equals(QuizTypeEnum.NONE)) {
             return null;
         }
         QuizData data = new QuizData();
-        data.setFrontText(card.getFront());
-        data.setBackText(card.getBack());
+        data.setFrontText(card.getFrontText());
+        data.setBackText(card.getBackText());
         data.setQuizType(quizType);
         data.setCardScore(card.getLearnScore());
-        String path = cardImageService.getCardImagePath(card.getId());
+        String path = cardImageService.getCardImagePath(card.getCardId());
         if (path != null) {
             data.setImageUri(Uri.parse(path));
         }
@@ -51,16 +50,16 @@ public class QuizData {
             data.setReversed();
             data.setChoices(findChoicesFor(data, randomCards));
         } else if (quizType.equals(QuizTypeEnum.KEYBOARD_INPUT)) {
-            data.setKeyboardKeys(findKeyboardKeysFor(card.getBack()));
+            data.setKeyboardKeys(findKeyboardKeysFor(card.getBackText()));
         }
         return data;
     }
 
-    private static List<String> findChoicesFor(QuizData data, List<CardEntityOld> randomCards) {
+    private static List<String> findChoicesFor(QuizData data, List<CardEntity> randomCards) {
         String original = data.getReversed() ? data.getFrontText() : data.getBackText();
         ArrayList<Pair<Integer, String>> candidates = new ArrayList<>();
-        for (CardEntityOld card : randomCards) {
-            String candidate = data.getReversed() ? card.getFront() : card.getBack();
+        for (CardEntity cardEntity : randomCards) {
+            String candidate = data.getReversed() ? cardEntity.getFrontText() : cardEntity.getBackText();
 
             Integer distance = Levenshtein.Distance(original, candidate);
             if (distance > 0) {
@@ -198,4 +197,5 @@ public class QuizData {
     private Boolean getReversed() {
         return isReversed;
     }
+
 }

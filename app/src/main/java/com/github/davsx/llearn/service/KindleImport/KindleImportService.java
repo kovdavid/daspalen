@@ -5,9 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import com.github.davsx.llearn.model.Card;
-import com.github.davsx.llearn.persistence.entity.CardEntity;
-import com.github.davsx.llearn.persistence.entity.CardEntityOld;
-import com.github.davsx.llearn.persistence.repository.CardRepositoryOld;
 import com.github.davsx.llearn.persistence.repository.LLearnRepository;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -66,7 +63,7 @@ public class KindleImportService {
             ArrayList<Card> newCards = new ArrayList<>();
             for (String back : newBackStrings) {
                 Log.i(TAG, "importing Card with back text " + back);
-                newCards.add(Card.createFromKindle(back));
+                newCards.add(Card.createNew("", back));
             }
             repository.createNewCards(newCards);
         }
