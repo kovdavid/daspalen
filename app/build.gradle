@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.github.davsx.llearn"
+        applicationId "com.github.davsx.daspalen"
         minSdkVersion 22
         targetSdkVersion 27
         versionCode 10004

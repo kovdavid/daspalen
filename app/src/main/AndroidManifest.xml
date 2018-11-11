@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
-          package="com.github.davsx.llearn"
+          package="com.github.davsx.daspalen"
           tools:ignore="InnerclassSeparator"
         >
 
@@ -12,16 +12,16 @@
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
-            android:icon="@mipmap/ic_launcher_icon"
-            android:roundIcon="@mipmap/ic_launcher_icon"
+            android:icon="@mipmap/daspalen_icon"
+            android:roundIcon="@mipmap/daspalen"
             android:label="@string/app_name"
-            android:name=".LLearnApplication"
+            android:name="com.github.davsx.daspalen.DaspalenApplication"
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             >
 
         <activity
-                android:name=".activities.Main.MainActivity"
+                android:name="com.github.davsx.daspalen.activities.Main.MainActivity"
                 android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -29,18 +29,18 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".activities.ManageCards.ManageCardsActivity"
+                android:name="com.github.davsx.daspalen.activities.ManageCards.ManageCardsActivity"
                 android:launchMode="singleTask"
-                android:parentActivityName=".activities.Main.MainActivity"
+                android:parentActivityName="com.github.davsx.daspalen.activities.Main.MainActivity"
                 >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
         <activity
-                android:name=".activities.CardEditor.CardEditorActivity"
+                android:name="com.github.davsx.daspalen.activities.CardEditor.CardEditorActivity"
                 android:launchMode="singleTask"
-                android:parentActivityName=".activities.ManageCards.ManageCardsActivity"
+                android:parentActivityName="com.github.davsx.daspalen.activities.ManageCards.ManageCardsActivity"
                 >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -55,45 +55,45 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".activities.LearnQuiz.LearnQuizActivity"
+                android:name="com.github.davsx.daspalen.activities.LearnQuiz.LearnQuizActivity"
                 android:launchMode="singleTask"
-                android:parentActivityName=".activities.Main.MainActivity"
+                android:parentActivityName="com.github.davsx.daspalen.activities.Main.MainActivity"
                 >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
         <activity
-                android:name=".activities.ReviewQuiz.ReviewQuizActivity"
+                android:name="com.github.davsx.daspalen.activities.ReviewQuiz.ReviewQuizActivity"
                 android:launchMode="singleTask"
-                android:parentActivityName=".activities.Main.MainActivity"
+                android:parentActivityName="com.github.davsx.daspalen.activities.Main.MainActivity"
                 >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
         <activity
-                android:name=".activities.BackupCreate.BackupCreateActivity"
+                android:name="com.github.davsx.daspalen.activities.BackupCreate.BackupCreateActivity"
                 android:launchMode="singleTask"
-                android:parentActivityName=".activities.Main.MainActivity"
+                android:parentActivityName="com.github.davsx.daspalen.activities.Main.MainActivity"
                 >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
         <activity
-                android:name=".activities.BackupImport.BackupImportActivity"
+                android:name="com.github.davsx.daspalen.activities.BackupImport.BackupImportActivity"
                 android:launchMode="singleTask"
-                android:parentActivityName=".activities.Main.MainActivity"
+                android:parentActivityName="com.github.davsx.daspalen.activities.Main.MainActivity"
                 >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
         <activity
-                android:name=".activities.KindleImport.KindleImportActivity"
+                android:name="com.github.davsx.daspalen.activities.KindleImport.KindleImportActivity"
                 android:launchMode="singleTask"
-                android:parentActivityName=".activities.ManageCards.ManageCardsActivity"
+                android:parentActivityName="com.github.davsx.daspalen.activities.ManageCards.ManageCardsActivity"
                 >
             <intent-filter>
                 <action android:name="android.intent.action.SEND_MULTIPLE"/>
@@ -102,32 +102,32 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".activities.MemriseImport.MemriseImportActivity"
+                android:name="com.github.davsx.daspalen.activities.MemriseImport.MemriseImportActivity"
                 android:launchMode="singleTask"
-                android:parentActivityName=".activities.ManageCards.ManageCardsActivity"
+                android:parentActivityName="com.github.davsx.daspalen.activities.ManageCards.ManageCardsActivity"
                 >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
         <activity
-                android:name=".activities.Settings.SettingsActivity"
+                android:name="com.github.davsx.daspalen.activities.Settings.SettingsActivity"
                 android:launchMode="singleTask"
-                android:parentActivityName=".activities.Main.MainActivity"
+                android:parentActivityName="com.github.davsx.daspalen.activities.Main.MainActivity"
                 >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
 
-        <receiver android:name=".service.BootReceiver.BootReceiverService">
+        <receiver android:name="com.github.davsx.daspalen.service.BootReceiver.BootReceiverService">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
-        <receiver android:name=".service.CardNotification.CardNotificationService">
+        <receiver android:name="com.github.davsx.daspalen.service.CardNotification.CardNotificationService">
             <intent-filter>
-                <action android:name="com.github.davsx.llearn.WordOfTheDay"/>
+                <action android:name="com.github.davsx.daspalen.WordOfTheDay"/>
             </intent-filter>
         </receiver>
 

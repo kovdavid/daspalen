@@ -5,14 +5,14 @@
     <item
             android:id="@+id/action_export_data"
             android:icon="@drawable/baseline_add_circle_outline_24"
-            android:title="Export data"
+            android:title="Create backup"
             app:showAsAction="never"
             />
 
     <item
             android:id="@+id/action_import_data"
             android:icon="@drawable/baseline_add_circle_outline_24"
-            android:title="Import data"
+            android:title="Import backup"
             app:showAsAction="never"
             />
 
