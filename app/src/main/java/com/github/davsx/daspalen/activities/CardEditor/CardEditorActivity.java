@@ -596,7 +596,7 @@ public class CardEditorActivity extends AppCompatActivity {
         String newBack = editTextBack.getText().toString();
 
         if (card == null) {
-            card = Card.createNew(frontText, backText);
+            card = Card.createNew(newFront, newBack);
             card.updateImageHash(imageHash);
             cardId = repository.createNewCard(card);
         } else {

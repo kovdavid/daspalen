@@ -119,7 +119,7 @@ public class Card {
     }
 
     public void processGoodReviewAnswer() {
-        double multiplier = changeReviewIntervalMultiplierBy(0.10);
+        double multiplier = changeReviewIntervalMultiplierBy(0.05);
 
         long nextInterval = getNextInterval(multiplier);
 
