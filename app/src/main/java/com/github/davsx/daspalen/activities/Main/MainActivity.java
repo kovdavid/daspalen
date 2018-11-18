@@ -21,6 +21,7 @@ import com.github.davsx.daspalen.activities.ManageCards.ManageCardsActivity;
 import com.github.davsx.daspalen.activities.MemriseImport.MemriseImportActivity;
 import com.github.davsx.daspalen.activities.ReviewQuiz.ReviewQuizActivity;
 import com.github.davsx.daspalen.activities.Settings.SettingsActivity;
+import com.github.davsx.daspalen.activities.Sync.SyncActivity;
 import com.github.davsx.daspalen.service.MainActivity.MainActivityService;
 
 import javax.inject.Inject;
@@ -64,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_sync:
+                MainActivity.this.startActivity(new Intent(MainActivity.this, SyncActivity.class));
+                break;
             case R.id.action_export_data:
                 MainActivity.this.startActivity(new Intent(MainActivity.this, BackupCreateActivity.class));
                 break;

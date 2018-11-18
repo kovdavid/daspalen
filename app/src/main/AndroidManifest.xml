@@ -109,6 +109,14 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activities.Sync.SyncActivity"
+            android:launchMode="singleTask"
+            android:parentActivityName="com.github.davsx.daspalen.activities.Main.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
 
         <receiver android:name="com.github.davsx.daspalen.service.BootReceiver.BootReceiverService">
             <intent-filter>

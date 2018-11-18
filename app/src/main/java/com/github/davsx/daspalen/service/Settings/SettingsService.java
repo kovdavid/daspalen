@@ -20,6 +20,7 @@ public class SettingsService {
     private static final String CARD_NOTIFICATION_INTERVAL_MINUTE = "CARD_NOTIFICATION_INTERVAL_MINUTE";
     private static final String IMAGE_SEARCH_API_KEY = "IMAGE_SEARCH_API_KEY";
     private static final String IMAGE_SEARCH_CX_KEY = "IMAGE_SEARCH_CX_KEY";
+    private static final String SYNC_SERVER_URL = "SYNC_SERVER_URL";
 
     private SharedPreferences sharedPreferences;
 
@@ -58,7 +59,8 @@ public class SettingsService {
         Gson gson = new Gson();
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        Type typeOfHashMap = new TypeToken<Map<String, String>>() {}.getType();
+        Type typeOfHashMap = new TypeToken<Map<String, String>>() {
+        }.getType();
         Map<String, String> map = gson.fromJson(json, typeOfHashMap);
 
         Set<Map.Entry<String, String>> entries = map.entrySet();
@@ -77,6 +79,7 @@ public class SettingsService {
                     break;
                 case IMAGE_SEARCH_API_KEY:
                 case IMAGE_SEARCH_CX_KEY:
+                case SYNC_SERVER_URL:
                     editor.putString(entry.getKey(), entry.getValue());
                     break;
             }
@@ -132,6 +135,16 @@ public class SettingsService {
 
     public String getImageSearchCxKey() {
         return sharedPreferences.getString(IMAGE_SEARCH_CX_KEY, null);
+    }
+
+    public String getSyncServerUrl() {
+        return sharedPreferences.getString(SYNC_SERVER_URL, "");
+    }
+
+    public void setSyncServerUrl(String url) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(SYNC_SERVER_URL, url);
+        editor.commit();
     }
 
 }

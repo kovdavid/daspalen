@@ -3,6 +3,13 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_sync"
+        android:icon="@android:drawable/ic_popup_sync"
+        android:title="Sync"
+        app:showAsAction="never"
+        />
+
+    <item
             android:id="@+id/action_export_data"
             android:icon="@drawable/baseline_add_circle_outline_24"
             android:title="Create backup"

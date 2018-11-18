@@ -30,6 +30,7 @@ public class SettingsActivity extends AppCompatActivity {
     private Button buttonNotificationInterval;
     private EditText editTextImageApiKey;
     private EditText editTextImageCxKey;
+    private EditText editTextSyncServerUrl;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,6 +50,7 @@ public class SettingsActivity extends AppCompatActivity {
         buttonNotificationInterval = findViewById(R.id.button_notification_interval);
         editTextImageApiKey = findViewById(R.id.edittext_image_search_api_key);
         editTextImageCxKey = findViewById(R.id.edittext_image_search_cx_key);
+        editTextSyncServerUrl = findViewById(R.id.edittext_sync_server_url);
 
         buttonNotificationFrom.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,6 +101,7 @@ public class SettingsActivity extends AppCompatActivity {
                 settingsService.setImageSearchKeys(
                         editTextImageApiKey.getText().toString(), editTextImageCxKey.getText().toString()
                 );
+                settingsService.setSyncServerUrl(editTextSyncServerUrl.getText().toString());
                 finish();
                 break;
             case R.id.action_cancel:
@@ -200,6 +203,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         editTextImageApiKey.setText(settingsService.getImageSearchApiKey());
         editTextImageCxKey.setText(settingsService.getImageSearchCxKey());
+        editTextSyncServerUrl.setText(settingsService.getSyncServerUrl());
     }
 
 }

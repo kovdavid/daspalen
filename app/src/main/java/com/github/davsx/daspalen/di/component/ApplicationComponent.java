@@ -11,6 +11,7 @@ import com.github.davsx.daspalen.activities.ManageCards.ManageCardsActivity;
 import com.github.davsx.daspalen.activities.MemriseImport.MemriseImportActivity;
 import com.github.davsx.daspalen.activities.ReviewQuiz.ReviewQuizActivity;
 import com.github.davsx.daspalen.activities.Settings.SettingsActivity;
+import com.github.davsx.daspalen.activities.Sync.SyncActivity;
 import com.github.davsx.daspalen.di.module.*;
 import com.github.davsx.daspalen.service.BootReceiver.BootReceiverService;
 import com.github.davsx.daspalen.service.CardNotification.CardNotificationService;
@@ -30,6 +31,7 @@ import javax.inject.Singleton;
         SpeakerModule.class,
         BackupCreateServiceModule.class,
         MemriseImportServiceModule.class,
+        SyncServiceModule.class,
         SettingsModule.class,
         OkHttpModule.class,
         BackupImportServiceModule.class
@@ -57,6 +59,8 @@ public interface ApplicationComponent {
     void inject(ReviewQuizActivity activity);
 
     void inject(SettingsActivity activity);
+
+    void inject(SyncActivity activity);
 
     void inject(CardNotificationService service);
 

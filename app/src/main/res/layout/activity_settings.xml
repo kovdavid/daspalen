@@ -186,6 +186,45 @@
 
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/label_sync_server"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:text="Sync Server"
+                android:textSize="24dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearlayout_cx_key" />
+
+            <LinearLayout
+                android:id="@+id/linearlayout_sync_server_url"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@+id/label_sync_server">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="32dp"
+                    android:layout_weight="0.2"
+                    android:gravity="center"
+                    android:text="URL:" />
+
+                <EditText
+                    android:id="@+id/edittext_sync_server_url"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="32dp"
+                    android:layout_weight="0.8"
+                    android:text=""
+                    app:layout_constraintRight_toRightOf="parent" />
+
+            </LinearLayout>
+
         </android.support.constraint.ConstraintLayout>
 
     </ScrollView>
