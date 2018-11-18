@@ -18,6 +18,8 @@ public class SettingsService {
     private static final String CARD_NOTIFICATION_TO_MINUTE = "CARD_NOTIFICATION_TO_MINUTE";
     private static final String CARD_NOTIFICATION_INTERVAL_HOUR = "CARD_NOTIFICATION_INTERVAL_HOUR";
     private static final String CARD_NOTIFICATION_INTERVAL_MINUTE = "CARD_NOTIFICATION_INTERVAL_MINUTE";
+    private static final String IMAGE_SEARCH_API_KEY = "IMAGE_SEARCH_API_KEY";
+    private static final String IMAGE_SEARCH_CX_KEY = "IMAGE_SEARCH_CX_KEY";
 
     private SharedPreferences sharedPreferences;
 
@@ -74,6 +76,10 @@ public class SettingsService {
                 case CARD_NOTIFICATION_INTERVAL_MINUTE:
                     editor.putInt(entry.getKey(), Integer.valueOf(entry.getValue()));
                     break;
+                case IMAGE_SEARCH_API_KEY:
+                case IMAGE_SEARCH_CX_KEY:
+                    editor.putString(entry.getKey(), entry.getValue());
+                    break;
             }
         }
 
@@ -112,6 +118,26 @@ public class SettingsService {
 
     public Integer getCardNotificationToMinute() {
         return sharedPreferences.getInt(CARD_NOTIFICATION_TO_MINUTE, 0);
+    }
+
+    public String getImageSearchApiKey() {
+        return sharedPreferences.getString(IMAGE_SEARCH_API_KEY, null);
+    }
+
+    public void setImageSearchApiKey(String key) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(IMAGE_SEARCH_API_KEY, key);
+        editor.commit();
+    }
+
+    public String getImageSearchCxKey() {
+        return sharedPreferences.getString(IMAGE_SEARCH_CX_KEY, null);
+    }
+
+    public void setImageSearchCxKey(String key) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(IMAGE_SEARCH_CX_KEY, key);
+        editor.commit();
     }
 
 }

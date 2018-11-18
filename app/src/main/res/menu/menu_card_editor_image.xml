@@ -9,6 +9,12 @@
             />
 
     <item
+        android:id="@+id/action_find_image_feel_lucky"
+        android:title="I feel lucky"
+        app:showAsAction="always"
+        />
+
+    <item
             android:id="@+id/action_delete_image"
             android:title="Delete image"
             app:showAsAction="always"

@@ -1,6 +1,7 @@
 package com.github.davsx.daspalen.service.CardImage;
 
 import android.content.ContentResolver;
+import android.graphics.Bitmap;
 import android.net.Uri;
 
 import java.io.*;
@@ -129,6 +130,20 @@ public class CardImageService {
 
     private File getCardImageFile(String fileName) {
         return new File(imageDir + File.separator + fileName);
+    }
+
+    public String saveTempBitmap(Bitmap bitmap) {
+        try {
+            File outFile = getTempFile();
+            OutputStream outputStream = new FileOutputStream(outFile);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+            outputStream.close();
+
+            return outFile.getAbsolutePath();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public void setCardImageFromTemp(Long cardId) {

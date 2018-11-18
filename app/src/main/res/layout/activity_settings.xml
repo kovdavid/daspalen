@@ -1,121 +1,179 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
-            android:elevation="4dp"
-            app:titleTextColor="@android:color/white"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            android:theme="@style/Theme.AppCompat"
-            />
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/Theme.AppCompat"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:titleTextColor="@android:color/white" />
 
     <TextView
-            android:id="@+id/label_word_of_the_day"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Word of the day Notifications:"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"
-            android:layout_marginTop="32dp"
-            android:layout_marginLeft="16dp"
-            android:textSize="24dp"
-            />
+        android:id="@+id/label_word_of_the_day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Word of the day Notifications"
+        android:textSize="24dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     <CheckBox
-            android:id="@+id/checkbox_word_of_the_day_enable"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Enable"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/label_word_of_the_day"
-            android:layout_marginTop="16dp"
-            android:layout_marginLeft="32dp"
-            />
+        android:id="@+id/checkbox_word_of_the_day_enable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="16dp"
+        android:text="Enable"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/label_word_of_the_day" />
 
     <TextView
-            android:id="@+id/label_word_of_the_day_from"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/checkbox_word_of_the_day_enable"
-            android:layout_marginTop="16dp"
-            android:layout_marginLeft="32dp"
-            android:text="Notification start hour:"
-            />
+        android:id="@+id/label_word_of_the_day_from"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="16dp"
+        android:text="Notification start hour:"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/checkbox_word_of_the_day_enable" />
 
     <Button
-            android:id="@+id/button_notification_from"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBaseline_toBaselineOf="@+id/label_word_of_the_day_from"
-            app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginRight="32dp"
-            android:text="12:00"
-            android:theme="@style/AppTheme.ButtonConfirm"
-            />
+        android:id="@+id/button_notification_from"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="32dp"
+        android:text="12:00"
+        android:theme="@style/AppTheme.ButtonConfirm"
+        app:layout_constraintBaseline_toBaselineOf="@+id/label_word_of_the_day_from"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <TextView
-            android:id="@+id/label_word_of_the_day_to"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button_notification_from"
-            android:layout_marginTop="16dp"
-            android:layout_marginLeft="32dp"
-            android:text="Notification end hour:"
-            />
+        android:id="@+id/label_word_of_the_day_to"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="16dp"
+        android:text="Notification end hour:"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_notification_from" />
 
     <Button
-            android:id="@+id/button_notification_to"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBaseline_toBaselineOf="@+id/label_word_of_the_day_to"
-            app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginRight="32dp"
-            android:text="12:00"
-            android:theme="@style/AppTheme.ButtonConfirm"
-            />
+        android:id="@+id/button_notification_to"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="32dp"
+        android:text="12:00"
+        android:theme="@style/AppTheme.ButtonConfirm"
+        app:layout_constraintBaseline_toBaselineOf="@+id/label_word_of_the_day_to"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <TextView
-            android:id="@+id/label_word_of_the_day_interval"
-            android:layout_width="wrap_content"
+        android:id="@+id/label_word_of_the_day_interval"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="16dp"
+        android:text="Notification interval (hour):"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_notification_to" />
+
+    <Button
+        android:id="@+id/button_notification_interval"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="32dp"
+        android:text="01:00"
+        android:theme="@style/AppTheme.ButtonConfirm"
+        app:layout_constraintBaseline_toBaselineOf="@+id/label_word_of_the_day_interval"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <Button
+        android:id="@+id/button_reset_alarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="16dp"
+        android:text="Reset alarm"
+        android:theme="@style/AppTheme.ButtonConfirm"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_notification_interval" />
+
+    <TextView
+        android:id="@+id/label_image_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Image search API"
+        android:textSize="24dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_reset_alarm" />
+
+    <LinearLayout
+        android:id="@+id/linearlayout_api_key"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/label_image_search">
+
+        <TextView
+            android:id="@+id/textview_image_search_api_key"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button_notification_to"
-            android:layout_marginTop="16dp"
             android:layout_marginLeft="32dp"
-            android:text="Notification interval (hour):"
-            />
+            android:layout_weight="0.2"
+            android:gravity="center"
+            android:text="API key:"/>
 
-    <Button
-            android:id="@+id/button_notification_interval"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/edittext_image_search_api_key"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintBaseline_toBaselineOf="@+id/label_word_of_the_day_interval"
-            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginLeft="16dp"
+            android:layout_weight="0.8"
             android:layout_marginRight="32dp"
-            android:theme="@style/AppTheme.ButtonConfirm"
-            android:text="01:00"
-            />
+            android:text=""
+            app:layout_constraintRight_toRightOf="parent" />
 
-    <Button
-            android:id="@+id/button_reset_alarm"
-            android:layout_width="wrap_content"
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/linearlayout_cx_key"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/linearlayout_api_key">
+
+        <TextView
+            android:id="@+id/textview_image_search_cx_key"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button_notification_interval"
-            android:layout_marginTop="16dp"
+            android:layout_marginLeft="32dp"
+            android:layout_weight="0.2"
+            android:gravity="center"
+            android:text="CX key:"/>
+
+        <EditText
+            android:id="@+id/edittext_image_search_cx_key"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
             android:layout_marginRight="32dp"
-            android:theme="@style/AppTheme.ButtonConfirm"
-            android:text="Reset alarm"
-            />
+            android:layout_weight="0.8"
+            android:text=""
+            app:layout_constraintRight_toRightOf="parent" />
+
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

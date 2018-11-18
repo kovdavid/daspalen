@@ -28,8 +28,12 @@ import com.github.davsx.daspalen.model.Card;
 import com.github.davsx.daspalen.persistence.entity.CardEntity;
 import com.github.davsx.daspalen.persistence.repository.DaspalenRepository;
 import com.github.davsx.daspalen.service.CardImage.CardImageService;
+import com.github.davsx.daspalen.service.ImageService.GoogleImageService;
 import com.github.davsx.daspalen.service.ManageCards.ManageCardsService;
+import com.github.davsx.daspalen.service.Settings.SettingsService;
 import com.github.davsx.daspalen.service.Speaker.SpeakerService;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
 
 import javax.inject.Inject;
 
@@ -43,6 +47,8 @@ public class CardEditorActivity extends AppCompatActivity {
     CardImageService cardImageService;
     @Inject
     SpeakerService speakerService;
+    @Inject
+    SettingsService settingsService;
 
     private ImageView imageView;
     private EditText editTextFront;
@@ -68,6 +74,8 @@ public class CardEditorActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPreferences;
 
+    private OkHttpClient httpClient;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +83,8 @@ public class CardEditorActivity extends AppCompatActivity {
 
         ((DaspalenApplication) getApplication()).getApplicationComponent().inject(this);
         sharedPreferences = getPreferences(MODE_PRIVATE);
+
+        httpClient = new OkHttpClient();
 
         imageView = findViewById(R.id.card_image);
         editTextFront = findViewById(R.id.edittext_front);
@@ -109,6 +119,12 @@ public class CardEditorActivity extends AppCompatActivity {
         });
 
         handleIntent(getIntent());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        httpClient.cancel(DaspalenConstants.OKHTTP_TAG);
     }
 
     @Override
@@ -227,6 +243,9 @@ public class CardEditorActivity extends AppCompatActivity {
                             case R.id.action_find_image_browser:
                                 searchImageFromWeb();
                                 break;
+                            case R.id.action_find_image_feel_lucky:
+                                onFindImageFeelLucky();
+                                break;
                             case R.id.action_delete_image:
                                 showImageDeleteConfirmDialog();
                                 break;
@@ -283,6 +302,41 @@ public class CardEditorActivity extends AppCompatActivity {
                 popup.show();
             }
         });
+    }
+
+    private void onFindImageFeelLucky() {
+        String frontString = editTextFront.getText().toString();
+        String backString = editTextBack.getText().toString();
+
+        String query;
+        if (frontString.length() > 0) {
+            query = frontString;
+        } else if (backString.length() > 0) {
+            query = backString;
+        } else {
+            Toast.makeText(this, "Front and Back are empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Request request = GoogleImageService.getRequest(settingsService, query);
+        if (request == null) {
+            Toast.makeText(this, "Image search API KEY or CX KEY settings are missing", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        ChosenImageHandler handler = new ChosenImageHandler() {
+            @Override
+            public void handle(Bitmap bitmap) {
+                imagePath = cardImageService.saveTempBitmap(bitmap);
+                imageHash = cardImageService.getImageHash(imagePath);
+                imageView.setImageBitmap(bitmap);
+            }
+        };
+
+        ImageChooserDialog dialog = new ImageChooserDialog(this);
+        dialog.setRequest(request);
+        dialog.setChosenImageHandler(handler);
+        dialog.show();
     }
 
     private void redrawToggleButtons() {

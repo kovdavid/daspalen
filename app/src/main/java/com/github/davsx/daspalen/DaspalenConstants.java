@@ -43,4 +43,6 @@ public class DaspalenConstants {
     public static final List<Integer> CARD_TYPES_ALL = new ArrayList<>(
             Arrays.asList(CARD_TYPE_INCOMPLETE, CARD_TYPE_LEARN, CARD_TYPE_REVIEW));
     public static final String CARD_NOTIFICATION_CHANNEL = "DASPALEN_CARD_NOTIFICATION_CHANNEL";
+
+    public static final String OKHTTP_TAG = "DASPALEN_OK_HTTP_TAG";
 }
