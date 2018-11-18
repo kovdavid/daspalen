@@ -94,6 +94,10 @@ public class CardNotificationEntity {
         return this;
     }
 
+    public void incrementLocalVersion() {
+        this.localVersion++;
+    }
+
     @NonNull
     public Integer getSyncedVersion() {
         return syncedVersion;

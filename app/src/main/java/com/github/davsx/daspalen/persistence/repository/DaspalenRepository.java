@@ -126,6 +126,11 @@ public class DaspalenRepository {
         return loadCards(cardEntities);
     }
 
+    public List<Card> getCardNotificationCandidates(int limit) {
+        List<CardEntity> cardEntities = dao.getCardNotificationCandidateEntities(limit);
+        return loadCards(cardEntities);
+    }
+
     public int getAllCardCount() {
         return dao.getAllCardCount();
     }

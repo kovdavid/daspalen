@@ -99,6 +99,11 @@ public abstract class DaspalenDao {
             + " ORDER BY RANDOM() LIMIT :count")
     public abstract List<CardEntity> getReviewFillCardEntities(Integer quizType, List<Long> cardIdBlackList, Integer count);
 
+    @Query("SELECT c.* FROM card c JOIN card_notification cn USING(id_card)"
+            + " WHERE c.enabled = 1 AND cn.enabled = 1"
+            + " ORDER BY cn.last_notification_at ASC LIMIT :limit")
+    public abstract List<CardEntity> getCardNotificationCandidateEntities(int limit);
+
     @Query("DELETE FROM card")
     abstract void deleteAllCards();
 

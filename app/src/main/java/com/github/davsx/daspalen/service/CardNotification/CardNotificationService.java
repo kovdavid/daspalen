@@ -11,12 +11,13 @@ import android.text.Html;
 import com.github.davsx.daspalen.DaspalenApplication;
 import com.github.davsx.daspalen.DaspalenConstants;
 import com.github.davsx.daspalen.R;
-import com.github.davsx.daspalen.persistence.entity.CardEntity;
+import com.github.davsx.daspalen.model.Card;
 import com.github.davsx.daspalen.persistence.repository.DaspalenRepository;
 import com.github.davsx.daspalen.service.Settings.SettingsService;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Random;
 
 public class CardNotificationService extends BroadcastReceiver {
 
@@ -32,12 +33,13 @@ public class CardNotificationService extends BroadcastReceiver {
     }
 
     private void showNotification(Context context) {
-        List<CardEntity> cards = repository.getRandomCardEntities(1);
+        List<Card> cards = repository.getCardNotificationCandidates(10);
         if (cards.size() == 0) {
             return;
         }
 
-        CardEntity card = cards.get(0);
+        Card card = cards.get(new Random().nextInt(cards.size()));
+
         String message = String.format("<b>Front:</b> %s<br /><b>Back:</b> %s",
                 card.getFrontText(), card.getBackText());
 
@@ -67,6 +69,9 @@ public class CardNotificationService extends BroadcastReceiver {
         }
 
         notificationManager.notify(0, builder.build());
+
+        card.setLastNotificationAt(System.currentTimeMillis());
+        repository.updateCard(card);
 
         CardNotificationAlarmService.resetAlarm(context, settingsService);
     }

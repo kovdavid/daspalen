@@ -222,6 +222,13 @@ public class Card {
         return multiplier;
     }
 
+    public void setCardEnabled(boolean enabled) {
+        cardEntity.setEnabled(enabled);
+        cardEntity.incrementLocalVersion();
+        cardEntity.setUpdatedAt(System.currentTimeMillis());
+        cardEntityChanged = true;
+    }
+
     public String getBackText() {
         return cardEntity.getBackText();
     }
@@ -230,9 +237,11 @@ public class Card {
         return cardEntity.getEnabled();
     }
 
-    public void setCardEnabled(boolean enabled) {
-        cardEntity.setEnabled(enabled);
-        cardEntityChanged = true;
+    public void setLastNotificationAt(long timestamp) {
+        cardNotificationEntity.setLastNotificationAt(timestamp);
+        cardNotificationEntity.incrementLocalVersion();
+        cardNotificationEntity.setUpdatedAt(System.currentTimeMillis());
+        cardNotificationEntityChanged = true;
     }
 
     public CardEntity getCardEntity() {
@@ -287,6 +296,8 @@ public class Card {
 
     public void setNotificationEnabled(boolean enabled) {
         cardNotificationEntity.setEnabled(enabled);
+        cardNotificationEntity.incrementLocalVersion();
+        cardNotificationEntity.setUpdatedAt(System.currentTimeMillis());
         cardNotificationEntityChanged = true;
     }
 
@@ -317,4 +328,5 @@ public class Card {
     public boolean isCardQuizEntityChanged() {
         return cardQuizEntityChanged;
     }
+
 }
