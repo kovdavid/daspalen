@@ -34,19 +34,19 @@ public class Card {
                 .setCreatedAt(System.currentTimeMillis())
                 .setUpdatedAt(System.currentTimeMillis())
                 .setLocalVersion(1)
-                .setSyncedVersion(0);
+                .setServerVersion(0);
         CardQuizEntity cardQuizEntity = new CardQuizEntity()
                 .setQuizType(DaspalenConstants.CARD_TYPE_LEARN)
                 .setLearnScore(0)
                 .setCreatedAt(System.currentTimeMillis())
                 .setUpdatedAt(System.currentTimeMillis())
                 .setLocalVersion(1)
-                .setSyncedVersion(0);
+                .setServerVersion(0);
         CardNotificationEntity cardNotificationEntity = new CardNotificationEntity()
                 .setCreatedAt(System.currentTimeMillis())
                 .setUpdatedAt(System.currentTimeMillis())
                 .setLocalVersion(1)
-                .setSyncedVersion(0);
+                .setServerVersion(0);
 
         Card c = new Card(cardEntity, cardQuizEntity, cardNotificationEntity);
 

@@ -40,8 +40,8 @@ public class CardEntity {
     public Integer localVersion = 0;
 
     @NonNull
-    @ColumnInfo(name = "synced_version")
-    public Integer syncedVersion = 0;
+    @ColumnInfo(name = "server_version")
+    public Integer serverVersion = 0;
 
     @NonNull
     @ColumnInfo(name = "created_at")
@@ -128,12 +128,12 @@ public class CardEntity {
     }
 
     @NonNull
-    public Integer getSyncedVersion() {
-        return syncedVersion;
+    public Integer getServerVersion() {
+        return serverVersion;
     }
 
-    public CardEntity setSyncedVersion(@NonNull Integer syncedVersion) {
-        this.syncedVersion = syncedVersion;
+    public CardEntity setServerVersion(@NonNull Integer serverVersion) {
+        this.serverVersion = serverVersion;
         return this;
     }
 
