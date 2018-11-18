@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.media.ThumbnailUtils;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,14 +17,13 @@ import android.view.Window;
 import android.widget.Toast;
 import com.github.davsx.daspalen.DaspalenConstants;
 import com.github.davsx.daspalen.R;
-import com.squareup.okhttp.*;
+import okhttp3.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ImageChooserDialog extends AlertDialog {
@@ -40,27 +41,26 @@ public class ImageChooserDialog extends AlertDialog {
     ImageChooserDialog(Context context) {
         super(context);
         this.context = context;
-        this.httpClient = new OkHttpClient();
-        this.httpClient.setProtocols(Arrays.asList(Protocol.HTTP_1_1));
     }
 
     @Override
     protected void onStop() {
+        imageQueue.clear();
+        httpClient.dispatcher().cancelAll();
         super.onStop();
-        httpClient.cancel(DaspalenConstants.OKHTTP_TAG);
     }
 
     @Override
     public void show() {
         httpClient.newCall(initialRequest).enqueue(new Callback() {
             @Override
-            public void onFailure(Request request, IOException e) {
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 Toast.makeText(context, "Could not request images JSON", Toast.LENGTH_SHORT).show();
-                dismiss();
+                ImageChooserDialog.this.dismiss();
             }
 
             @Override
-            public void onResponse(Response response) {
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
                 String json;
                 try {
                     json = response.body().string();
@@ -104,7 +104,7 @@ public class ImageChooserDialog extends AlertDialog {
             @Override
             public void handle(Bitmap bitmap) {
                 ImageChooserDialog.this.handler.handle(bitmap);
-                dismiss();
+                ImageChooserDialog.this.dismiss();
             }
         });
         recyclerView = view.findViewById(R.id.recycler_view);
@@ -130,17 +130,18 @@ public class ImageChooserDialog extends AlertDialog {
 
         httpClient.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Request request, IOException e) {
-                Log.w(TAG, "Could not download image: " + request.url().toString() + " " + e);
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.w(TAG, "Could not download image: " + call.request().url().toString() + " " + e);
                 downloadImageFromQueue();
             }
 
             @Override
-            public void onResponse(Response response) {
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
                 final Bitmap bitmap;
                 try {
-                    bitmap = BitmapFactory.decodeStream(response.body().byteStream());
-                } catch (IOException e) {
+                    Bitmap httpBitmap = BitmapFactory.decodeStream(response.body().byteStream());
+                    bitmap = ThumbnailUtils.extractThumbnail(httpBitmap, 600, 600);
+                } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(context, "Could not download image", Toast.LENGTH_SHORT).show();
                     return;
@@ -161,7 +162,12 @@ public class ImageChooserDialog extends AlertDialog {
         this.handler = handler;
     }
 
+    void setHttpClient(OkHttpClient httpClient) {
+        this.httpClient = httpClient;
+    }
+
     void setRequest(Request request) {
         this.initialRequest = request;
     }
+
 }

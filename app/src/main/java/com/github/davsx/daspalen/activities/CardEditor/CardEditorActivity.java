@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
@@ -32,8 +33,8 @@ import com.github.davsx.daspalen.service.ImageService.GoogleImageService;
 import com.github.davsx.daspalen.service.ManageCards.ManageCardsService;
 import com.github.davsx.daspalen.service.Settings.SettingsService;
 import com.github.davsx.daspalen.service.Speaker.SpeakerService;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 
 import javax.inject.Inject;
 
@@ -49,6 +50,8 @@ public class CardEditorActivity extends AppCompatActivity {
     SpeakerService speakerService;
     @Inject
     SettingsService settingsService;
+    @Inject
+    OkHttpClient httpClient;
 
     private ImageView imageView;
     private EditText editTextFront;
@@ -74,7 +77,6 @@ public class CardEditorActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPreferences;
 
-    private OkHttpClient httpClient;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,9 +84,12 @@ public class CardEditorActivity extends AppCompatActivity {
         setContentView(R.layout.activity_card_editor);
 
         ((DaspalenApplication) getApplication()).getApplicationComponent().inject(this);
+        setSupportActionBar((android.support.v7.widget.Toolbar) findViewById(R.id.toolbar));
         sharedPreferences = getPreferences(MODE_PRIVATE);
 
-        httpClient = new OkHttpClient();
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("   Card");
+        actionBar.setIcon(R.mipmap.daspalen_icon);
 
         imageView = findViewById(R.id.card_image);
         editTextFront = findViewById(R.id.edittext_front);
@@ -124,7 +129,7 @@ public class CardEditorActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        httpClient.cancel(DaspalenConstants.OKHTTP_TAG);
+        this.httpClient.dispatcher().cancelAll();
     }
 
     @Override
@@ -336,6 +341,7 @@ public class CardEditorActivity extends AppCompatActivity {
         ImageChooserDialog dialog = new ImageChooserDialog(this);
         dialog.setRequest(request);
         dialog.setChosenImageHandler(handler);
+        dialog.setHttpClient(httpClient);
         dialog.show();
     }
 

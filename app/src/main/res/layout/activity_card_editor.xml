@@ -12,9 +12,7 @@
         android:background="@color/colorPrimary"
         android:elevation="4dp"
         android:theme="@style/Theme.AppCompat"
-        app:navigationIcon="@mipmap/daspalen_icon"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:title="Card"
         app:titleTextColor="@android:color/white" />
 
 

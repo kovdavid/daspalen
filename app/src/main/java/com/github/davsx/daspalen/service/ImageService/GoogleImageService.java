@@ -3,7 +3,7 @@ package com.github.davsx.daspalen.service.ImageService;
 import android.net.Uri;
 import com.github.davsx.daspalen.DaspalenConstants;
 import com.github.davsx.daspalen.service.Settings.SettingsService;
-import com.squareup.okhttp.Request;
+import okhttp3.Request;
 
 public class GoogleImageService {
 

@@ -31,6 +31,7 @@ import javax.inject.Singleton;
         BackupCreateServiceModule.class,
         MemriseImportServiceModule.class,
         SettingsModule.class,
+        OkHttpModule.class,
         BackupImportServiceModule.class
 })
 public interface ApplicationComponent {
