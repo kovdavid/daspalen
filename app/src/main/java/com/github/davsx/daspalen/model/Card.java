@@ -6,7 +6,11 @@ import com.github.davsx.daspalen.persistence.entity.CardNotificationEntity;
 import com.github.davsx.daspalen.persistence.entity.CardQuizEntity;
 import com.google.gson.annotations.Expose;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 import java.util.Random;
+import java.util.TimeZone;
 
 public class Card {
 
@@ -226,6 +230,15 @@ public class Card {
         return cardEntity.getBackText();
     }
 
+    public boolean getCardEnabled() {
+        return cardEntity.getEnabled();
+    }
+
+    public void setCardEnabled(boolean enabled) {
+        cardEntity.setEnabled(enabled);
+        cardEntityChanged = true;
+    }
+
     public CardEntity getCardEntity() {
         return cardEntity;
     }
@@ -256,15 +269,6 @@ public class Card {
         return cardQuizEntity.getNextReviewAt() - cardQuizEntity.getLastReviewAt();
     }
 
-    public boolean getEnabled() {
-        return cardEntity.getEnabled();
-    }
-
-    public void setEnabled(boolean enabled) {
-        cardEntity.setEnabled(enabled);
-        cardEntityChanged = true;
-    }
-
     public String getFrontText() {
         return cardEntity.getFrontText();
     }
@@ -279,6 +283,31 @@ public class Card {
 
     public long getNextReviewAt() {
         return cardQuizEntity.getNextReviewAt();
+    }
+
+    public boolean getNotificationEnabled() {
+        return cardNotificationEntity.getEnabled();
+    }
+
+    public void setNotificationEnabled(boolean enabled) {
+        cardNotificationEntity.setEnabled(enabled);
+        cardNotificationEntityChanged = true;
+    }
+
+    public String getQuizInfo() {
+        if (cardQuizEntity != null) {
+            if (cardQuizEntity.getQuizType().equals(DaspalenConstants.CARD_TYPE_LEARN)) {
+                return String.format("Learn score: %d", cardQuizEntity.getLearnScore());
+            }
+            if (cardQuizEntity.getQuizType().equals(DaspalenConstants.CARD_TYPE_REVIEW)) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTimeZone(TimeZone.getDefault());
+                cal.setTimeInMillis(cardQuizEntity.getNextReviewAt());
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+                return formatter.format(cal.getTime());
+            }
+        }
+        return "";
     }
 
     public boolean isCardEntityChanged() {

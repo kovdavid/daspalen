@@ -68,12 +68,12 @@ public class ManageCardsService {
     }
 
     public void enableCard(Card card) {
-        card.setEnabled(true);
+        card.setCardEnabled(true);
         repository.updateCard(card);
     }
 
     public void disableCard(Card card) {
-        card.setEnabled(false);
+        card.setCardEnabled(false);
         repository.updateCard(card);
     }
 

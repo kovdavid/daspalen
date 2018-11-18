@@ -1,240 +1,222 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                             xmlns:app="http://schemas.android.com/apk/res-auto"
-                                             xmlns:tools="http://schemas.android.com/tools"
-                                             android:layout_width="match_parent"
-                                             android:layout_height="match_parent"
-                                             tools:layout_editor_absoluteY="89dp">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/Theme.AppCompat"
+        app:navigationIcon="@mipmap/daspalen_icon"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:title="Card"
+        app:titleTextColor="@android:color/white" />
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="56dp"
-            android:minWidth="56dp"
-            android:text="0"
-            android:textSize="24sp"
-            android:background="@drawable/baseline_panorama_fish_eye_24"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="8dp"
-            android:layout_marginRight="8dp"
-            android:id="@+id/textview_card_score"
-            android:textStyle="bold"
-            android:gravity="center_vertical|center_horizontal"
-            />
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="56dp"
-            android:text="2018-10-10\n12:00:00"
-            android:textSize="16sp"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="8dp"
-            android:layout_marginRight="8dp"
-            android:id="@+id/textview_next_review"
-            android:textStyle="bold"
-            android:gravity="center_vertical|center_horizontal"
-            />
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/label_front"
-            android:text="Front"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textview_card_score"
-            android:layout_marginTop="16dp"
-            android:layout_marginLeft="16dp"
-            android:textSize="16dp"
-            />
 
     <LinearLayout
-            android:id="@+id/layout_front_text"
-            android:layout_width="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/label_front"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@+id/textview_card_score"
-            >
+            android:text="Front"
+            android:textSize="16dp" />
 
-        <EditText
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:id="@+id/edittext_front"
-                android:inputType="textNoSuggestions|textMultiLine"
-                android:textSize="20sp"
-                app:layout_constraintTop_toBottomOf="@id/button_tts"
-                android:layout_marginLeft="16dp"
-                android:text=""
-                />
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
-        <ImageButton
-                android:id="@+id/imagebutton_front_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="?android:attr/actionOverflowButtonStyle"
-                />
+        <TextView
+            android:id="@+id/textview_quiz_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16dp" />
 
     </LinearLayout>
 
-    <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/baseline_hearing_24"
-            android:id="@+id/button_tts"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layout_front_text"
-            android:layout_marginTop="16dp"
-            android:layout_marginRight="16dp"
-            />
 
-    <TextView
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/edittext_front"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_weight="1"
+            android:inputType="textNoSuggestions|textMultiLine"
+            android:text=""
+            android:textSize="20sp" />
+
+        <ImageButton
+            android:id="@+id/imagebutton_front_text"
+            style="?android:attr/actionOverflowButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/label_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/label_back"
             android:text="Back"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/button_tts"
-            android:layout_marginTop="16dp"
-            android:layout_marginLeft="16dp"
-            android:textSize="16dp"
-            />
+            android:textSize="16dp" />
 
-    <ImageView
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <ImageView
             android:id="@+id/button_swap_front_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@android:drawable/ic_popup_sync"
-            android:tint="@color/colorPrimary"
-            app:layout_constraintLeft_toRightOf="@+id/label_back"
-            app:layout_constraintRight_toLeftOf="@+id/button_tts"
-            app:layout_constraintTop_toBottomOf="@+id/button_tts"
-            app:layout_constraintBottom_toTopOf="@+id/button_tts"
-            />
+            android:tint="@color/colorPrimary" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:id="@+id/button_tts"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/baseline_hearing_24" />
+
+    </LinearLayout>
 
     <LinearLayout
-            android:id="@+id/layout_back_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@+id/button_tts"
-            >
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <EditText
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:id="@+id/edittext_back"
-                android:inputType="textNoSuggestions|textMultiLine"
-                android:textSize="20sp"
-                app:layout_constraintTop_toBottomOf="@id/button_tts"
-                android:layout_marginLeft="16dp"
-                android:text=""
-                />
+            android:id="@+id/edittext_back"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_weight="1"
+            android:inputType="textNoSuggestions|textMultiLine"
+            android:text=""
+            android:textSize="20sp" />
 
         <ImageButton
-                android:id="@+id/imagebutton_back_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="?android:attr/actionOverflowButtonStyle"
-                />
+            android:id="@+id/imagebutton_back_text"
+            style="?android:attr/actionOverflowButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
+    <TableLayout
+        android:id="@+id/table_enable_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp">
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/label_image"
-            android:text="Image"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layout_back_text"
-            android:layout_marginTop="8dp"
-            android:layout_marginLeft="16dp"
-            android:textSize="16dp"
-            />
-
-    <ImageView
-            android:id="@+id/card_image"
+        <TableRow
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@+id/label_image"
-            app:layout_constraintBottom_toTopOf="@+id/layout_buttons"
-            android:scaleType="centerInside"
-            android:src="@android:drawable/ic_menu_report_image"
-            android:layout_margin="8dp"
-            />
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="16dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Card" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Notification" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ToggleButton
+                android:id="@+id/toggle_button_card_enabled"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="16dp"
+                android:layout_weight="1"
+                android:textOff="Disabled"
+                android:textOn="Enabled"
+                android:theme="@style/AppTheme.ButtonDelete" />
+
+            <ToggleButton
+                android:id="@+id/toggle_button_notification_enabled"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textOff="Disabled"
+                android:textOn="Enabled"
+                android:theme="@style/AppTheme.ButtonGreen" />
+
+        </TableRow>
+
+    </TableLayout>
 
     <LinearLayout
-            android:layout_width="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/label_image"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_margin="16dp"
-            android:id="@+id/layout_buttons"
-            >
+            android:text="Image"
+            android:textSize="16dp" />
 
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="64dp"
-                android:theme="@style/AppTheme.ButtonDelete"
-                android:text="⊖ Disable"
-                android:textAllCaps="false"
-                android:id="@+id/button_disable"
-                android:textStyle="bold"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:textSize="20sp"
-                />
-
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="64dp"
-                android:theme="@style/AppTheme.ButtonGreen"
-                android:text="⊕ Enable"
-                android:textAllCaps="false"
-                android:id="@+id/button_enable"
-                android:textStyle="bold"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:textSize="20sp"
-                />
-
-        <Space
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1"/>
-
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="64dp"
-                android:theme="@style/AppTheme.ButtonCancel"
-                android:text="✗ Cancel"
-                android:textAllCaps="false"
-                android:id="@+id/button_cancel"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:textSize="20sp"
-                />
-
-        <Space
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1"/>
-
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="64dp"
-                android:theme="@style/AppTheme.ButtonConfirm"
-                android:text="✓ Save"
-                android:textStyle="bold"
-                android:textAllCaps="false"
-                android:id="@+id/button_save"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:textSize="20sp"
-                />
+        <ImageButton
+            android:id="@+id/imagebutton_image"
+            style="?android:attr/actionOverflowButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 
-</android.support.constraint.ConstraintLayout>
+    <ImageView
+        android:id="@+id/card_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:scaleType="centerInside"
+        android:src="@android:drawable/ic_menu_report_image" />
+
+</LinearLayout>

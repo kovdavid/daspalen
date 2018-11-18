@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+            android:id="@+id/action_find_image_browser"
+            android:title="Find image with a browser"
+            app:showAsAction="always"
+            />
+
+    <item
+            android:id="@+id/action_delete_image"
+            android:title="Delete image"
+            app:showAsAction="always"
+            />
+
+</menu>

@@ -15,6 +15,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
@@ -30,11 +32,6 @@ import com.github.davsx.daspalen.service.ManageCards.ManageCardsService;
 import com.github.davsx.daspalen.service.Speaker.SpeakerService;
 
 import javax.inject.Inject;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
 public class CardEditorActivity extends AppCompatActivity {
 
@@ -50,16 +47,13 @@ public class CardEditorActivity extends AppCompatActivity {
     private ImageView imageView;
     private EditText editTextFront;
     private EditText editTextBack;
-    private ImageView buttonTTS;
-    private Button buttonSave;
-    private Button buttonCancel;
-    private Button buttonEnable;
-    private Button buttonDisable;
-    private TextView textViewCardScore;
-    private TextView textViewNextReview;
     private ImageButton imageButtonFront;
     private ImageButton imageButtonBack;
-    private ImageView buttonSwap;
+    private ImageButton imageButtonImage;
+    private TextView textViewQuizInfo;
+    private ToggleButton toggleButtonCardEnabled;
+    private ToggleButton toggleButtonNotificationEnabled;
+    private TableLayout tableEnableButtons;
 
     private Card card = null;
     private Long cardId = 0L;
@@ -82,8 +76,89 @@ public class CardEditorActivity extends AppCompatActivity {
         ((DaspalenApplication) getApplication()).getApplicationComponent().inject(this);
         sharedPreferences = getPreferences(MODE_PRIVATE);
 
-        setUpViews();
+        imageView = findViewById(R.id.card_image);
+        editTextFront = findViewById(R.id.edittext_front);
+        editTextBack = findViewById(R.id.edittext_back);
+        textViewQuizInfo = findViewById(R.id.textview_quiz_info);
+        imageButtonFront = findViewById(R.id.imagebutton_front_text);
+        imageButtonBack = findViewById(R.id.imagebutton_back_text);
+        imageButtonImage = findViewById(R.id.imagebutton_image);
+        toggleButtonCardEnabled = findViewById(R.id.toggle_button_card_enabled);
+        toggleButtonNotificationEnabled = findViewById(R.id.toggle_button_notification_enabled);
+        tableEnableButtons = findViewById(R.id.table_enable_buttons);
+
+        ImageView buttonTTS = findViewById(R.id.button_tts);
+        ImageView buttonSwap = findViewById(R.id.button_swap_front_back);
+
+        buttonSwap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String frontText = editTextFront.getText().toString();
+                String backText = editTextBack.getText().toString();
+
+                editTextFront.setText(backText);
+                editTextBack.setText(frontText);
+            }
+        });
+
+        buttonTTS.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                speakerService.speak(editTextBack.getText().toString());
+            }
+        });
+
         handleIntent(getIntent());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_card_editor, menu);
+
+        if (card == null) {
+            MenuItem item = menu.findItem(R.id.action_card_info);
+            item.setVisible(false);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_save:
+                onActionSave();
+                break;
+            case R.id.action_card_info:
+                CardInfoDialog.show(this, card);
+                break;
+            case R.id.action_cancel:
+                onActionCancel();
+                break;
+        }
+
+        return true;
+    }
+
+    private void onActionSave() {
+        CardEntity duplicateCardEntity = findDuplicateCardEntity();
+        boolean isNewCard = card == null;
+
+        if (duplicateCardEntity == null) {
+            saveCard();
+            if (isNewCard) {
+                openManageCardsActivity(ManageCardsService.RESULT_CARD_ADDED);
+            } else {
+                openManageCardsActivity(ManageCardsService.RESULT_CARD_CHANGED);
+            }
+        } else {
+            showDuplicateCardAlert(duplicateCardEntity);
+        }
+    }
+
+    private void onActionCancel() {
+        openManageCardsActivity(ManageCardsService.RESULT_CARD_NOT_CHANGED);
     }
 
     @Override
@@ -99,6 +174,29 @@ public class CardEditorActivity extends AppCompatActivity {
 
         editTextFront.setText(frontText);
         editTextBack.setText(backText);
+
+        if (card == null) {
+            tableEnableButtons.setVisibility(View.GONE);
+        } else {
+            textViewQuizInfo.setText(card.getQuizInfo());
+
+            toggleButtonCardEnabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    card.setCardEnabled(isChecked);
+                    redrawToggleButtons();
+                }
+            });
+            toggleButtonNotificationEnabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    card.setNotificationEnabled(isChecked);
+                    redrawToggleButtons();
+                }
+            });
+
+            redrawToggleButtons();
+        }
 
         if (receivedTranslation != null && receivedTranslation.length() > 0) {
             showTranslationDialog();
@@ -117,83 +215,34 @@ public class CardEditorActivity extends AppCompatActivity {
             imageView.setImageResource(android.R.drawable.ic_menu_report_image);
         }
 
-        int learnScore = card != null ? card.getLearnScore() : 0;
-        if (learnScore < DaspalenConstants.MAX_CARD_LEARN_SCORE) {
-            textViewCardScore.setVisibility(View.VISIBLE);
-            textViewCardScore.setText(String.valueOf(learnScore));
-            textViewNextReview.setVisibility(View.INVISIBLE);
-        } else {
-            textViewCardScore.setVisibility(View.INVISIBLE);
-            textViewNextReview.setVisibility(View.VISIBLE);
-            Calendar cal = Calendar.getInstance();
-            cal.setTimeZone(TimeZone.getDefault());
-            cal.setTimeInMillis(card.getNextReviewAt());
-            Date dateTime = cal.getTime();
-            SimpleDateFormat format_date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-            SimpleDateFormat format_time = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
-            textViewNextReview.setText(
-                    String.format("%s\n%s", format_date.format(dateTime), format_time.format(dateTime))
-            );
-        }
-
-        imageView.setOnClickListener(new View.OnClickListener() {
+        imageButtonImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (imagePath == null) {
-                    searchImageFromWeb();
-                } else {
-                    showImageEditDialog();
-                }
+                PopupMenu popup = new PopupMenu(CardEditorActivity.this, imageButtonImage);
+                popup.getMenuInflater().inflate(R.menu.menu_card_editor_image, popup.getMenu());
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.action_find_image_browser:
+                                searchImageFromWeb();
+                                break;
+                            case R.id.action_delete_image:
+                                showImageDeleteConfirmDialog();
+                                break;
+                        }
+                        return true;
+                    }
+                });
+                popup.show();
             }
         });
-
-        buttonTTS.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                speakerService.speak(editTextBack.getText().toString());
-            }
-        });
-
-        buttonSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onSaveCard();
-            }
-        });
-
-        buttonCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openManageCardsActivity(ManageCardsService.RESULT_CARD_NOT_CHANGED);
-            }
-        });
-
-        if (cardId > 0L && card != null) {
-            buttonEnable.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    toggleCardEnabled();
-                }
-            });
-            buttonDisable.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    toggleCardEnabled();
-                }
-            });
-
-            redrawEnableButton();
-        } else {
-            buttonEnable.setOnClickListener(null);
-            buttonEnable.setEnabled(false);
-            buttonEnable.setVisibility(View.GONE);
-        }
 
         imageButtonFront.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 PopupMenu popup = new PopupMenu(CardEditorActivity.this, imageButtonFront);
-                popup.getMenuInflater().inflate(R.menu.card_editor_edittext_menu, popup.getMenu());
+                popup.getMenuInflater().inflate(R.menu.menu_card_editor_edittext, popup.getMenu());
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
@@ -216,7 +265,7 @@ public class CardEditorActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 PopupMenu popup = new PopupMenu(CardEditorActivity.this, imageButtonBack);
-                popup.getMenuInflater().inflate(R.menu.card_editor_edittext_menu, popup.getMenu());
+                popup.getMenuInflater().inflate(R.menu.menu_card_editor_edittext, popup.getMenu());
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
@@ -234,27 +283,17 @@ public class CardEditorActivity extends AppCompatActivity {
                 popup.show();
             }
         });
-
-        buttonSwap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String frontText = editTextFront.getText().toString();
-                String backText = editTextBack.getText().toString();
-
-                editTextFront.setText(backText);
-                editTextBack.setText(frontText);
-            }
-        });
     }
 
-    private void redrawEnableButton() {
-        if (card.getEnabled()) {
-            buttonEnable.setVisibility(View.GONE);
-            buttonDisable.setVisibility(View.VISIBLE);
-        } else {
-            buttonEnable.setVisibility(View.VISIBLE);
-            buttonDisable.setVisibility(View.GONE);
-        }
+    private void redrawToggleButtons() {
+        toggleButtonCardEnabled.setChecked(card.getCardEnabled());
+        toggleButtonNotificationEnabled.setChecked(card.getNotificationEnabled());
+
+        int cardBg = card.getCardEnabled() ? R.color.colorGreen : R.color.colorAccent;
+        int notificationBg = card.getNotificationEnabled() ? R.color.colorGreen : R.color.colorAccent;
+
+        toggleButtonCardEnabled.setBackgroundResource(cardBg);
+        toggleButtonNotificationEnabled.setBackgroundResource(notificationBg);
     }
 
     private void handleIntent(Intent intent) {
@@ -482,27 +521,6 @@ public class CardEditorActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private void showImageEditDialog() {
-        String[] items = {"Delete image", "Find image on the web"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(CardEditorActivity.this)
-                .setTitle("Choose action")
-                .setCancelable(true)
-                .setItems(items, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case 0:
-                                showImageDeleteConfirmDialog();
-                                break;
-                            case 1:
-                                searchImageFromWeb();
-                                break;
-                        }
-                    }
-                });
-        builder.show();
-    }
-
     private void showImageDeleteConfirmDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setMessage("Are you sure?")
@@ -544,22 +562,6 @@ public class CardEditorActivity extends AppCompatActivity {
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(Uri.parse(url));
         startActivity(i);
-    }
-
-    private void onSaveCard() {
-        CardEntity duplicateCardEntity = findDuplicateCardEntity();
-        boolean isNewCard = card == null;
-
-        if (duplicateCardEntity == null) {
-            saveCard();
-            if (isNewCard) {
-                openManageCardsActivity(ManageCardsService.RESULT_CARD_ADDED);
-            } else {
-                openManageCardsActivity(ManageCardsService.RESULT_CARD_CHANGED);
-            }
-        } else {
-            showDuplicateCardAlert(duplicateCardEntity);
-        }
     }
 
     private CardEntity findDuplicateCardEntity() {
@@ -613,13 +615,6 @@ public class CardEditorActivity extends AppCompatActivity {
         }
     }
 
-    private void toggleCardEnabled() {
-        if (card != null) {
-            card.setEnabled(!card.getEnabled());
-            redrawEnableButton();
-        }
-    }
-
     private void putDataToSharedPrefs() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
@@ -646,22 +641,6 @@ public class CardEditorActivity extends AppCompatActivity {
         if (cardId > 0L) {
             card = repository.getCardWithId(cardId);
         }
-    }
-
-    private void setUpViews() {
-        imageView = findViewById(R.id.card_image);
-        editTextFront = findViewById(R.id.edittext_front);
-        editTextBack = findViewById(R.id.edittext_back);
-        buttonTTS = findViewById(R.id.button_tts);
-        buttonSave = findViewById(R.id.button_save);
-        buttonCancel = findViewById(R.id.button_cancel);
-        buttonEnable = findViewById(R.id.button_enable);
-        buttonDisable = findViewById(R.id.button_disable);
-        textViewCardScore = findViewById(R.id.textview_card_score);
-        textViewNextReview = findViewById(R.id.textview_next_review);
-        imageButtonFront = findViewById(R.id.imagebutton_front_text);
-        imageButtonBack = findViewById(R.id.imagebutton_back_text);
-        buttonSwap = findViewById(R.id.button_swap_front_back);
     }
 
 }

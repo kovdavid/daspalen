@@ -39,7 +39,7 @@ public class ManageCardsActivity extends AppCompatActivity {
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("   Manage cards");
+        actionBar.setTitle("   Cards");
         actionBar.setIcon(R.mipmap.daspalen_icon);
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
@@ -65,7 +65,7 @@ public class ManageCardsActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.manage_cards_menu, menu);
+        inflater.inflate(R.menu.menu_manage_cards, menu);
 
         menuShowIncomplete = menu.findItem(R.id.checkbox_show_incomplete);
         menuShowLearnable = menu.findItem(R.id.checkbox_show_learn);
@@ -114,7 +114,7 @@ public class ManageCardsActivity extends AppCompatActivity {
                 break;
         }
 
-        return false;
+        return true;
     }
 
     private void createNewCard() {

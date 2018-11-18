@@ -39,11 +39,17 @@ public class ManageCardsAdapter extends RecyclerView.Adapter<ManageCardsAdapter.
     public void onBindViewHolder(@NonNull ManageCardsAdapter.CardViewHolder holder, int position) {
         Card card = manageCardsService.getCardByPosition(position);
         if (card != null) {
-            if (card.getEnabled()) {
-                holder.textViewIdCard.setBackgroundResource(R.color.colorPrimary);
+            int bgResource;
+            if (card.getCardEnabled()) {
+                if (card.getNotificationEnabled()) {
+                    bgResource = R.color.colorPrimary;
+                } else {
+                    bgResource = R.color.colorOrange;
+                }
             } else {
-                holder.textViewIdCard.setBackgroundResource(R.color.colorAccent);
+                bgResource = R.color.colorAccent;
             }
+            holder.textViewIdCard.setBackgroundResource(bgResource);
             holder.textViewIdCard.setText(Long.toString(card.getCardId()));
             if (card.getLearnScore() < DaspalenConstants.MAX_CARD_LEARN_SCORE) {
                 holder.textViewLearnScore.setText(Integer.toString(card.getLearnScore()));
@@ -130,7 +136,7 @@ public class ManageCardsAdapter extends RecyclerView.Adapter<ManageCardsAdapter.
         @Override
         public boolean onLongClick(View v) {
             String[] items;
-            if (card.getEnabled()) {
+            if (card.getCardEnabled()) {
                 items = new String[]{"Disable card", "Delete card"};
             } else {
                 items = new String[]{"Enable card", "Delete card"};
@@ -140,7 +146,7 @@ public class ManageCardsAdapter extends RecyclerView.Adapter<ManageCardsAdapter.
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     if (which == 0) {
-                        if (card.getEnabled()) {
+                        if (card.getCardEnabled()) {
                             manageCardsService.disableCard(card);
                         } else {
                             manageCardsService.enableCard(card);

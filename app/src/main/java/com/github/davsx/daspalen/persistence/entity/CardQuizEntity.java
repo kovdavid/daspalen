@@ -209,6 +209,18 @@ public class CardQuizEntity {
         return this;
     }
 
+    public String getQuizTypeString() {
+        if (quizType.equals(DaspalenConstants.CARD_TYPE_INCOMPLETE)) {
+            return "INCOMPLETE";
+        } else if (quizType.equals(DaspalenConstants.CARD_TYPE_LEARN)) {
+            return "LEARN";
+        } else if (quizType.equals(DaspalenConstants.CARD_TYPE_REVIEW)) {
+            return "REVIEW";
+        } else {
+            return "";
+        }
+    }
+
     @NonNull
     public Double getReviewIntervalMultiplier() {
         return reviewIntervalMultiplier;
