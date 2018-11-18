@@ -57,7 +57,7 @@ public class CardInfoDialog {
         table.addView(createTableRowView(inflater, "ImageHash", entity.getImageHash()));
         table.addView(createTableRowView(inflater, "Enabled", Boolean.toString(entity.getEnabled())));
         table.addView(createTableRowView(inflater, "Local Version", Integer.toString(entity.getLocalVersion())));
-        table.addView(createTableRowView(inflater, "Synced Version", Integer.toString(entity.getServerVersion())));
+        table.addView(createTableRowView(inflater, "Server Version", Integer.toString(entity.getServerVersion())));
         table.addView(createTableRowView(inflater, "Created At", timestampToString(entity.getCreatedAt())));
         table.addView(createTableRowView(inflater, "Updated At", timestampToString(entity.getUpdatedAt())));
     }
@@ -75,7 +75,7 @@ public class CardInfoDialog {
         table.addView(createTableRowView(inflater, "Good Reviews", Integer.toString(entity.getGoodReviews())));
         table.addView(createTableRowView(inflater, "Bad Reviews", Integer.toString(entity.getBadReviews())));
         table.addView(createTableRowView(inflater, "Local Version", Integer.toString(entity.getLocalVersion())));
-        table.addView(createTableRowView(inflater, "Synced Version", Integer.toString(entity.getServerVersion())));
+        table.addView(createTableRowView(inflater, "Server Version", Integer.toString(entity.getServerVersion())));
         table.addView(createTableRowView(inflater, "Created At", timestampToString(entity.getCreatedAt())));
         table.addView(createTableRowView(inflater, "Updated At", timestampToString(entity.getUpdatedAt())));
     }
@@ -86,7 +86,7 @@ public class CardInfoDialog {
                 timestampToString(entity.getLastNotificationAt())));
         table.addView(createTableRowView(inflater, "Enabled", Boolean.toString(entity.getEnabled())));
         table.addView(createTableRowView(inflater, "Local Version", Integer.toString(entity.getLocalVersion())));
-        table.addView(createTableRowView(inflater, "Synced Version", Integer.toString(entity.getServerVersion())));
+        table.addView(createTableRowView(inflater, "Server Version", Integer.toString(entity.getServerVersion())));
         table.addView(createTableRowView(inflater, "Created At", timestampToString(entity.getCreatedAt())));
         table.addView(createTableRowView(inflater, "Updated At", timestampToString(entity.getUpdatedAt())));
     }
