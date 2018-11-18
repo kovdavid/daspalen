@@ -11,7 +11,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -37,7 +36,7 @@ public class BackupImportService {
         this.repository = repository;
         this.cardImageService = cardImageService;
         this.settingsService = settingsService;
-        this.gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        this.gson = new GsonBuilder().create();
     }
 
     public void startImport(InputStream inputStream) {
@@ -115,15 +114,16 @@ public class BackupImportService {
     }
 
     private void loadSettingsFromJsonV1() throws IOException {
-        ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
+        StringBuilder stringBuilder = new StringBuilder();
+
         byte[] buffer = new byte[8096];
         int length;
 
         while ((length = zipInputStream.read(buffer)) != -1) {
-            byteBuffer.put(buffer, 0, length);
+            stringBuilder.append(new String(buffer, 0, length));
         }
 
-        settingsService.fromJson(byteBuffer.toString());
+        settingsService.fromJson(stringBuilder.toString());
     }
 
     private void loadCardsFromJsonV1() throws IOException {
@@ -140,8 +140,6 @@ public class BackupImportService {
                 cards.clear();
             }
         }
-
-        bufferedReader.close();
 
         if (cards.size() > 0) {
             repository.createNewCards(cards);

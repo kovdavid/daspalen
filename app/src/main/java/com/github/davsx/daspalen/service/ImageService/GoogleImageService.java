@@ -8,7 +8,10 @@ import com.squareup.okhttp.Request;
 public class GoogleImageService {
 
     public static Request getRequest(SettingsService settings, String queryText) {
-        if (settings.getImageSearchApiKey() == null || settings.getImageSearchCxKey() == null) {
+        if (settings.getImageSearchApiKey() == null
+                || settings.getImageSearchCxKey() == null
+                || settings.getImageSearchApiKey().equals("")
+                || settings.getImageSearchCxKey().equals("")) {
             return null;
         }
 

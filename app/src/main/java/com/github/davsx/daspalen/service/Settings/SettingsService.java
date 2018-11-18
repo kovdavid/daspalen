@@ -58,8 +58,7 @@ public class SettingsService {
         Gson gson = new Gson();
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        Type typeOfHashMap = new TypeToken<Map<String, String>>() {
-        }.getType();
+        Type typeOfHashMap = new TypeToken<Map<String, String>>() {}.getType();
         Map<String, String> map = gson.fromJson(json, typeOfHashMap);
 
         Set<Map.Entry<String, String>> entries = map.entrySet();
@@ -83,6 +82,13 @@ public class SettingsService {
             }
         }
 
+        editor.commit();
+    }
+
+    public void setImageSearchKeys(String apiKey, String cxKey) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(IMAGE_SEARCH_API_KEY, apiKey);
+        editor.putString(IMAGE_SEARCH_CX_KEY, cxKey);
         editor.commit();
     }
 
@@ -124,20 +130,8 @@ public class SettingsService {
         return sharedPreferences.getString(IMAGE_SEARCH_API_KEY, null);
     }
 
-    public void setImageSearchApiKey(String key) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(IMAGE_SEARCH_API_KEY, key);
-        editor.commit();
-    }
-
     public String getImageSearchCxKey() {
         return sharedPreferences.getString(IMAGE_SEARCH_CX_KEY, null);
-    }
-
-    public void setImageSearchCxKey(String key) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(IMAGE_SEARCH_CX_KEY, key);
-        editor.commit();
     }
 
 }

@@ -4,7 +4,6 @@ import com.github.davsx.daspalen.DaspalenConstants;
 import com.github.davsx.daspalen.persistence.entity.CardEntity;
 import com.github.davsx.daspalen.persistence.entity.CardNotificationEntity;
 import com.github.davsx.daspalen.persistence.entity.CardQuizEntity;
-import com.google.gson.annotations.Expose;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -14,15 +13,12 @@ import java.util.TimeZone;
 
 public class Card {
 
-    private boolean cardEntityChanged = false;
-    private boolean cardQuizEntityChanged = false;
-    private boolean cardNotificationEntityChanged = false;
+    private transient boolean cardEntityChanged = false;
+    private transient boolean cardQuizEntityChanged = false;
+    private transient boolean cardNotificationEntityChanged = false;
 
-    @Expose
     private CardEntity cardEntity;
-    @Expose
     private CardQuizEntity cardQuizEntity;
-    @Expose
     private CardNotificationEntity cardNotificationEntity;
 
     public Card(CardEntity cardEntity, CardQuizEntity cardQuizEntity, CardNotificationEntity cardNotificationEntity) {

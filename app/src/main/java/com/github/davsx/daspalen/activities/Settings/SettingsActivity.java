@@ -6,6 +6,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
 import com.github.davsx.daspalen.DaspalenApplication;
@@ -25,6 +28,8 @@ public class SettingsActivity extends AppCompatActivity {
     private Button buttonNotificationFrom;
     private Button buttonNotificationTo;
     private Button buttonNotificationInterval;
+    private EditText editTextImageApiKey;
+    private EditText editTextImageCxKey;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,6 +47,8 @@ public class SettingsActivity extends AppCompatActivity {
         buttonNotificationFrom = findViewById(R.id.button_notification_from);
         buttonNotificationTo = findViewById(R.id.button_notification_to);
         buttonNotificationInterval = findViewById(R.id.button_notification_interval);
+        editTextImageApiKey = findViewById(R.id.edittext_image_search_api_key);
+        editTextImageCxKey = findViewById(R.id.edittext_image_search_cx_key);
 
         buttonNotificationFrom.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,6 +86,30 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_settings, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_save:
+                settingsService.setImageSearchKeys(
+                        editTextImageApiKey.getText().toString(), editTextImageCxKey.getText().toString()
+                );
+                finish();
+                break;
+            case R.id.action_cancel:
+                finish();
+                break;
+        }
+
+        return true;
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
         CardNotificationAlarmService.setNextAlarm(this, settingsService);
@@ -90,7 +121,8 @@ public class SettingsActivity extends AppCompatActivity {
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 setNotificationInterval(hourOfDay, minute);
             }
-        }, settingsService.getCardNotificationIntervalHour(), settingsService.getCardNotificationIntervalMinute(), true);
+        }, settingsService.getCardNotificationIntervalHour(), settingsService.getCardNotificationIntervalMinute(),
+                true);
         dialog.show();
     }
 
@@ -165,6 +197,9 @@ public class SettingsActivity extends AppCompatActivity {
                 settingsService.getCardNotificationIntervalMinute()));
 
         checkBoxWordOfTheDayEnable.setChecked(settingsService.getCardNotificationEnabled());
+
+        editTextImageApiKey.setText(settingsService.getImageSearchApiKey());
+        editTextImageCxKey.setText(settingsService.getImageSearchCxKey());
     }
 
 }

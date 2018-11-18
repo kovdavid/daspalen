@@ -175,5 +175,5 @@
             app:layout_constraintRight_toRightOf="parent" />
 
     </LinearLayout>
-
+    
 </android.support.constraint.ConstraintLayout>

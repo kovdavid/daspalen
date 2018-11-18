@@ -41,7 +41,7 @@ public class BackupCreateService {
         this.repository = repository;
         this.cardImageService = cardImageService;
         this.settingsService = settingsService;
-        this.gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        this.gson = new GsonBuilder().create();
     }
 
     public void startBackup(OutputStream outputStream) {

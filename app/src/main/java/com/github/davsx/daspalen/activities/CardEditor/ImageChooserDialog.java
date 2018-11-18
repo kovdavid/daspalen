@@ -84,7 +84,7 @@ public class ImageChooserDialog extends AlertDialog {
                     Log.e(TAG, json);
                     e.printStackTrace();
                     Toast.makeText(context, "Could not deserialize JSON", Toast.LENGTH_SHORT).show();
-                    dismiss();
+                    ImageChooserDialog.this.dismiss();
                     return;
                 }
 
