@@ -43,7 +43,7 @@ public class ImageChooserDialog extends AlertDialog {
     ImageChooserDialog(Context context) {
         super(context);
         this.context = context;
-        mainHandler = new Handler(context.getMainLooper());
+        this.mainHandler = new Handler(context.getMainLooper());
     }
 
     @Override
@@ -73,6 +73,7 @@ public class ImageChooserDialog extends AlertDialog {
                 String json;
                 try {
                     json = response.body().string();
+                    onInitialRequestResponse(json);
                 } catch (IOException e) {
                     e.printStackTrace();
                     mainHandler.post(new Runnable() {
@@ -82,10 +83,7 @@ public class ImageChooserDialog extends AlertDialog {
                             ImageChooserDialog.this.dismiss();
                         }
                     });
-                    return;
                 }
-
-                onInitialRequestResponse(json);
             }
         });
 

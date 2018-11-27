@@ -62,7 +62,7 @@ public class DaspalenRepository {
     }
 
     public List<Card> searchCardsChunked(String searchQuery, Long cardId, List<Integer> quizTypes, int limit) {
-        String queryString = String.format("(%s)", searchQuery);
+        String queryString = "%" + searchQuery + "%";
         List<CardEntity> cardEntities = dao.searchNextCardEntities(queryString, cardId, quizTypes, limit);
         return loadCards(cardEntities);
     }
