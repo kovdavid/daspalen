@@ -77,7 +77,6 @@ public class CardEditorActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPreferences;
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -248,8 +247,8 @@ public class CardEditorActivity extends AppCompatActivity {
                             case R.id.action_find_image_browser:
                                 searchImageFromWeb();
                                 break;
-                            case R.id.action_find_image_feel_lucky:
-                                onFindImageFeelLucky();
+                            case R.id.action_google_custom_search:
+                                chooseImageGoogleCustomSearch();
                                 break;
                             case R.id.action_delete_image:
                                 showImageDeleteConfirmDialog();
@@ -309,7 +308,7 @@ public class CardEditorActivity extends AppCompatActivity {
         });
     }
 
-    private void onFindImageFeelLucky() {
+    private void chooseImageGoogleCustomSearch() {
         String frontString = editTextFront.getText().toString();
         String backString = editTextBack.getText().toString();
 
@@ -329,7 +328,7 @@ public class CardEditorActivity extends AppCompatActivity {
             return;
         }
 
-        ChosenImageHandler handler = new ChosenImageHandler() {
+        ChosenBitmapHandler handler = new ChosenBitmapHandler() {
             @Override
             public void handle(Bitmap bitmap) {
                 imagePath = cardImageService.saveTempBitmap(bitmap);
@@ -339,8 +338,8 @@ public class CardEditorActivity extends AppCompatActivity {
         };
 
         ImageChooserDialog dialog = new ImageChooserDialog(this);
-        dialog.setRequest(request);
-        dialog.setChosenImageHandler(handler);
+        dialog.setInitialRequest(request);
+        dialog.setChosenBitmapHandler(handler);
         dialog.setHttpClient(httpClient);
         dialog.show();
     }

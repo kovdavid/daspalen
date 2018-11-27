@@ -54,6 +54,7 @@ public class SyncActivity extends AppCompatActivity implements View.OnClickListe
         if (syncRunning) {
             textViewInfo.setText("Sync data");
             buttonSync.setText("Sync data");
+            syncService.stopSync();
             syncRunning = false;
         } else {
             textViewInfo.setText("Starting sync");

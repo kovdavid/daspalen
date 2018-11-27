@@ -19,10 +19,10 @@ public class ImageChooserAdapter extends RecyclerView.Adapter<ImageChooserAdapte
 
     private List<Bitmap> images = new ArrayList<>();
     private LayoutInflater inflater;
-    private ChosenImageHandler handler;
+    private ChosenThumbnailHandler handler;
     private Context context;
 
-    public ImageChooserAdapter(Context context, ChosenImageHandler handler) {
+    ImageChooserAdapter(Context context, ChosenThumbnailHandler handler) {
         this.context = context;
         this.inflater = LayoutInflater.from(context);
         this.handler = handler;
@@ -40,7 +40,6 @@ public class ImageChooserAdapter extends RecyclerView.Adapter<ImageChooserAdapte
         Bitmap bitmap = images.get(position);
         if (bitmap != null) {
             holder.imageView.setImageBitmap(bitmap);
-            holder.bitmap = bitmap;
         }
     }
 
@@ -49,15 +48,14 @@ public class ImageChooserAdapter extends RecyclerView.Adapter<ImageChooserAdapte
         return images.size();
     }
 
-    public void addImage(Bitmap bitmap) {
+    void addImage(Bitmap bitmap) {
         images.add(bitmap);
         notifyDataSetChanged();
     }
 
-    public class ItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class ItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private ImageView imageView;
-        private Bitmap bitmap;
+        ImageView imageView;
 
         ItemHolder(View itemView) {
             super(itemView);
@@ -72,7 +70,7 @@ public class ImageChooserAdapter extends RecyclerView.Adapter<ImageChooserAdapte
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            ImageChooserAdapter.this.handler.handle(bitmap);
+                            ImageChooserAdapter.this.handler.handle(getAdapterPosition());
                         }
                     })
                     .setNegativeButton("No", new DialogInterface.OnClickListener() {

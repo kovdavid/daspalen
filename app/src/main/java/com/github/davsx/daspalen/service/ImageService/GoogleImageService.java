@@ -16,7 +16,7 @@ public class GoogleImageService {
         }
 
         String url = String.format(
-                "https://www.googleapis.com/customsearch/v1?key=%s&cx=%s&q=%s&searchType=image&num=8&fileType=png",
+                "https://www.googleapis.com/customsearch/v1?key=%s&cx=%s&q=%s&searchType=image&num=10&fileType=png",
                 settings.getImageSearchApiKey(),
                 settings.getImageSearchCxKey(),
                 Uri.encode(queryText)

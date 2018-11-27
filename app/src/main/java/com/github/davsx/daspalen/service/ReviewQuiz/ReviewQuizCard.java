@@ -54,9 +54,9 @@ class ReviewQuizCard {
     }
 
     private void logCard(String prefix) {
-        Log.d(TAG, String.format("%s cardId:%d front:%s back:%s answered:%s answeredCorrectly:%s updateCardOnAnswer:%s",
-                prefix, card.getCardId(), card.getFrontText(), card.getBackText(), answered, answeredCorrectly,
-                updateCardOnAnswer));
+        Log.d(TAG, String.format("%s cardId:%d front:%s answeredCorrectly:%s fillCard:%s",
+                prefix, card.getCardId(), card.getFrontText(), answeredCorrectly,
+                !updateCardOnAnswer));
     }
 
     void handleAnswer(BaseQuizCardScheduler<ReviewQuizCard> scheduler, String answer) {

@@ -136,7 +136,7 @@ public class CardImageService {
         try {
             File outFile = getTempFile();
             OutputStream outputStream = new FileOutputStream(outFile);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream);
             outputStream.close();
 
             return outFile.getAbsolutePath();

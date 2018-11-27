@@ -96,7 +96,7 @@ public abstract class DaspalenDao {
 
     @Query("SELECT c.* FROM card c JOIN card_quiz cq USING(id_card)"
             + " WHERE cq.quiz_type = :quizType AND c.enabled = 1 AND c.id_card NOT IN (:cardIdBlackList)"
-            + " ORDER BY RANDOM() LIMIT :count")
+            + " ORDER BY cq.last_review_at ASC LIMIT :count")
     public abstract List<CardEntity> getReviewFillCardEntities(Integer quizType, List<Long> cardIdBlackList, Integer count);
 
     @Query("SELECT c.* FROM card c JOIN card_notification cn USING(id_card)"

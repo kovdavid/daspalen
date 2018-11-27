@@ -10,7 +10,7 @@
 
     <item
         android:id="@+id/action_card_info"
-        android:icon="@android:drawable/ic_menu_zoom"
+        android:icon="@android:drawable/ic_menu_info_details"
         android:title="Card Info"
         app:showAsAction="ifRoom|withText" />
 

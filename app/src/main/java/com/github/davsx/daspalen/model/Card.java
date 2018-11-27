@@ -29,8 +29,6 @@ public class Card {
 
     public static Card createNew(String frontText, String backText) {
         CardEntity cardEntity = new CardEntity()
-                .setFrontText(frontText)
-                .setBackText(backText)
                 .setCreatedAt(System.currentTimeMillis())
                 .setUpdatedAt(System.currentTimeMillis())
                 .setLocalVersion(1)
@@ -50,6 +48,8 @@ public class Card {
 
         Card c = new Card(cardEntity, cardQuizEntity, cardNotificationEntity);
 
+        c._updateTexts(frontText, backText);
+
         c.cardEntityChanged = true;
         c.cardQuizEntityChanged = true;
         c.cardNotificationEntityChanged = true;
@@ -58,27 +58,33 @@ public class Card {
     }
 
     public void updateTexts(String newFrontText, String newBackText) {
-        cardEntity.setFrontText(newFrontText)
-                .setBackText(newBackText)
-                .incrementLocalVersion()
+        cardEntity.incrementLocalVersion()
                 .setUpdatedAt(System.currentTimeMillis());
         cardEntityChanged = true;
 
-        if (newFrontText.equals("") || newBackText.equals("")) {
-            if (!cardQuizEntity.getQuizType().equals(DaspalenConstants.CARD_TYPE_INCOMPLETE)) {
-                cardQuizEntity.setQuizType(DaspalenConstants.CARD_TYPE_INCOMPLETE);
-            } else {
-                if (cardQuizEntity.getQuizType().equals(DaspalenConstants.CARD_TYPE_REVIEW)) {
-                    cardQuizEntity.setLearnScore(1);
-                } else {
-                    cardQuizEntity.setLearnScore(0);
-                }
-                cardQuizEntity.setQuizType(DaspalenConstants.CARD_TYPE_LEARN);
+        _updateTexts(newFrontText, newBackText);
+
+    }
+
+    private void _updateTexts(String frontText, String backText) {
+        cardEntity.setFrontText(frontText);
+        cardEntity.setBackText(backText);
+
+        if (!frontText.equals("") && !backText.equals("")) {
+            if (cardQuizEntity.getQuizType().equals(DaspalenConstants.CARD_TYPE_INCOMPLETE)) {
+                cardQuizEntity.setQuizType(DaspalenConstants.CARD_TYPE_LEARN)
+                        .setLearnScore(0)
+                        .setUpdatedAt(System.currentTimeMillis())
+                        .incrementLocalVersion();
+                cardQuizEntityChanged = true;
             }
-            cardQuizEntity.incrementQuizTypeChanges()
-                    .incrementLocalVersion()
-                    .setUpdatedAt(System.currentTimeMillis());
-            cardQuizEntityChanged = true;
+        } else {
+            if (!cardQuizEntity.getQuizType().equals(DaspalenConstants.CARD_TYPE_INCOMPLETE)) {
+                cardQuizEntity.setQuizType(DaspalenConstants.CARD_TYPE_INCOMPLETE)
+                        .setUpdatedAt(System.currentTimeMillis())
+                        .incrementLocalVersion();
+                cardQuizEntityChanged = true;
+            }
         }
     }
 
@@ -222,11 +228,11 @@ public class Card {
         return multiplier;
     }
 
-    public void setCardEnabled(boolean enabled) {
-        cardEntity.setEnabled(enabled);
-        cardEntity.incrementLocalVersion();
-        cardEntity.setUpdatedAt(System.currentTimeMillis());
-        cardEntityChanged = true;
+    public void setLastNotificationAt(long timestamp) {
+        cardNotificationEntity.setLastNotificationAt(timestamp);
+        cardNotificationEntity.incrementLocalVersion();
+        cardNotificationEntity.setUpdatedAt(System.currentTimeMillis());
+        cardNotificationEntityChanged = true;
     }
 
     public String getBackText() {
@@ -237,11 +243,11 @@ public class Card {
         return cardEntity.getEnabled();
     }
 
-    public void setLastNotificationAt(long timestamp) {
-        cardNotificationEntity.setLastNotificationAt(timestamp);
-        cardNotificationEntity.incrementLocalVersion();
-        cardNotificationEntity.setUpdatedAt(System.currentTimeMillis());
-        cardNotificationEntityChanged = true;
+    public void setCardEnabled(boolean enabled) {
+        cardEntity.setEnabled(enabled);
+        cardEntity.incrementLocalVersion();
+        cardEntity.setUpdatedAt(System.currentTimeMillis());
+        cardEntityChanged = true;
     }
 
     public CardEntity getCardEntity() {
