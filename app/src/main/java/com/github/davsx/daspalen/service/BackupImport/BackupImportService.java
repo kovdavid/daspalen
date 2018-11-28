@@ -132,6 +132,9 @@ public class BackupImportService {
 
         List<Card> cards = new ArrayList<>();
         while ((json = bufferedReader.readLine()) != null) {
+            if (json.length() == 0) {
+                continue;
+            }
             Card card = gson.fromJson(json, Card.class);
             cards.add(card);
 

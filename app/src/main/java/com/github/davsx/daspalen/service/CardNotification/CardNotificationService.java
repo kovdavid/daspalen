@@ -59,10 +59,10 @@ public class CardNotificationService extends BroadcastReceiver {
         }
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel notificationChannel = new NotificationChannel(
                     DaspalenConstants.CARD_NOTIFICATION_CHANNEL,
-                    DaspalenConstants.CARD_NOTIFICATION_CHANNEL, importance);
+                    DaspalenConstants.CARD_NOTIFICATION_CHANNEL,
+                    NotificationManager.IMPORTANCE_DEFAULT);
             notificationChannel.enableVibration(true);
             builder.setChannelId(DaspalenConstants.CARD_NOTIFICATION_CHANNEL);
             notificationManager.createNotificationChannel(notificationChannel);

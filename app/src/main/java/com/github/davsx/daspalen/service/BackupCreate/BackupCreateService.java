@@ -140,6 +140,7 @@ public class BackupCreateService {
         for (Card card : cards) {
             currentProgress++;
             jsonStringWriter.write(gson.toJson(card, Card.class));
+            jsonStringWriter.write("\n");
             maxCardId = card.getCardId();
         }
 
