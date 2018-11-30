@@ -111,7 +111,7 @@ public class ReviewQuizService implements CardQuizService {
             }
             List<Card> fillCandidates = repository.getReviewFillCandidates(
                     DaspalenConstants.REVIEW_SESSION_CANDIDATE_CARDS, cardIds);
-            int fillCount = DaspalenConstants.REVIEW_SESSION_MAX_CARDS - candidateCards.size();
+            int fillCount = DaspalenConstants.REVIEW_SESSION_MAX_CARDS - cards.size();
 
             Log.i(TAG, String.format("prepareCards adding fill cards fillCandidates.size:%d fillCount:%d", fillCandidates.size(), fillCount));
 
