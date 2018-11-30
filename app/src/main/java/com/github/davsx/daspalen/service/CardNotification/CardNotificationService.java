@@ -15,6 +15,7 @@ import com.github.davsx.daspalen.R;
 import com.github.davsx.daspalen.model.Card;
 import com.github.davsx.daspalen.persistence.repository.DaspalenRepository;
 import com.github.davsx.daspalen.service.Settings.SettingsService;
+import com.github.davsx.daspalen.utils.DateUtils;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -43,10 +44,9 @@ public class CardNotificationService extends BroadcastReceiver {
 
         Card card = cards.get(new Random().nextInt(cards.size()));
 
-        Log.i(TAG, String.format("showNotification cardId:%d lastNotificationAt:%d now:%d",
+        Log.i(TAG, String.format("showNotification cardId:%d lastNotificationAt:%s",
                 card.getCardId(),
-                card.getCardNotificationEntity().getLastNotificationAt(),
-                System.currentTimeMillis()));
+                DateUtils.timestampToString(card.getCardNotificationEntity().getLastNotificationAt())));
 
         String message = String.format("<b>Front:</b> %s<br /><b>Back:</b> %s",
                 card.getFrontText(), card.getBackText());
