@@ -17,7 +17,7 @@ import java.util.Random;
 
 class LearnQuizCard implements BaseQuizCard {
 
-    private static final String TAG = "daspalen|LearnQuizCard";
+    private static final String TAG = "daspalen|LearnQuizC";
 
     private DaspalenRepository repository;
     private CardImageService cardImageService;
@@ -37,7 +37,7 @@ class LearnQuizCard implements BaseQuizCard {
         this.plannedRounds = calculatePlannedRounds();
         this.rng = new Random(System.currentTimeMillis());
 
-        Log.d(TAG, String.format("init cardId:%d front:%s back:%s learnScore:%d plannedRounds:%d",
+        Log.i(TAG, String.format("init cardId:%d front:%s back:%s learnScore:%d plannedRounds:%d",
                 card.getCardId(),
                 card.getFrontText(),
                 card.getBackText(),
@@ -101,7 +101,7 @@ class LearnQuizCard implements BaseQuizCard {
         boolean isCorrectAnswer = evaluateAnswer(answer);
 
         if (isCorrectAnswer) {
-            Log.d(TAG, String.format("handleAnswer correct cardId:%d gotBadAnswer:%s doShowCard:%s",
+            Log.i(TAG, String.format("handleAnswer correct cardId:%d gotBadAnswer:%s doShowCard:%s",
                     card.getCardId(), gotBadAnswer, doShowCard));
 
             if (!gotBadAnswer) {
@@ -128,7 +128,7 @@ class LearnQuizCard implements BaseQuizCard {
                 }
             }
         } else {
-            Log.d(TAG, String.format("handleAnswer incorrect cardId:%d", card.getCardId()));
+            Log.i(TAG, String.format("handleAnswer incorrect cardId:%d", card.getCardId()));
             gotBadAnswer = true;
             doShowCard = true;
             scheduler.scheduleToExactOffset(1, this);
@@ -138,7 +138,7 @@ class LearnQuizCard implements BaseQuizCard {
     @Override
     public QuizData buildQuizData(List<CardEntity> randomCards) {
         QuizTypeEnum quizType = getQuizType();
-        Log.d(TAG, String.format("buildQuizData cardId:%d quizType:%s", card.getCardId(), quizType));
+        Log.i(TAG, String.format("buildQuizData cardId:%d quizType:%s", card.getCardId(), quizType));
         return QuizData.build(quizType, cardImageService, card, randomCards);
     }
 

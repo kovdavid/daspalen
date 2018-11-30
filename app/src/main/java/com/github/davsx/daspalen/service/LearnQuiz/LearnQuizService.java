@@ -35,7 +35,7 @@ import java.util.List;
 
 public class LearnQuizService implements CardQuizService {
 
-    private static final String TAG = "daspalen|LearnQuizService";
+    private static final String TAG = "daspalen|LearnQuizS";
 
     private DaspalenRepository repository;
     private CardImageService cardImageService;
@@ -52,6 +52,8 @@ public class LearnQuizService implements CardQuizService {
         this.cardImageService = cardImageService;
         this.totalRounds = 0;
         this.isFinished = false;
+
+        Log.i(TAG, "LearnQuizService:init");
     }
 
     @Override
@@ -144,9 +146,9 @@ public class LearnQuizService implements CardQuizService {
 
         Collections.sort(chosenCards, new LearnQuizCard.LearnQuizCardComparator());
 
-        Log.d(TAG, String.format("prepareCards size:%d", chosenCards.size()));
+        Log.i(TAG, String.format("prepareCards size:%d", chosenCards.size()));
         for (LearnQuizCard card : chosenCards) {
-            Log.d(TAG, String.format("prepareCards cardId:%d", card.getCardId()));
+            Log.i(TAG, String.format("prepareCards cardId:%d", card.getCardId()));
         }
 
         return new ArrayList<BaseQuizCard>(chosenCards);

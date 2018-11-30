@@ -16,7 +16,7 @@ import java.util.List;
 
 class ReviewQuizCard implements BaseQuizCard {
 
-    private static final String TAG = "daspalen|ReviewQuizCard";
+    private static final String TAG = "daspalen|ReviewQuizC";
 
     private DaspalenRepository repository;
     private CardImageService cardImageService;
@@ -35,7 +35,7 @@ class ReviewQuizCard implements BaseQuizCard {
         this.card = card;
         this.updateCardOnAnswer = updateCardOnAnswer;
 
-        Log.d(TAG, String.format("init cardId:%d front:%s back:%s updateCardOnAnswer:%s",
+        Log.i(TAG, String.format("init cardId:%d front:%s back:%s updateCardOnAnswer:%s",
                 card.getCardId(),
                 card.getFrontText(),
                 card.getBackText(),
@@ -60,15 +60,9 @@ class ReviewQuizCard implements BaseQuizCard {
         return (double) (overdueInterval / reviewInterval);
     }
 
-    private void logCard(String prefix) {
-        Log.d(TAG, String.format("%s cardId:%d front:%s answeredCorrectly:%s fillCard:%s",
-                prefix, card.getCardId(), card.getFrontText(), answeredCorrectly,
-                !updateCardOnAnswer));
-    }
-
     @Override
     public void handleAnswer(BaseQuizCardScheduler scheduler, String answer) {
-        Log.d(TAG, String.format("handleAnswer cardId:%d answer:%s", card.getCardId(), answer));
+        Log.i(TAG, String.format("handleAnswer cardId:%d answer:%s", card.getCardId(), answer));
 
         if (answer.equals(DaspalenConstants.REVIEW_ANSWER_GOOD)) {
             if (updateCardOnAnswer && !answered) {

@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class BaseQuizSchedule implements BaseQuizCardScheduler {
 
-    private static final String TAG = "daspalen|BaseQuizSchedule";
+    private static final String TAG = "daspalen|BaseSchedule";
 
     private Map<Integer, BaseQuizCard> schedule;
     private List<BaseQuizCard> queue;
@@ -24,7 +24,7 @@ public class BaseQuizSchedule implements BaseQuizCardScheduler {
 
     @Override
     public void scheduleAfterOffset(int offset, BaseQuizCard card) {
-        Log.d(TAG, String.format("scheduleAfterOffset offset:%d nextTick:%d maxTick:%d cardId:%d", offset, nextTick,
+        Log.i(TAG, String.format("scheduleAfterOffset offset:%d nextTick:%d maxTick:%d cardId:%d", offset, nextTick,
                 maxTick, card.getCardId()));
 
         int tick = nextTick + offset - 1;
@@ -36,13 +36,13 @@ public class BaseQuizSchedule implements BaseQuizCardScheduler {
         }
         schedule.put(tick, card);
 
-        Log.d(TAG, String.format("scheduleAfterOffset tick:%d", tick));
+        Log.i(TAG, String.format("scheduleAfterOffset tick:%d", tick));
         logScheduleState();
     }
 
     @Override
     public void scheduleToExactOffset(int offset, BaseQuizCard card) {
-        Log.d(TAG, String.format("scheduleToExactOffset offset:%d nextTick:%d maxTick:%d cardId:%d", offset, nextTick
+        Log.i(TAG, String.format("scheduleToExactOffset offset:%d nextTick:%d maxTick:%d cardId:%d", offset, nextTick
                 , maxTick, card.getCardId()));
 
         int targetTick = nextTick + offset - 1;
@@ -61,13 +61,13 @@ public class BaseQuizSchedule implements BaseQuizCardScheduler {
 
         schedule.put(targetTick, card);
 
-        Log.d(TAG, String.format("scheduleToExactOffset targetTick:%d freeTick:%d", targetTick, freeTick));
+        Log.i(TAG, String.format("scheduleToExactOffset targetTick:%d freeTick:%d", targetTick, freeTick));
         logScheduleState();
     }
 
     @Override
     public void scheduleToEnd(BaseQuizCard card) {
-        Log.d(TAG, String.format("scheduleToEnd nextTick:%d maxTick:%d cardId:%d", nextTick, maxTick,
+        Log.i(TAG, String.format("scheduleToEnd nextTick:%d maxTick:%d cardId:%d", nextTick, maxTick,
                 card.getCardId()));
         maxTick = maxTick + 1 + queue.size();
         schedule.put(maxTick, card);
@@ -83,7 +83,7 @@ public class BaseQuizSchedule implements BaseQuizCardScheduler {
 
         BaseQuizCard card = schedule.get(currentTick);
         if (card != null) {
-            Log.d(TAG, String.format("nextCard serving from schedule tick:%d cardId:%d", currentTick,
+            Log.i(TAG, String.format("nextCard serving from schedule tick:%d cardId:%d", currentTick,
                     card.getCardId()));
             nextTick++;
             return card;
@@ -91,14 +91,14 @@ public class BaseQuizSchedule implements BaseQuizCardScheduler {
             if (queue.size() > 0) {
                 nextTick++;
                 BaseQuizCard queueCard = queue.remove(0);
-                Log.d(TAG, String.format("nextCard serving from queue cardId:%d", queueCard.getCardId()));
+                Log.i(TAG, String.format("nextCard serving from queue cardId:%d", queueCard.getCardId()));
                 return queueCard;
             } else {
                 for (int t = currentTick; t <= maxTick; t++) {
                     BaseQuizCard c = schedule.get(t);
                     if (c != null) {
                         nextTick = t + 1;
-                        Log.d(TAG, String.format("nextCard serving from schedule after skipping empty ticks " +
+                        Log.i(TAG, String.format("nextCard serving from schedule after skipping empty ticks " +
                                 "currentTick:%d tick:%d cardId:%d", currentTick, t, c.getCardId()));
                         return c;
                     }
@@ -122,6 +122,6 @@ public class BaseQuizSchedule implements BaseQuizCardScheduler {
             }
         }
 
-        Log.d(TAG, "scheduleState: " + builder.toString());
+        Log.i(TAG, "scheduleState: " + builder.toString());
     }
 }

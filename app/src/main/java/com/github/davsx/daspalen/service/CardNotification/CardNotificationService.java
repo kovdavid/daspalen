@@ -43,19 +43,18 @@ public class CardNotificationService extends BroadcastReceiver {
 
         Card card = cards.get(new Random().nextInt(cards.size()));
 
-        Log.d(TAG, String.format("showNotification cardId:%d lastNotificationAt:%d now:%d",
+        Log.i(TAG, String.format("showNotification cardId:%d lastNotificationAt:%d now:%d",
                 card.getCardId(),
                 card.getCardNotificationEntity().getLastNotificationAt(),
-                System.currentTimeMillis()
-        ));
+                System.currentTimeMillis()));
 
         String message = String.format("<b>Front:</b> %s<br /><b>Back:</b> %s",
                 card.getFrontText(), card.getBackText());
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context,
-                DaspalenConstants.CARD_NOTIFICATION_CHANNEL);
-        builder.setSmallIcon(R.mipmap.daspalen_icon);
-        builder.setContentTitle("Word Of The Day")
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(context, DaspalenConstants.CARD_NOTIFICATION_CHANNEL);
+        builder.setSmallIcon(R.mipmap.daspalen_icon)
+                .setContentTitle("Card notification")
                 .setStyle(new NotificationCompat.BigTextStyle(builder).bigText(Html.fromHtml(message)))
                 .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                 .setAutoCancel(false);

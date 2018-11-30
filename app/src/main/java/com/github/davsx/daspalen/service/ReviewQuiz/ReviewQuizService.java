@@ -28,6 +28,8 @@ public class ReviewQuizService implements CardQuizService {
         this.repository = repository;
         this.cardImageService = cardImageService;
         this.isFinished = false;
+
+        Log.i(TAG, "ReviewQuizService:init");
     }
 
     @Override
@@ -90,28 +92,28 @@ public class ReviewQuizService implements CardQuizService {
         List<Card> candidateCards =
                 repository.getReviewCandidateCards(DaspalenConstants.REVIEW_SESSION_CANDIDATE_CARDS);
 
-        Log.d(TAG, String.format("prepareCards candidateCards.size:%d", candidateCards.size()));
+        Log.i(TAG, String.format("prepareCards candidateCards.size:%d", candidateCards.size()));
 
         Collections.sort(candidateCards, new ReviewQuizCard.ReviewQuizCardComparator());
 
         while (cards.size() < DaspalenConstants.REVIEW_SESSION_MAX_CARDS && candidateCards.size() > 0) {
             Card card = candidateCards.remove(0);
             cards.add(ReviewQuizCard.createUpdatableCard(repository, cardImageService, card));
-            Log.d(TAG, String.format("prepareCards cardId:%d", card.getCardId()));
+            Log.i(TAG, String.format("prepareCards cardId:%d", card.getCardId()));
         }
 
         Random rng = new Random(System.currentTimeMillis());
 
-        if (candidateCards.size() < DaspalenConstants.REVIEW_SESSION_MAX_CARDS) {
+        if (cards.size() < DaspalenConstants.REVIEW_SESSION_MAX_CARDS) {
             List<Long> cardIds = new ArrayList<>();
-            for (Card card : candidateCards) {
+            for (BaseQuizCard card : cards) {
                 cardIds.add(card.getCardId());
             }
             List<Card> fillCandidates = repository.getReviewFillCandidates(
                     DaspalenConstants.REVIEW_SESSION_CANDIDATE_CARDS, cardIds);
             int fillCount = DaspalenConstants.REVIEW_SESSION_MAX_CARDS - candidateCards.size();
 
-            Log.d(TAG, String.format("prepareCards adding fill cards fillCandidates.size:%d fillCount:%d", fillCandidates.size(), fillCount));
+            Log.i(TAG, String.format("prepareCards adding fill cards fillCandidates.size:%d fillCount:%d", fillCandidates.size(), fillCount));
 
             if (fillCandidates.size() > fillCount) {
                 Set<Card> fillCards = new HashSet<>();
@@ -121,15 +123,17 @@ public class ReviewQuizService implements CardQuizService {
                 }
                 for (Card card : fillCards) {
                     cards.add(ReviewQuizCard.createNonUpdatableCard(repository, cardImageService, card));
-                    Log.d(TAG, String.format("prepareCards fillCard cardId:%d", card.getCardId()));
+                    Log.i(TAG, String.format("prepareCards fillCard cardId:%d", card.getCardId()));
                 }
             } else {
                 for (Card card : fillCandidates) {
                     cards.add(ReviewQuizCard.createNonUpdatableCard(repository, cardImageService, card));
-                    Log.d(TAG, String.format("prepareCards fillCard cardId:%d", card.getCardId()));
+                    Log.i(TAG, String.format("prepareCards fillCard cardId:%d", card.getCardId()));
                 }
             }
         }
+
+        Log.i(TAG, String.format("prepareCards cards.size:%d", cards.size()));
 
         return cards;
     }
