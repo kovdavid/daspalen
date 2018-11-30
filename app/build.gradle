@@ -6,8 +6,8 @@ android {
         applicationId "com.github.davsx.daspalen"
         minSdkVersion 22
         targetSdkVersion 27
-        versionCode 10005
-        versionName "1.5"
+        versionCode 10006
+        versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

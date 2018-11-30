@@ -1,9 +1,9 @@
 package com.github.davsx.daspalen.service.BaseQuiz;
 
-public interface BaseQuizCardScheduler<T> {
-    void scheduleAfterOffset(int offset, T elem);
+public interface BaseQuizCardScheduler {
+    void scheduleAfterOffset(int offset, BaseQuizCard elem);
 
-    void scheduleToExactOffset(int offset, T elem);
+    void scheduleToExactOffset(int offset, BaseQuizCard elem);
 
-    void scheduleToEnd(T elem);
+    void scheduleToEnd(BaseQuizCard elem);
 }

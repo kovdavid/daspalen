@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.text.Html;
+import android.util.Log;
 import com.github.davsx.daspalen.DaspalenApplication;
 import com.github.davsx.daspalen.DaspalenConstants;
 import com.github.davsx.daspalen.R;
@@ -20,6 +21,8 @@ import java.util.List;
 import java.util.Random;
 
 public class CardNotificationService extends BroadcastReceiver {
+
+    private static final String TAG = "daspalen|CardNotify";
 
     @Inject
     DaspalenRepository repository;
@@ -39,6 +42,12 @@ public class CardNotificationService extends BroadcastReceiver {
         }
 
         Card card = cards.get(new Random().nextInt(cards.size()));
+
+        Log.d(TAG, String.format("showNotification cardId:%d lastNotificationAt:%d now:%d",
+                card.getCardId(),
+                card.getCardNotificationEntity().getLastNotificationAt(),
+                System.currentTimeMillis()
+        ));
 
         String message = String.format("<b>Front:</b> %s<br /><b>Back:</b> %s",
                 card.getFrontText(), card.getBackText());

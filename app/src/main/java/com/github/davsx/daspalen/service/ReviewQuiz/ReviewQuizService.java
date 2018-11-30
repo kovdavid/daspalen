@@ -1,8 +1,10 @@
 package com.github.davsx.daspalen.service.ReviewQuiz;
 
+import android.util.Log;
 import com.github.davsx.daspalen.DaspalenConstants;
 import com.github.davsx.daspalen.model.Card;
 import com.github.davsx.daspalen.persistence.repository.DaspalenRepository;
+import com.github.davsx.daspalen.service.BaseQuiz.BaseQuizCard;
 import com.github.davsx.daspalen.service.BaseQuiz.BaseQuizSchedule;
 import com.github.davsx.daspalen.service.BaseQuiz.CardQuizService;
 import com.github.davsx.daspalen.service.BaseQuiz.QuizData;
@@ -12,12 +14,14 @@ import java.util.*;
 
 public class ReviewQuizService implements CardQuizService {
 
+    private static final String TAG = "daspalen|ReviewQuizS";
+
     private DaspalenRepository repository;
     private CardImageService cardImageService;
 
-    private List<ReviewQuizCard> cards;
-    private BaseQuizSchedule<ReviewQuizCard> quizSchedule;
-    private ReviewQuizCard currentCard;
+    private List<BaseQuizCard> cards;
+    private BaseQuizSchedule quizSchedule;
+    private BaseQuizCard currentCard;
     private boolean isFinished;
 
     public ReviewQuizService(DaspalenRepository repository, CardImageService cardImageService) {
@@ -34,7 +38,7 @@ public class ReviewQuizService implements CardQuizService {
             return false; // Nothing new to learn
         }
 
-        this.quizSchedule = new BaseQuizSchedule<>(new ArrayList<>(cards));
+        this.quizSchedule = new BaseQuizSchedule(new ArrayList<>(cards));
 
         prepareNextCard();
 
@@ -51,9 +55,9 @@ public class ReviewQuizService implements CardQuizService {
 
     @Override
     public Integer getCompletedRounds() {
-        Integer completedRounds = 0;
-        for (ReviewQuizCard card : cards) {
-            if (card.isAnsweredCorrectly()) completedRounds++;
+        int completedRounds = 0;
+        for (BaseQuizCard card : cards) {
+            completedRounds += card.getCompletedRounds();
         }
         return completedRounds;
     }
@@ -69,7 +73,7 @@ public class ReviewQuizService implements CardQuizService {
             }
         }
 
-        return currentCard.buildQuizData();
+        return currentCard.buildQuizData(null);
     }
 
     @Override
@@ -77,15 +81,23 @@ public class ReviewQuizService implements CardQuizService {
         return cards.size();
     }
 
-    private List<ReviewQuizCard> prepareCards() {
-        List<ReviewQuizCard> cards = new ArrayList<>();
-        List<Card> candidateCards = repository.getReviewCandidateCards(DaspalenConstants.REVIEW_SESSION_CANDIDATE_CARDS);
+    private void prepareNextCard() {
+        currentCard = quizSchedule.nextCard();
+    }
+
+    private List<BaseQuizCard> prepareCards() {
+        List<BaseQuizCard> cards = new ArrayList<>();
+        List<Card> candidateCards =
+                repository.getReviewCandidateCards(DaspalenConstants.REVIEW_SESSION_CANDIDATE_CARDS);
+
+        Log.d(TAG, String.format("prepareCards candidateCards.size:%d", candidateCards.size()));
 
         Collections.sort(candidateCards, new ReviewQuizCard.ReviewQuizCardComparator());
 
         while (cards.size() < DaspalenConstants.REVIEW_SESSION_MAX_CARDS && candidateCards.size() > 0) {
             Card card = candidateCards.remove(0);
             cards.add(ReviewQuizCard.createUpdatableCard(repository, cardImageService, card));
+            Log.d(TAG, String.format("prepareCards cardId:%d", card.getCardId()));
         }
 
         Random rng = new Random(System.currentTimeMillis());
@@ -99,6 +111,8 @@ public class ReviewQuizService implements CardQuizService {
                     DaspalenConstants.REVIEW_SESSION_CANDIDATE_CARDS, cardIds);
             int fillCount = DaspalenConstants.REVIEW_SESSION_MAX_CARDS - candidateCards.size();
 
+            Log.d(TAG, String.format("prepareCards adding fill cards fillCandidates.size:%d fillCount:%d", fillCandidates.size(), fillCount));
+
             if (fillCandidates.size() > fillCount) {
                 Set<Card> fillCards = new HashSet<>();
                 while (fillCards.size() < fillCount) {
@@ -107,19 +121,17 @@ public class ReviewQuizService implements CardQuizService {
                 }
                 for (Card card : fillCards) {
                     cards.add(ReviewQuizCard.createNonUpdatableCard(repository, cardImageService, card));
+                    Log.d(TAG, String.format("prepareCards fillCard cardId:%d", card.getCardId()));
                 }
             } else {
                 for (Card card : fillCandidates) {
                     cards.add(ReviewQuizCard.createNonUpdatableCard(repository, cardImageService, card));
+                    Log.d(TAG, String.format("prepareCards fillCard cardId:%d", card.getCardId()));
                 }
             }
         }
 
         return cards;
-    }
-
-    private void prepareNextCard() {
-        currentCard = quizSchedule.nextElem();
     }
 
 }

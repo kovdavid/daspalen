@@ -5,6 +5,7 @@ import com.github.davsx.daspalen.DaspalenConstants;
 import com.github.davsx.daspalen.model.Card;
 import com.github.davsx.daspalen.persistence.entity.CardEntity;
 import com.github.davsx.daspalen.persistence.repository.DaspalenRepository;
+import com.github.davsx.daspalen.service.BaseQuiz.BaseQuizCard;
 import com.github.davsx.daspalen.service.BaseQuiz.BaseQuizCardScheduler;
 import com.github.davsx.daspalen.service.BaseQuiz.QuizData;
 import com.github.davsx.daspalen.service.BaseQuiz.QuizTypeEnum;
@@ -14,9 +15,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
-class LearnQuizCard {
+class LearnQuizCard implements BaseQuizCard {
 
-    private static final String TAG = "LearnQuizCard";
+    private static final String TAG = "daspalen|LearnQuizCard";
 
     private DaspalenRepository repository;
     private CardImageService cardImageService;
@@ -36,51 +37,12 @@ class LearnQuizCard {
         this.plannedRounds = calculatePlannedRounds();
         this.rng = new Random(System.currentTimeMillis());
 
-        logCard("init");
-    }
-
-    private void logCard(String prefix) {
-        Log.d(TAG, String.format("%s cardId:%d learnScore:%d completedRounds: %d plannedRounds:%d front:%s back:%s",
-                prefix, card.getCardId(), card.getLearnScore(), completedRounds, plannedRounds,
-                card.getFrontText(), card.getBackText()));
-    }
-
-    void handleAnswer(BaseQuizCardScheduler<LearnQuizCard> scheduler, String answer) {
-        boolean isCorrectAnswer = evaluateAnswer(answer);
-
-        logCard("handleAnswer");
-
-        if (isCorrectAnswer) {
-            Log.d(TAG, String.format("isCorrectAnswer:true gotBadAnswer:%s doShowCard:%s", gotBadAnswer, doShowCard));
-            if (!gotBadAnswer) {
-                if (doShowCard) {
-                    doShowCard = false;
-                } else {
-                    completedRounds++;
-                    card.processCorrectLearnAnswer();
-                    repository.updateCard(card);
-                }
-                Integer scheduleOffset = calculateScheduleOffset();
-                if (scheduleOffset > 0) {
-                    scheduler.scheduleAfterOffset(scheduleOffset, this);
-                }
-            } else {
-                if (doShowCard) {
-                    doShowCard = false;
-                } else {
-                    gotBadAnswer = false;
-                }
-                Integer scheduleOffset = calculateScheduleOffset();
-                if (scheduleOffset > 0) {
-                    scheduler.scheduleToExactOffset(scheduleOffset, this);
-                }
-            }
-        } else {
-            gotBadAnswer = true;
-            doShowCard = true;
-            scheduler.scheduleToExactOffset(1, this);
-            Log.d(TAG, "isCorrectAnswer:false answer:" + answer);
-        }
+        Log.d(TAG, String.format("init cardId:%d front:%s back:%s learnScore:%d plannedRounds:%d",
+                card.getCardId(),
+                card.getFrontText(),
+                card.getBackText(),
+                card.getLearnScore(),
+                plannedRounds));
     }
 
     private Integer calculateScheduleOffset() {
@@ -134,13 +96,59 @@ class LearnQuizCard {
         return false;
     }
 
-    QuizData buildQuizData(List<CardEntity> randomCards) {
+    @Override
+    public void handleAnswer(BaseQuizCardScheduler scheduler, String answer) {
+        boolean isCorrectAnswer = evaluateAnswer(answer);
+
+        if (isCorrectAnswer) {
+            Log.d(TAG, String.format("handleAnswer correct cardId:%d gotBadAnswer:%s doShowCard:%s",
+                    card.getCardId(), gotBadAnswer, doShowCard));
+
+            if (!gotBadAnswer) {
+                if (doShowCard) {
+                    doShowCard = false;
+                } else {
+                    completedRounds++;
+                    card.processCorrectLearnAnswer();
+                    repository.updateCard(card);
+                }
+                Integer scheduleOffset = calculateScheduleOffset();
+                if (scheduleOffset > 0) {
+                    scheduler.scheduleAfterOffset(scheduleOffset, this);
+                }
+            } else {
+                if (doShowCard) {
+                    doShowCard = false;
+                } else {
+                    gotBadAnswer = false;
+                }
+                Integer scheduleOffset = calculateScheduleOffset();
+                if (scheduleOffset > 0) {
+                    scheduler.scheduleToExactOffset(scheduleOffset, this);
+                }
+            }
+        } else {
+            Log.d(TAG, String.format("handleAnswer incorrect cardId:%d", card.getCardId()));
+            gotBadAnswer = true;
+            doShowCard = true;
+            scheduler.scheduleToExactOffset(1, this);
+        }
+    }
+
+    @Override
+    public QuizData buildQuizData(List<CardEntity> randomCards) {
         QuizTypeEnum quizType = getQuizType();
-        logCard("buildQuizData quizType:" + quizType);
+        Log.d(TAG, String.format("buildQuizData cardId:%d quizType:%s", card.getCardId(), quizType));
         return QuizData.build(quizType, cardImageService, card, randomCards);
     }
 
-    Integer getCompletedRounds() {
+    @Override
+    public long getCardId() {
+        return card.getCardId();
+    }
+
+    @Override
+    public int getCompletedRounds() {
         return completedRounds;
     }
 

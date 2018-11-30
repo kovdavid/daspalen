@@ -3,17 +3,20 @@ package com.github.davsx.daspalen.service.ReviewQuiz;
 import android.util.Log;
 import com.github.davsx.daspalen.DaspalenConstants;
 import com.github.davsx.daspalen.model.Card;
+import com.github.davsx.daspalen.persistence.entity.CardEntity;
 import com.github.davsx.daspalen.persistence.repository.DaspalenRepository;
+import com.github.davsx.daspalen.service.BaseQuiz.BaseQuizCard;
 import com.github.davsx.daspalen.service.BaseQuiz.BaseQuizCardScheduler;
 import com.github.davsx.daspalen.service.BaseQuiz.QuizData;
 import com.github.davsx.daspalen.service.BaseQuiz.QuizTypeEnum;
 import com.github.davsx.daspalen.service.CardImage.CardImageService;
 
 import java.util.Comparator;
+import java.util.List;
 
-class ReviewQuizCard {
+class ReviewQuizCard implements BaseQuizCard {
 
-    private static final String TAG = "ReviewQuizCard";
+    private static final String TAG = "daspalen|ReviewQuizCard";
 
     private DaspalenRepository repository;
     private CardImageService cardImageService;
@@ -32,7 +35,11 @@ class ReviewQuizCard {
         this.card = card;
         this.updateCardOnAnswer = updateCardOnAnswer;
 
-        logCard("init");
+        Log.d(TAG, String.format("init cardId:%d front:%s back:%s updateCardOnAnswer:%s",
+                card.getCardId(),
+                card.getFrontText(),
+                card.getBackText(),
+                updateCardOnAnswer));
     }
 
     static ReviewQuizCard createUpdatableCard(DaspalenRepository repository,
@@ -59,18 +66,9 @@ class ReviewQuizCard {
                 !updateCardOnAnswer));
     }
 
-    void handleAnswer(BaseQuizCardScheduler<ReviewQuizCard> scheduler, String answer) {
-        switch (answer) {
-            case DaspalenConstants.REVIEW_ANSWER_GOOD:
-                logCard("handleAnswer GOOD");
-                break;
-            case DaspalenConstants.REVIEW_ANSWER_OK:
-                logCard("handleAnswer OK");
-                break;
-            default:
-                logCard("handleAnswer BAD");
-                break;
-        }
+    @Override
+    public void handleAnswer(BaseQuizCardScheduler scheduler, String answer) {
+        Log.d(TAG, String.format("handleAnswer cardId:%d answer:%s", card.getCardId(), answer));
 
         if (answer.equals(DaspalenConstants.REVIEW_ANSWER_GOOD)) {
             if (updateCardOnAnswer && !answered) {
@@ -93,12 +91,22 @@ class ReviewQuizCard {
         answered = true;
     }
 
-    QuizData buildQuizData() {
-        return QuizData.build(QuizTypeEnum.REVIEW_CARD, cardImageService, card, null);
+    @Override
+    public QuizData buildQuizData(List<CardEntity> randomCards) {
+        return QuizData.build(QuizTypeEnum.REVIEW_CARD, cardImageService, card, randomCards);
     }
 
-    boolean isAnsweredCorrectly() {
-        return this.answeredCorrectly;
+    @Override
+    public long getCardId() {
+        return card.getCardId();
+    }
+
+    @Override
+    public int getCompletedRounds() {
+        if (answeredCorrectly) {
+            return 1;
+        }
+        return 0;
     }
 
     public static class ReviewQuizCardComparator implements Comparator<Card> {

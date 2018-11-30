@@ -1,9 +1,11 @@
 package com.github.davsx.daspalen.service.LearnQuiz;
 
+import android.util.Log;
 import com.github.davsx.daspalen.DaspalenConstants;
 import com.github.davsx.daspalen.model.Card;
 import com.github.davsx.daspalen.persistence.entity.CardEntity;
 import com.github.davsx.daspalen.persistence.repository.DaspalenRepository;
+import com.github.davsx.daspalen.service.BaseQuiz.BaseQuizCard;
 import com.github.davsx.daspalen.service.BaseQuiz.BaseQuizSchedule;
 import com.github.davsx.daspalen.service.BaseQuiz.CardQuizService;
 import com.github.davsx.daspalen.service.BaseQuiz.QuizData;
@@ -33,11 +35,13 @@ import java.util.List;
 
 public class LearnQuizService implements CardQuizService {
 
+    private static final String TAG = "daspalen|LearnQuizService";
+
     private DaspalenRepository repository;
     private CardImageService cardImageService;
 
-    private BaseQuizSchedule<LearnQuizCard> quizSchedule;
-    private List<LearnQuizCard> cards;
+    private BaseQuizSchedule quizSchedule;
+    private List<BaseQuizCard> cards;
     private List<CardEntity> randomCards;
     private Integer totalRounds;
     private LearnQuizCard currentCard;
@@ -58,8 +62,7 @@ public class LearnQuizService implements CardQuizService {
             return false; // Nothing new to learn
         }
 
-        ArrayList<LearnQuizCard> cardQueue = new ArrayList<>(this.cards);
-        this.quizSchedule = new BaseQuizSchedule<>(cardQueue);
+        this.quizSchedule = new BaseQuizSchedule(new ArrayList<>(this.cards));
 
         this.randomCards = repository.getRandomCardEntities(DaspalenConstants.LEARN_SESSION_RANDOM_CARDS_COUNT);
 
@@ -78,8 +81,8 @@ public class LearnQuizService implements CardQuizService {
 
     @Override
     public Integer getCompletedRounds() {
-        Integer completedRounds = 0;
-        for (LearnQuizCard card : cards) {
+        int completedRounds = 0;
+        for (BaseQuizCard card : cards) {
             completedRounds += card.getCompletedRounds();
         }
         return completedRounds;
@@ -105,10 +108,10 @@ public class LearnQuizService implements CardQuizService {
     }
 
     private void prepareNextCard() {
-        currentCard = quizSchedule.nextElem();
+        currentCard = (LearnQuizCard) quizSchedule.nextCard();
     }
 
-    private List<LearnQuizCard> prepareCards() {
+    private List<BaseQuizCard> prepareCards() {
         List<Card> learnCandidates = repository.getLearnCandidateCards(DaspalenConstants.LEARN_SESSION_CANDIDATE_CARDS);
         if (learnCandidates.isEmpty()) {
             return null;
@@ -141,6 +144,11 @@ public class LearnQuizService implements CardQuizService {
 
         Collections.sort(chosenCards, new LearnQuizCard.LearnQuizCardComparator());
 
-        return chosenCards;
+        Log.d(TAG, String.format("prepareCards size:%d", chosenCards.size()));
+        for (LearnQuizCard card : chosenCards) {
+            Log.d(TAG, String.format("prepareCards cardId:%d", card.getCardId()));
+        }
+
+        return new ArrayList<BaseQuizCard>(chosenCards);
     }
 }
