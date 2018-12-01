@@ -6,9 +6,10 @@ android {
         applicationId "com.github.davsx.daspalen"
         minSdkVersion 22
         targetSdkVersion 27
-        versionCode 10007
-        versionName "1.0.7"
+        versionCode 10008
+        versionName "1.0.8"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        setProperty("archivesBaseName", "daspalen_v$versionName")
     }
     buildTypes {
         debug {
