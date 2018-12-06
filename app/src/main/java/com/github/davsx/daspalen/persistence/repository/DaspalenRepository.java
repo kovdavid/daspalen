@@ -127,7 +127,8 @@ public class DaspalenRepository {
     }
 
     public List<Card> getCardNotificationCandidates(int limit) {
-        List<CardEntity> cardEntities = dao.getCardNotificationCandidateEntities(limit);
+        int typeBlacklist = DaspalenConstants.CARD_TYPE_INCOMPLETE;
+        List<CardEntity> cardEntities = dao.getCardNotificationCandidateEntities(typeBlacklist, limit);
         return loadCards(cardEntities);
     }
 

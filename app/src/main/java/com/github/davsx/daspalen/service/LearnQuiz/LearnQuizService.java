@@ -6,9 +6,9 @@ import com.github.davsx.daspalen.model.Card;
 import com.github.davsx.daspalen.persistence.entity.CardEntity;
 import com.github.davsx.daspalen.persistence.repository.DaspalenRepository;
 import com.github.davsx.daspalen.service.BaseQuiz.BaseQuizCard;
-import com.github.davsx.daspalen.service.BaseQuiz.BaseQuizSchedule;
 import com.github.davsx.daspalen.service.BaseQuiz.CardQuizService;
 import com.github.davsx.daspalen.service.BaseQuiz.QuizData;
+import com.github.davsx.daspalen.service.BaseQuiz.QuizScheduler;
 import com.github.davsx.daspalen.service.CardImage.CardImageService;
 
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ public class LearnQuizService implements CardQuizService {
     private DaspalenRepository repository;
     private CardImageService cardImageService;
 
-    private BaseQuizSchedule quizSchedule;
+    private QuizScheduler quizScheduler;
     private List<BaseQuizCard> cards;
     private List<CardEntity> randomCards;
     private Integer totalRounds;
@@ -64,7 +64,7 @@ public class LearnQuizService implements CardQuizService {
             return false; // Nothing new to learn
         }
 
-        this.quizSchedule = new BaseQuizSchedule(new ArrayList<>(this.cards));
+        this.quizScheduler = new QuizScheduler(new ArrayList<>(this.cards));
 
         this.randomCards = repository.getRandomCardEntities(DaspalenConstants.LEARN_SESSION_RANDOM_CARDS_COUNT);
 
@@ -76,7 +76,7 @@ public class LearnQuizService implements CardQuizService {
     @Override
     public void processAnswer(String answer) {
         if (!isFinished) {
-            currentCard.handleAnswer(quizSchedule, answer);
+            currentCard.handleAnswer(quizScheduler, answer);
         }
         prepareNextCard();
     }
@@ -110,7 +110,7 @@ public class LearnQuizService implements CardQuizService {
     }
 
     private void prepareNextCard() {
-        currentCard = (LearnQuizCard) quizSchedule.nextCard();
+        currentCard = (LearnQuizCard) quizScheduler.nextCard();
     }
 
     private List<BaseQuizCard> prepareCards() {

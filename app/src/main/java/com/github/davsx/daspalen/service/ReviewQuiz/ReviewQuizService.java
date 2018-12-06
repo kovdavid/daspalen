@@ -5,9 +5,9 @@ import com.github.davsx.daspalen.DaspalenConstants;
 import com.github.davsx.daspalen.model.Card;
 import com.github.davsx.daspalen.persistence.repository.DaspalenRepository;
 import com.github.davsx.daspalen.service.BaseQuiz.BaseQuizCard;
-import com.github.davsx.daspalen.service.BaseQuiz.BaseQuizSchedule;
 import com.github.davsx.daspalen.service.BaseQuiz.CardQuizService;
 import com.github.davsx.daspalen.service.BaseQuiz.QuizData;
+import com.github.davsx.daspalen.service.BaseQuiz.QuizScheduler;
 import com.github.davsx.daspalen.service.CardImage.CardImageService;
 
 import java.util.*;
@@ -20,7 +20,7 @@ public class ReviewQuizService implements CardQuizService {
     private CardImageService cardImageService;
 
     private List<BaseQuizCard> cards;
-    private BaseQuizSchedule quizSchedule;
+    private QuizScheduler quizScheduler;
     private BaseQuizCard currentCard;
     private boolean isFinished;
 
@@ -40,7 +40,7 @@ public class ReviewQuizService implements CardQuizService {
             return false; // Nothing new to learn
         }
 
-        this.quizSchedule = new BaseQuizSchedule(new ArrayList<>(cards));
+        this.quizScheduler = new QuizScheduler(new ArrayList<>(cards));
 
         prepareNextCard();
 
@@ -50,7 +50,7 @@ public class ReviewQuizService implements CardQuizService {
     @Override
     public void processAnswer(String answer) {
         if (!isFinished) {
-            currentCard.handleAnswer(quizSchedule, answer);
+            currentCard.handleAnswer(quizScheduler, answer);
         }
         prepareNextCard();
     }
@@ -84,7 +84,7 @@ public class ReviewQuizService implements CardQuizService {
     }
 
     private void prepareNextCard() {
-        currentCard = quizSchedule.nextCard();
+        currentCard = quizScheduler.nextCard();
     }
 
     private List<BaseQuizCard> prepareCards() {

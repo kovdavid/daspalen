@@ -5,7 +5,7 @@ import com.github.davsx.daspalen.persistence.entity.CardEntity;
 import java.util.List;
 
 public interface BaseQuizCard {
-    void handleAnswer(BaseQuizCardScheduler quizSchedule, String answer);
+    void handleAnswer(QuizScheduler quizScheduler, String answer);
 
     QuizData buildQuizData(List<CardEntity> randomCards);
 

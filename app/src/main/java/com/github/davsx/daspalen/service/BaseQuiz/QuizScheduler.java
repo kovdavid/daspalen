@@ -6,26 +6,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BaseQuizSchedule implements BaseQuizCardScheduler {
+public class QuizScheduler {
 
-    private static final String TAG = "daspalen|BaseSchedule";
+    private static final String TAG = "daspalen|QuizScheduler";
 
     private Map<Integer, BaseQuizCard> schedule;
     private List<BaseQuizCard> queue;
     private int nextTick;
     private int maxTick;
 
-    public BaseQuizSchedule(List<BaseQuizCard> queue) {
+    public QuizScheduler(List<BaseQuizCard> queue) {
         this.queue = queue;
         this.schedule = new HashMap<Integer, BaseQuizCard>();
         this.nextTick = 0;
         this.maxTick = 0;
     }
 
-    @Override
     public void scheduleAfterOffset(int offset, BaseQuizCard card) {
-        Log.i(TAG, String.format("scheduleAfterOffset offset:%d nextTick:%d maxTick:%d cardId:%d", offset, nextTick,
-                maxTick, card.getCardId()));
+        Log.i(TAG, String.format("scheduleAfterOffset offset:%d nextTick:%d maxTick:%d cardId:%d",
+                offset, nextTick, maxTick, card.getCardId()));
 
         int tick = nextTick + offset - 1;
         while (schedule.get(tick) != null) {
@@ -40,7 +39,6 @@ public class BaseQuizSchedule implements BaseQuizCardScheduler {
         logScheduleState();
     }
 
-    @Override
     public void scheduleToExactOffset(int offset, BaseQuizCard card) {
         Log.i(TAG, String.format("scheduleToExactOffset offset:%d nextTick:%d maxTick:%d cardId:%d", offset, nextTick
                 , maxTick, card.getCardId()));
@@ -65,11 +63,12 @@ public class BaseQuizSchedule implements BaseQuizCardScheduler {
         logScheduleState();
     }
 
-    @Override
     public void scheduleToEnd(BaseQuizCard card) {
-        Log.i(TAG, String.format("scheduleToEnd nextTick:%d maxTick:%d cardId:%d", nextTick, maxTick,
-                card.getCardId()));
-        maxTick = maxTick + 1 + queue.size();
+        Log.i(TAG, String.format("scheduleToEnd nextTick:%d maxTick:%d queue.size:%d cardId:%d",
+                nextTick, maxTick, queue.size(), card.getCardId()));
+
+        int baseTick = maxTick > nextTick ? maxTick : nextTick;
+        maxTick = baseTick + queue.size() + 1;
         schedule.put(maxTick, card);
         logScheduleState();
     }
@@ -83,15 +82,16 @@ public class BaseQuizSchedule implements BaseQuizCardScheduler {
 
         BaseQuizCard card = schedule.get(currentTick);
         if (card != null) {
-            Log.i(TAG, String.format("nextCard serving from schedule tick:%d cardId:%d", currentTick,
-                    card.getCardId()));
+            Log.i(TAG, String.format("nextCard serving from schedule tick:%d cardId:%d",
+                    currentTick, card.getCardId()));
             nextTick++;
             return card;
         } else {
             if (queue.size() > 0) {
-                nextTick++;
                 BaseQuizCard queueCard = queue.remove(0);
-                Log.i(TAG, String.format("nextCard serving from queue cardId:%d", queueCard.getCardId()));
+                Log.i(TAG, String.format("nextCard serving from queue currentTick:%d cardId:%d",
+                        currentTick, queueCard.getCardId()));
+                nextTick++;
                 return queueCard;
             } else {
                 for (int t = currentTick; t <= maxTick; t++) {
@@ -116,7 +116,7 @@ public class BaseQuizSchedule implements BaseQuizCardScheduler {
             BaseQuizCard card = schedule.get(tick);
 
             if (card == null) {
-                builder.append(String.format("%d[null] ", tick));
+                builder.append(String.format("%d[0] ", tick));
             } else {
                 builder.append(String.format("%d[%d] ", tick, card.getCardId()));
             }

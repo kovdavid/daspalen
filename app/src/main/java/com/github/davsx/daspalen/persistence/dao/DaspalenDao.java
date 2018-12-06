@@ -99,10 +99,10 @@ public abstract class DaspalenDao {
             + " ORDER BY cq.last_review_at ASC LIMIT :count")
     public abstract List<CardEntity> getReviewFillCardEntities(Integer quizType, List<Long> cardIdBlackList, Integer count);
 
-    @Query("SELECT c.* FROM card c JOIN card_notification cn USING(id_card)"
-            + " WHERE c.enabled = 1 AND cn.enabled = 1"
+    @Query("SELECT c.* FROM card c JOIN card_notification cn USING(id_card) JOIN card_quiz cq USING(id_card)"
+            + " WHERE c.enabled = 1 AND cn.enabled = 1 AND cq.quiz_type != :quizType"
             + " ORDER BY cn.last_notification_at ASC LIMIT :limit")
-    public abstract List<CardEntity> getCardNotificationCandidateEntities(int limit);
+    public abstract List<CardEntity> getCardNotificationCandidateEntities(int quizType, int limit);
 
     @Query("DELETE FROM card")
     abstract void deleteAllCards();

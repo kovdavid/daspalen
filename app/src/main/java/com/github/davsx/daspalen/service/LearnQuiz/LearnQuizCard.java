@@ -6,8 +6,8 @@ import com.github.davsx.daspalen.model.Card;
 import com.github.davsx.daspalen.persistence.entity.CardEntity;
 import com.github.davsx.daspalen.persistence.repository.DaspalenRepository;
 import com.github.davsx.daspalen.service.BaseQuiz.BaseQuizCard;
-import com.github.davsx.daspalen.service.BaseQuiz.BaseQuizCardScheduler;
 import com.github.davsx.daspalen.service.BaseQuiz.QuizData;
+import com.github.davsx.daspalen.service.BaseQuiz.QuizScheduler;
 import com.github.davsx.daspalen.service.BaseQuiz.QuizTypeEnum;
 import com.github.davsx.daspalen.service.CardImage.CardImageService;
 
@@ -97,7 +97,7 @@ class LearnQuizCard implements BaseQuizCard {
     }
 
     @Override
-    public void handleAnswer(BaseQuizCardScheduler scheduler, String answer) {
+    public void handleAnswer(QuizScheduler scheduler, String answer) {
         boolean isCorrectAnswer = evaluateAnswer(answer);
 
         if (isCorrectAnswer) {
