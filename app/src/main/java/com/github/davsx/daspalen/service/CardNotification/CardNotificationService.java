@@ -2,14 +2,13 @@ package com.github.davsx.daspalen.service.CardNotification;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.content.BroadcastReceiver;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.text.Html;
 import android.util.Log;
-import com.github.davsx.daspalen.DaspalenApplication;
 import com.github.davsx.daspalen.DaspalenConstants;
 import com.github.davsx.daspalen.R;
 import com.github.davsx.daspalen.model.Card;
@@ -17,32 +16,29 @@ import com.github.davsx.daspalen.persistence.repository.DaspalenRepository;
 import com.github.davsx.daspalen.service.Settings.SettingsService;
 import com.github.davsx.daspalen.utils.DateUtils;
 
-import javax.inject.Inject;
 import java.util.List;
 import java.util.Random;
 
-public class CardNotificationService extends BroadcastReceiver {
+public class CardNotificationService {
 
     private static final String TAG = "daspalen|CardNotify";
 
-    @Inject
-    DaspalenRepository repository;
-    @Inject
-    SettingsService settingsService;
+    private DaspalenRepository repository;
+    private SettingsService settingsService;
 
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        ((DaspalenApplication) context.getApplicationContext()).getApplicationComponent().inject(this);
-        showNotification(context);
+    public CardNotificationService(DaspalenRepository repository, SettingsService settingsService) {
+        this.repository = repository;
+        this.settingsService = settingsService;
     }
 
-    private void showNotification(Context context) {
-        List<Card> cards = repository.getCardNotificationCandidates(10);
+    public void showNotification(Context context) {
+        List<Card> cards = repository.getCardNotificationCandidates(5);
         if (cards.size() == 0) {
             return;
         }
 
-        Card card = cards.get(new Random().nextInt(cards.size()));
+        int cardIndex = new Random(System.currentTimeMillis()).nextInt(cards.size());
+        Card card = cards.get(cardIndex);
 
         Log.i(TAG, String.format("showNotification cardId:%d lastNotificationAt:%s",
                 card.getCardId(),
@@ -51,12 +47,16 @@ public class CardNotificationService extends BroadcastReceiver {
         String message = String.format("<b>Front:</b> %s<br /><b>Back:</b> %s",
                 card.getFrontText(), card.getBackText());
 
+        Intent i = new Intent(context, CardNotificationReceiver.class);
+        PendingIntent newNotificationIntent = PendingIntent.getBroadcast(context, 0, i, 0);
+
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context, DaspalenConstants.CARD_NOTIFICATION_CHANNEL);
         builder.setSmallIcon(R.mipmap.daspalen_icon)
                 .setContentTitle("Card notification")
                 .setStyle(new NotificationCompat.BigTextStyle(builder).bigText(Html.fromHtml(message)))
                 .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
+                .addAction(R.drawable.ic_launcher_background, "New notification", newNotificationIntent)
                 .setAutoCancel(false);
 
         NotificationManager notificationManager =

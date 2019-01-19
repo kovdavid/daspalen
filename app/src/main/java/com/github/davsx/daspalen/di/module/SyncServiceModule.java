@@ -12,7 +12,7 @@ import okhttp3.OkHttpClient;
         DaspalenRepositoryModule.class,
         CardImageServiceModule.class,
         OkHttpModule.class,
-        SettingsModule.class
+        SettingsServiceModule.class
 })
 public class SyncServiceModule {
 

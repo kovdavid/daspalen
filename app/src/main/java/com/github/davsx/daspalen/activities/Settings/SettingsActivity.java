@@ -14,6 +14,7 @@ import android.widget.*;
 import com.github.davsx.daspalen.DaspalenApplication;
 import com.github.davsx.daspalen.R;
 import com.github.davsx.daspalen.service.CardNotification.CardNotificationAlarmService;
+import com.github.davsx.daspalen.service.CardNotification.CardNotificationService;
 import com.github.davsx.daspalen.service.Settings.SettingsService;
 
 import javax.inject.Inject;
@@ -23,6 +24,8 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Inject
     SettingsService settingsService;
+    @Inject
+    CardNotificationService notificationService;
 
     private CheckBox checkBoxWordOfTheDayEnable;
     private Button buttonNotificationFrom;
@@ -81,6 +84,13 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 CardNotificationAlarmService.resetAlarm(SettingsActivity.this, settingsService);
+            }
+        });
+
+        findViewById(R.id.button_show_notification).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                notificationService.showNotification(SettingsActivity.this);
             }
         });
 

@@ -6,7 +6,7 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module(includes = {SharedPreferencesModule.class})
-public class SettingsModule {
+public class SettingsServiceModule {
 
     @Provides
     SettingsService provide(SharedPreferences sharedPreferences) {

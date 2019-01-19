@@ -10,7 +10,7 @@ import dagger.Provides;
 @Module(includes = {
         DaspalenRepositoryModule.class,
         CardImageServiceModule.class,
-        SettingsModule.class
+        SettingsServiceModule.class
 })
 public class BackupImportServiceModule {
 

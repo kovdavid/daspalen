@@ -14,7 +14,7 @@ import com.github.davsx.daspalen.activities.Settings.SettingsActivity;
 import com.github.davsx.daspalen.activities.Sync.SyncActivity;
 import com.github.davsx.daspalen.di.module.*;
 import com.github.davsx.daspalen.service.BootReceiver.BootReceiverService;
-import com.github.davsx.daspalen.service.CardNotification.CardNotificationService;
+import com.github.davsx.daspalen.service.CardNotification.CardNotificationReceiver;
 import com.github.davsx.daspalen.service.Settings.SettingsService;
 import dagger.Component;
 
@@ -32,8 +32,9 @@ import javax.inject.Singleton;
         BackupCreateServiceModule.class,
         MemriseImportServiceModule.class,
         SyncServiceModule.class,
-        SettingsModule.class,
+        SettingsServiceModule.class,
         OkHttpModule.class,
+        CardNotificationServiceModule.class,
         BackupImportServiceModule.class
 })
 public interface ApplicationComponent {
@@ -62,7 +63,7 @@ public interface ApplicationComponent {
 
     void inject(SyncActivity activity);
 
-    void inject(CardNotificationService service);
+    void inject(CardNotificationReceiver service);
 
     void inject(BootReceiverService service);
 
