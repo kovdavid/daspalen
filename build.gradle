@@ -19,6 +19,7 @@ allprojects {
         jcenter()
         maven { url "https://jitpack.io" }
     }
+    buildDir = "/tmp/${rootProject.name}/${project.name}"
 }
 
 task clean(type: Delete) {

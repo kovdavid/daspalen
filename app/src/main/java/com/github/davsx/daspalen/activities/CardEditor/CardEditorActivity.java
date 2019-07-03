@@ -276,6 +276,9 @@ public class CardEditorActivity extends AppCompatActivity {
                             case R.id.translate_google_translate:
                                 translateFrontWithGoogleTranslate();
                                 break;
+                            case R.id.translate_reverso_context:
+                                translateFrontWithReversoContext();
+                                break;
                         }
                         return true;
                     }
@@ -298,6 +301,9 @@ public class CardEditorActivity extends AppCompatActivity {
                                 break;
                             case R.id.translate_google_translate:
                                 translateBackWithGoogleTranslate();
+                                break;
+                            case R.id.translate_reverso_context:
+                                translateBackWithReversoContext();
                                 break;
                         }
                         return true;
@@ -454,6 +460,58 @@ public class CardEditorActivity extends AppCompatActivity {
                     }
                 })
                 .show();
+    }
+
+    private void translateFrontWithReversoContext() {
+        String frontText = editTextFront.getText().toString();
+        if (frontText.equals("")) {
+            Toast.makeText(this, "Front text is empty!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        translateFront = true;
+
+        Uri uri = Uri.parse("http://context.reverso.net/translation/english-spanish/" + Uri.encode(frontText));
+        translateWithReversoContext(uri);
+    }
+
+    private void translateBackWithReversoContext() {
+        String backText = editTextBack.getText().toString();
+        if (backText.equals("")) {
+            Toast.makeText(this, "Back text is empty!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        translateFront = false;
+
+        Uri uri = Uri.parse("http://context.reverso.net/translation/spanish-english/" + Uri.encode(backText));
+        translateWithReversoContext(uri);
+    }
+
+    private void translateWithReversoContext(Uri uri) {
+        PackageManager pm = getPackageManager();
+        PackageInfo packageInfo = null;
+        try {
+            packageInfo = pm.getPackageInfo(DaspalenConstants.PKG_REVERSO_CONTEXT, 0);
+        } catch (PackageManager.NameNotFoundException ignored) {
+        }
+
+        if (packageInfo != null) {
+            putDataToSharedPrefs();
+            openReversoContext(uri);
+        } else {
+            String appName = "Reverso Context";
+            String pkgName = DaspalenConstants.PKG_REVERSO_CONTEXT;
+            alertInstallApp(appName, pkgName);
+        }
+    }
+
+    private void openReversoContext(Uri uri) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.setPackage(DaspalenConstants.PKG_REVERSO_CONTEXT);
+        intent.setData(uri);
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        intent.addCategory(Intent.CATEGORY_BROWSABLE);
+        startActivity(intent);
     }
 
     private void translateFrontWithSpanishDict() {

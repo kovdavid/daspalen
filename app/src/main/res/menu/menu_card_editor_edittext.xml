@@ -14,4 +14,10 @@
             app:showAsAction="always"
             />
 
+    <item
+        android:id="@+id/translate_reverso_context"
+        android:title="Translate with Reverso Context"
+        app:showAsAction="always"
+        />
+
 </menu>

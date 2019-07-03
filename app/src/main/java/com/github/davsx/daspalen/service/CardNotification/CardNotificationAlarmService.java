@@ -11,7 +11,7 @@ import java.util.Calendar;
 public class CardNotificationAlarmService {
 
     private static PendingIntent createPendingIntent(Context context) {
-        Intent intent = new Intent(context, CardNotificationService.class);
+        Intent intent = new Intent(context, CardNotificationReceiver.class);
         return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 

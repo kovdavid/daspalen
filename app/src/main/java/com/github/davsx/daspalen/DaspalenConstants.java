@@ -26,6 +26,8 @@ public class DaspalenConstants {
 
     public static final String PKG_SPANISHDICT = "com.spanishdict.spanishdict";
     public static final String PKG_GOOGLE_TRANSLATE = "com.google.android.apps.translate";
+    public static final String PKG_REVERSO_CONTEXT = "com.softissimo.reverso.context";
+
 
     public static final Integer REQUEST_CODE_CREATE_DOCUMENT = 1;
     public static final Integer REQUEST_CODE_OPEN_DOCUMENT = 2;
