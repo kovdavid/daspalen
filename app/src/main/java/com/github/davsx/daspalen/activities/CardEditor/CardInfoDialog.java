@@ -66,8 +66,7 @@ public class CardInfoDialog {
         table.addView(createTableRowView(inflater, "Learn Updated", DateUtils.timestampToString(entity.getLastLearnQuizAt())));
         table.addView(createTableRowView(inflater, "Last Review", DateUtils.timestampToString(entity.getLastReviewAt())));
         table.addView(createTableRowView(inflater, "Next Review", DateUtils.timestampToString(entity.getNextReviewAt())));
-        table.addView(createTableRowView(inflater, "Review Multiplier",
-                Double.toString(entity.getReviewIntervalMultiplier())));
+        table.addView(createTableRowView(inflater, "Review Multiplier", String.format("%.2f", entity.getReviewIntervalMultiplier())));
         table.addView(createTableRowView(inflater, "Good Reviews", Integer.toString(entity.getGoodReviews())));
         table.addView(createTableRowView(inflater, "Bad Reviews", Integer.toString(entity.getBadReviews())));
         table.addView(createTableRowView(inflater, "Local Version", Integer.toString(entity.getLocalVersion())));
