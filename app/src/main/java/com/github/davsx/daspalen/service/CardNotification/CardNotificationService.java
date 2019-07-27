@@ -4,11 +4,10 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
-import android.text.Html;
 import android.util.Log;
+import android.widget.RemoteViews;
 import com.github.davsx.daspalen.DaspalenConstants;
 import com.github.davsx.daspalen.R;
 import com.github.davsx.daspalen.model.Card;
@@ -32,7 +31,7 @@ public class CardNotificationService {
     }
 
     public void showNotification(Context context) {
-        List<Card> cards = repository.getCardNotificationCandidates(5);
+        List<Card> cards = repository.getCardNotificationCandidates(15);
         if (cards.size() == 0) {
             return;
         }
@@ -44,19 +43,23 @@ public class CardNotificationService {
                 card.getCardId(),
                 DateUtils.timestampToString(card.getCardNotificationEntity().getLastNotificationAt())));
 
-        String message = String.format("<b>Front:</b> %s<br /><b>Back:</b> %s",
-                card.getFrontText(), card.getBackText());
+        PendingIntent newNotificationIntent = CardNotificationReceiver.getNewNotificationIntent(context);
+        PendingIntent disableNotificationIntent = CardNotificationReceiver.getDisableNotificationIntent(context, card);
 
-        Intent i = new Intent(context, CardNotificationReceiver.class);
-        PendingIntent newNotificationIntent = PendingIntent.getBroadcast(context, 0, i, 0);
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.card_notification);
+        remoteViews.setTextViewText(R.id.textview_front, card.getFrontText());
+        remoteViews.setTextViewText(R.id.textview_back, card.getBackText());
 
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context, DaspalenConstants.CARD_NOTIFICATION_CHANNEL);
         builder.setSmallIcon(R.mipmap.daspalen_icon)
                 .setContentTitle("Card notification")
-                .setStyle(new NotificationCompat.BigTextStyle(builder).bigText(Html.fromHtml(message)))
+                .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
+                .setCustomContentView(remoteViews)
+                .setCustomBigContentView(remoteViews)
                 .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
-                .addAction(R.drawable.ic_launcher_background, "New notification", newNotificationIntent)
+                .addAction(R.drawable.ic_launcher_background, "New Notification", newNotificationIntent)
+                .addAction(R.drawable.ic_launcher_background, "Disable Notification", disableNotificationIntent)
                 .setAutoCancel(false);
 
         NotificationManager notificationManager =
